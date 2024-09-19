@@ -1,0 +1,6 @@
+@Holonet.Databank.API_HostAddress = http://localhost:5185
+
+GET {{Holonet.Databank.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
