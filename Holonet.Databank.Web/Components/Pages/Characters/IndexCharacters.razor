@@ -1,0 +1,120 @@
+﻿@page "/characters/index"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@rendermode InteractiveServer
+
+<PageTitle>Characters</PageTitle>
+
+<h1>Characters</h1>
+<hr />
+
+@if (ResultPage == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<div class="row">
+		<div class="col">
+			<div class="d-flex">
+				<div class="">
+					<div class="card">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-auto">
+									<a href="/characters/create" class="btn btn-primary" title="Create a new item">Create</a>
+								</div>
+								<div class="col-auto">
+									<div class="input-group">
+										<input type="text" class="form-control" id="filterInput" placeholder="Filter by name" @bind-value=PageRequest.Filter>
+										<button class="btn btn-outline-secondary" type="button" id="button-addon2" title="Click to find." @onclick="FilterResults"><i class="bi bi-search"></i></button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="ms-auto d-flex align-items-center pe-5">
+					@if (ResultPage == null)
+					{
+						<h4 class="mb-0"> Total Characters <span class="badge bg-secondary">0</span></h4>
+					}
+					else
+					{
+						<h4 class="mb-0"> Total Characters <span class="badge bg-secondary">@ResultPage.ItemCount</span></h4>
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<table class="table">
+				<thead>
+					<tr>
+						<th><span @onclick="@(() => Sort("FirstName"))">First Name</span><i class="@(SortIndicator("FirstName"))"></i></th>
+						<th><span @onclick="@(() => Sort("LastName"))">Last Name</span><i class="@(SortIndicator("LastName"))"></i></th>
+						<th><span @onclick="@(() => Sort("BirthDate"))">Birth Date</span><i class="@(SortIndicator("BirthDate"))"></i></th>
+						<th><span @onclick="@(() => Sort("Planet"))">Planet</span><i class="@(SortIndicator("Planet"))"></i></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (ResultPage != null && ResultPage.Collection != null)
+					{
+						@foreach (var characterModel in ResultPage.Collection)
+						{
+							<tr>
+								<td>@characterModel.FirstName</td>
+								<td>@characterModel.LastName</td>
+								<td>@characterModel.BirthDate</td>
+								@if (characterModel.Planet != null)
+								{
+									<td>@characterModel.Planet.Name</td>
+								}
+								else
+								{
+									<td>Unknown</td>
+								})
+								<td>
+									<AuthorizeView Roles="Admin">
+										<Authorized>
+											<a href="/characters/update/@(characterModel.Id)"><i class="bi bi-pencil"></i></a>
+											<button class="btn btn-danger" @onclick="()=> { DeleteID = characterModel.Id; Modal.Open();}">Delete</button>
+										</Authorized>
+									</AuthorizeView>
+								</td>
+							</tr>
+						}
+					}
+					else
+					{
+						<tr>
+							<td colspan="5">No data found.</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			@if (ResultPage != null)
+			{
+				<Pager PageIndex=@ResultPage.CurrentPage TotalPages=@ResultPage.TotalPages OnClick="PageIndexChanged" IsLastPage=@ResultPage.IsLastPage IsFirstPage=@ResultPage.IsFirstPage></Pager>
+			}
+		</div>
+	</div>
+}
+
+<AppModal @ref="Modal">
+	<Title>Notification</Title>
+	<Body>
+		Do you sure want to delete this character?
+	</Body>
+	<Footer>
+		<button type="button" class="btn btn-primary" style="width:80px" @onclick="HandleDelete">Yes</button>
+		<button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => Modal.Close()">Cancel</button>
+	</Footer>
+</AppModal>
+

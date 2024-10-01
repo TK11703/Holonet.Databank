@@ -1,0 +1,137 @@
+﻿@page "/historicalevents/index"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@rendermode InteractiveServer
+
+<PageTitle>Historical Events</PageTitle>
+
+<h1>Historical Events</h1>
+<hr />
+
+@if (ResultPage == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<div class="row">
+		<div class="col">
+			<div class="d-flex">
+				<div class="">
+					<div class="card">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-auto">
+									<a href="/historicalevents/create" class="btn btn-primary" title="Create a new item">Create</a>
+								</div>
+								<div class="col-auto">
+									<div class="input-group">
+										<input type="text" class="form-control" id="filterInput" placeholder="Filter by name" @bind-value=PageRequest.Filter>
+										<button class="btn btn-outline-secondary" type="button" id="button-addon2" title="Click to find." @onclick="FilterResults"><i class="bi bi-search"></i></button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="ms-auto d-flex align-items-center pe-5">
+					@if (ResultPage == null)
+					{
+						<h4 class="mb-0"> Total Historical Events <span class="badge bg-secondary">0</span></h4>
+					}
+					else
+					{
+						<h4 class="mb-0"> Total Historical Events <span class="badge bg-secondary">@ResultPage.ItemCount</span></h4>
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<table class="table">
+				<thead>
+					<tr>
+						<th><span @onclick="@(() => Sort("Name"))">Name</span><i class="@(SortIndicator("Name"))"></i></th>
+						<th>Date Period</th>
+						<th>Planets</th>
+						<th>Characters</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					@if(ResultPage != null && ResultPage.Collection != null)
+					{
+						@foreach (var historicalEventModel in ResultPage.Collection)
+						{
+							<tr>
+								<td>@historicalEventModel.Name</td>
+								<td>@historicalEventModel.DatePeriod</td>
+								@if (historicalEventModel.Planets != null)
+								{
+									<td>
+										@foreach (var planetModel in historicalEventModel.Planets)
+										{
+											<span class="badge text-bg-light">@planetModel.Name</span>
+										})
+									</td>
+								}
+								else
+								{
+									<td>Unknown</td>
+								})
+								@if (historicalEventModel.Characters != null)
+								{
+									<td>
+										@foreach (var characterModel in historicalEventModel.Characters)
+										{
+											<span class="badge text-bg-light">@characterModel.FirstName</span>
+										})
+									</td>
+								}
+								else
+								{
+									<td>Unknown</td>
+								})
+								<td>
+									<AuthorizeView Roles="Admin">
+										<Authorized>
+											<a href="/historicalevents/update/@(historicalEventModel.Id)"><i class="bi bi-pencil"></i></a>
+											<button class="btn btn-danger" @onclick="()=> { DeleteID = historicalEventModel.Id; Modal.Open();}">Delete</button>
+										</Authorized>
+									</AuthorizeView>
+								</td>
+							</tr>
+						}
+					}
+					else
+					{
+						<tr>
+							<td colspan="5">No data found.</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			@if (ResultPage != null)
+			{
+				<Pager PageIndex=@ResultPage.CurrentPage TotalPages=@ResultPage.TotalPages OnClick="PageIndexChanged" IsLastPage=@ResultPage.IsLastPage IsFirstPage=@ResultPage.IsFirstPage></Pager>
+			}
+		</div>
+	</div>
+}
+
+<AppModal @ref="Modal">
+	<Title>Notification</Title>
+	<Body>
+		Do you sure want to delete this historical event?
+	</Body>
+	<Footer>
+		<button type="button" class="btn btn-primary" style="width:80px" @onclick="HandleDelete">Yes</button>
+		<button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => Modal.Close()">Cancel</button>
+	</Footer>
+</AppModal>
+

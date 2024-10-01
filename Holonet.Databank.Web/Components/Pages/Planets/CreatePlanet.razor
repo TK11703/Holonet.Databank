@@ -1,0 +1,39 @@
+﻿@page "/planets/create"
+@rendermode InteractiveServer
+
+<PageTitle>Create Planet</PageTitle>
+
+<h1>Create Planet</h1>
+<hr />
+
+<EditForm Model="Model" FormName="CreatePlanet" OnValidSubmit="Submit">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+	<div class="container">
+		<div class="row mb-3">
+			<div class="col-md-12">
+				<label for="FirstName" class="form-label">Name</label>
+				<InputText id="FirstName" class="form-control" @bind-Value="Model.Name" />
+				<ValidationMessage For="() => Model.Name" />
+			</div>
+		</div>
+		<div class="row mb-3">
+			<div class="col-md-12">
+				<label for="Shard" class="form-label">Shard (External Data Link)</label>
+				<InputText id="Shard" class="form-control" @bind-Value="Model.Shard" />
+				<ValidationMessage For="() => Model.Shard" />
+			</div>
+		</div>
+		<div class="row mb-3">
+			<div class="col-md-12">
+				<label for="Description" class="form-label">Description</label>
+				<InputTextArea id="Description" class="form-control" @bind-Value="Model.Description" />
+			</div>
+		</div>
+		<div class="row mb-3">
+			<div class="col-md-12">
+				<button type="submit" class="btn btn-primary">Create</button>
+			</div>
+		</div>
+	</div>
+</EditForm>

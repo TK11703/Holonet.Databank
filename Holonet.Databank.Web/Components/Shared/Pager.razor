@@ -1,0 +1,39 @@
+﻿<div class="btn-toolbar justify-content-center mt-5" role="toolbar" aria-label="Toolbar with table pagination">
+	<div class="btn-group me-1" role="group" aria-label="Previous buttons group">
+		<button type="button" class="btn btn-sm btn-outline-secondary" disabled="@((IsFirstPage) ? "disabled" : null)" @onclick="@(() => OnClick.InvokeAsync(PageIndex  - 1))" title="Click to go to the previous page.">Previous</button>
+	</div>
+	<div class="btn-group" role="group" aria-label="Paging group">
+		@for (int i = 1; i <= TotalPages; i++)
+		{
+			if (PageIndex.Equals(i))
+			{
+				<button type="button" class="btn btn-sm btn-outline-secondary active">@i</button>
+			}
+			else
+			{
+				<button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(() => OnClick.InvokeAsync(i))">@i</button>
+			}
+		}
+	</div>
+	<div class="btn-group ms-1" role="group" aria-label="Next buttons group">
+		<button type="button" class="btn btn-sm btn-outline-secondary" disabled="@((IsLastPage) ? "disabled" : null)" @onclick="@(() => OnClick.InvokeAsync(PageIndex  + 1))" title="Click to go to the next page.">Next</button>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public int PageIndex { get; set; }
+
+	[Parameter]
+	public int TotalPages { get; set; }
+
+	[Parameter]
+	public bool IsFirstPage { get; set; }
+
+	[Parameter]
+	public bool IsLastPage { get; set; }
+
+	[Parameter]
+	public EventCallback<int> OnClick { get; set; }
+
+}

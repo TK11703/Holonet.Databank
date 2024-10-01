@@ -1,6 +1,13 @@
-using Holonet.Databank.API;
+using System.Reflection;
+using Microsoft.AspNetCore.Diagnostics;
+using Holonet.Databank.API.Extensions;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add Logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 // Add services to the container.
 builder.Services.AddAuthorization();
@@ -9,7 +16,16 @@ builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScopedServices();
+
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+//Registers the endpoints that implement the IEndpoint interface
+builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
+
 var app = builder.Build();
+
+var logger = app.Services.GetService<ILogger<Program>>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -20,26 +36,33 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseExceptionHandler(appError =>
+{
+	appError.Run(async context =>
+	{
+		context.Response.StatusCode = 500;
+		context.Response.ContentType = "application/json";
+		var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+		if (contextFeature is not null)
+		{
+			//log the error
+			string error = $"Error: {contextFeature.Error}";
+			if (logger is not null)
+			{
+				logger.LogError(error);
+			}
+			await context.Response.WriteAsJsonAsync(new
+			{
+				context.Response.StatusCode,
+				Message = "Internal Server Error."
+			});
+		}
+	});
+});
+
 app.UseAuthorization();
 
-var summaries = new[]
-{
-				"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-			};
-
-app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-{
-	var forecast = Enumerable.Range(1, 5).Select(index =>
-		new WeatherForecast
-		{
-			Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-			TemperatureC = Random.Shared.Next(-20, 55),
-			Summary = summaries[Random.Shared.Next(summaries.Length)]
-		})
-		.ToArray();
-	return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+//Register the endpoint as services in the application for use.
+app.MapEndpoints();
 
 app.Run();
