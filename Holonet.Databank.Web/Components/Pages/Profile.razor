@@ -1,0 +1,58 @@
+﻿@page "/profile"
+@using Holonet.Databank.Web.Clients
+@using Microsoft.Graph.Models
+@inject GraphApiClient graphClient
+@attribute [Authorize]
+
+<PageTitle>User Profile</PageTitle>
+
+<h3>User Data</h3>
+<p class="small">User data was retrieved from Entra using the Graph API.</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Information Type</th>
+			<th>Value</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Email Address</td>
+			<td>
+				@if (!string.IsNullOrEmpty(user?.Mail))
+				{
+					@user.Mail
+				}
+			</td>
+		</tr>
+		<tr>
+			<td>Display Name</td>
+			<td>
+				@if (!string.IsNullOrEmpty(user?.DisplayName))
+				{
+					@user.DisplayName
+				}
+			</td>
+		</tr>
+		<tr>
+			<td>Mobile Phone</td>
+			<td>
+				@if (!string.IsNullOrEmpty(user?.MobilePhone))
+				{
+					@user.MobilePhone
+				}
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<UserClaims />
+
+@code {
+	private User? user { get; set; }
+	protected async override Task OnInitializedAsync()
+	{
+		user = await graphClient.GetGraphApiUser();
+
+	}
+}

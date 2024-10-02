@@ -1,3 +1,10 @@
 {
-  "dependencies": {}
+  "dependencies": {
+    "identityapp1": {
+      "connectionInfo": "App registration: Holonet-Databank, Tenant: Default Directory (aaronchorpenningoutlook.onmicrosoft.com - Microsoft Entra ID)",
+      "secretStore": null,
+      "resourceId": null,
+      "type": "identityapp.default"
+    }
+  }
 }

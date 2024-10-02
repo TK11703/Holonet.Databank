@@ -7,10 +7,17 @@
 	</div>
 
 	<main>
-		<div class="top-row px-4 auth">
-			<a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-		</div>
+		<div class="top-row px-4">
+			<div class="container d-flex flex-wrap justify-content-center align-items-center">
+				<form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto" role="search">
+					<input type="search" class="form-control" placeholder="Search..." aria-label="Search" disabled>
+				</form>
 
+				<div class="text-end">
+					<LoginDisplay />
+				</div>
+			</div>
+		</div>
 		<article class="content px-4">
 			@Body
 		</article>

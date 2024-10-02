@@ -2,7 +2,7 @@
 
 namespace Holonet.Databank.Web.Extensions;
 
-public static class ClientConfigs
+internal static class ClientConfigs
 {
     /// <summary>
     /// Helps configure these TYPED clients (which are transient) to be used in potential singleton services and not be affected by DNS refresh issues and port exhaustion. Otherwise 
@@ -12,6 +12,8 @@ public static class ClientConfigs
     /// <param name="config"></param>
     public static void ConfigureClients(this IServiceCollection services, ConfigurationManager config)
     {
+        services.AddScoped<GraphApiClient>();
+
         string? baseApiAddress = config.GetValue<string>("Clients:BaseUri");
 
         if (!string.IsNullOrEmpty(baseApiAddress))
