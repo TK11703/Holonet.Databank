@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Holonet.Databank.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Holonet.Databank.Core.Dtos;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Identity.Web.Resource;
 namespace Holonet.Databank.API.Endpoints.Characters.GetPage;
 
 public class GetCharacterResultsPage : IEndpoint
@@ -16,6 +18,8 @@ public class GetCharacterResultsPage : IEndpoint
 			.WithTags(Tags.Characters);
 	}
 
+	[Authorize]
+	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<PageResultDto<CharacterDto>>, ProblemHttpResult>> HandleAsync([FromBody] PageRequestDto pageRequest, ICharacterService characterService)
 	{
 		try

@@ -1,7 +1,9 @@
 ﻿using Holonet.Databank.Application.Services;
 using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Identity.Web.Resource;
 
 namespace Holonet.Databank.API.Endpoints.Characters.GetById;
 
@@ -13,6 +15,8 @@ public class GetCharacterById : IEndpoint
 			.WithTags(Tags.Characters);
 	}
 
+	[Authorize]
+	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<CharacterDto>, ProblemHttpResult, NotFound>> HandleAsync(int id, ICharacterService characterService)
 	{
 		try

@@ -2,6 +2,9 @@ using System.Reflection;
 using Microsoft.AspNetCore.Diagnostics;
 using Holonet.Databank.API.Extensions;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +14,20 @@ builder.Logging.AddConsole();
 
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+	.AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+
+var scopes = builder.Configuration.GetValue<string>("AzureAd:Scopes")?.Split(' ');
+if (scopes == null || scopes.Length == 0)
+{
+	scopes = ["access_as_user"];
+}
 // Add services to the container.
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+	options.AddPolicy("AccessAsUserPolicy", policy =>
+		policy.RequireAuthenticatedUser().RequireClaim("scp", scopes));
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -61,6 +76,8 @@ app.UseExceptionHandler(appError =>
 		}
 	});
 });
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

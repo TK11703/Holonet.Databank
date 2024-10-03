@@ -2,7 +2,9 @@
 using Holonet.Databank.Application.Services;
 using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Identity.Web.Resource;
 namespace Holonet.Databank.API.Endpoints.Planets.Update;
 
 public class UpdatePlanet : IEndpoint
@@ -14,6 +16,8 @@ public class UpdatePlanet : IEndpoint
 			.WithTags(Tags.Planets);
 	}
 
+	[Authorize]
+	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> Handle(int id, UpdatePlanetDto itemModel, IPlanetService planetService, IAuthorService authorService, IUserService userService)
 	{
 		try

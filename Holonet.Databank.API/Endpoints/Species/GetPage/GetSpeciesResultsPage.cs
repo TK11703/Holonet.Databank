@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Holonet.Databank.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Holonet.Databank.Core.Dtos;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Identity.Web.Resource;
 namespace Holonet.Databank.API.Endpoints.Species.GetPage;
 
 public class GetSpeciesResultsPage : IEndpoint
@@ -16,6 +18,8 @@ public class GetSpeciesResultsPage : IEndpoint
 			.WithTags(Tags.Species);
 	}
 
+	[Authorize]
+	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<PageResultDto<SpeciesDto>>, ProblemHttpResult>> HandleAsync([FromBody] PageRequestDto pageRequest, ISpeciesService speciesService)
 	{
 		try

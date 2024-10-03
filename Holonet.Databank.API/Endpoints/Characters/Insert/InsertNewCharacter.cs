@@ -2,7 +2,9 @@
 using Holonet.Databank.Application.Services;
 using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Identity.Web.Resource;
 
 namespace Holonet.Databank.API.Endpoints.Characters.Insert;
 
@@ -15,6 +17,8 @@ public class InsertNewCharacter : IEndpoint
 			.WithTags(Tags.Characters);
 	}
 
+	[Authorize]
+	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<int>, ProblemHttpResult>> HandleAsync(CreateCharacterDto itemModel, ICharacterService characterService, IAuthorService authorService, IUserService userService)
 	{
 		try

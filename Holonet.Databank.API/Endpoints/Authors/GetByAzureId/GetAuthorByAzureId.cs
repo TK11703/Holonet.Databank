@@ -1,7 +1,9 @@
 ﻿using Holonet.Databank.Application.Services;
 using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Identity.Web.Resource;
 
 namespace Holonet.Databank.API.Endpoints.Authors.GetByAzureId;
 
@@ -13,6 +15,8 @@ public class GetAuthorByAzureId : IEndpoint
 			.WithTags(Tags.Authors);
 	}
 
+	[Authorize]
+	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<AuthorDto>, ProblemHttpResult, NotFound>> HandleAsync(Guid id, IAuthorService authorService)
 	{
 		try

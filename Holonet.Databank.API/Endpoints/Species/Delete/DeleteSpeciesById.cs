@@ -1,5 +1,7 @@
 ﻿using Holonet.Databank.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Identity.Web.Resource;
 
 namespace Holonet.Databank.API.Endpoints.Species.Delete;
 
@@ -11,6 +13,8 @@ public class DeleteSpeciesById : IEndpoint
 			.WithTags(Tags.Species);
 	}
 
+	[Authorize]
+	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> HandleAsync(int id, ISpeciesService speciesService)
 	{
 		try
