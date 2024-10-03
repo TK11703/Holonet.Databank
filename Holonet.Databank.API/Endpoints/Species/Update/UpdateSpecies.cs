@@ -14,16 +14,27 @@ public class UpdateSpecies : IEndpoint
 			.WithTags(Tags.Species);
 	}
 
-	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> Handle(int id, UpdateSpeciesDto itemModel, ISpeciesService speciesService)
+	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> Handle(int id, UpdateSpeciesDto itemModel, ISpeciesService speciesService, IAuthorService authorService, IUserService userService)
 	{
 		try
 		{
+			var azureId = userService.GetAzureId();
+			if (azureId == null)
+			{
+				return TypedResults.Problem("User not found");
+			}
+			var author = await authorService.GetAuthorByAzureId(azureId.Value);
+			if (author == null)
+			{
+				return TypedResults.Problem("Author not found");
+			}
 			var species = new Core.Entities.Species
             {
 				Id = itemModel.Id,
 				Name = itemModel.Name,
 				Description = itemModel.Description,
-				Shard = itemModel.Shard
+				Shard = itemModel.Shard,
+				UpdatedBy = author
 			};
 			var rowsUpdated = await speciesService.UpdateSpecies(species);
 			return TypedResults.Ok(rowsUpdated);

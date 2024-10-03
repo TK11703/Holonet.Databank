@@ -15,10 +15,20 @@ public class InsertNewCharacter : IEndpoint
 			.WithTags(Tags.Characters);
 	}
 
-	protected virtual async Task<Results<Ok<int>, ProblemHttpResult>> HandleAsync(CreateCharacterDto itemModel, ICharacterService characterService)
+	protected virtual async Task<Results<Ok<int>, ProblemHttpResult>> HandleAsync(CreateCharacterDto itemModel, ICharacterService characterService, IAuthorService authorService, IUserService userService)
 	{
 		try
 		{
+			var azureId = userService.GetAzureId();
+			if (azureId == null)
+			{
+				return TypedResults.Problem("User not found");
+			}
+			var author = await authorService.GetAuthorByAzureId(azureId.Value);
+			if (author == null)
+			{
+				return TypedResults.Problem("Author not found");
+			}
 			var character = new Character
 			{
 				FirstName = itemModel.FirstName,
@@ -26,7 +36,8 @@ public class InsertNewCharacter : IEndpoint
 				Description = itemModel.Description,
 				Shard = itemModel.Shard,
 				BirthDate = itemModel.BirthDate,
-				PlanetId = itemModel.PlanetId
+				PlanetId = itemModel.PlanetId,
+				UpdatedBy = author
 			};
 
 			int newId = await characterService.CreateCharacter(character);

@@ -65,7 +65,7 @@ public class CharacterService(ICharacterRepository characterRepository, IPlanetR
         return characters;
     }
 
-    public async Task<int> CreateCharacter(Character character, string? createdBy = null)
+    public async Task<int> CreateCharacter(Character character)
     {
         bool exists;
         if (character.PlanetId.HasValue)
@@ -80,10 +80,10 @@ public class CharacterService(ICharacterRepository characterRepository, IPlanetR
         {
             throw new DataException("Character already exists.");
         }
-        return await _characterRepository.CreateCharacter(character, createdBy);
+        return await _characterRepository.CreateCharacter(character);
     }
 
-    public async Task<bool> UpdateCharacter(Character character, string? updatedBy = null)
+    public async Task<bool> UpdateCharacter(Character character)
     {
         bool exists;
         if (character.PlanetId.HasValue)
@@ -98,7 +98,7 @@ public class CharacterService(ICharacterRepository characterRepository, IPlanetR
         {
             throw new DataException("Character already exists.");
         }
-        return _characterRepository.UpdateCharacter(character, updatedBy);
+        return _characterRepository.UpdateCharacter(character);
     }
 
     public async Task<bool> DeleteCharacter(int id)

@@ -15,15 +15,26 @@ public class InsertNewPlanet : IEndpoint
 			.WithTags(Tags.Planets);
 	}
 
-	protected virtual async Task<Results<Ok<int>, ProblemHttpResult>> HandleAsync(CreatePlanetDto itemModel, IPlanetService planetService)
+	protected virtual async Task<Results<Ok<int>, ProblemHttpResult>> HandleAsync(CreatePlanetDto itemModel, IPlanetService planetService, IAuthorService authorService, IUserService userService)
 	{
 		try
 		{
+			var azureId = userService.GetAzureId();
+			if (azureId == null)
+			{
+				return TypedResults.Problem("User not found");
+			}
+			var author = await authorService.GetAuthorByAzureId(azureId.Value);
+			if (author == null)
+			{
+				return TypedResults.Problem("Author not found");
+			}
 			var newPlanet = new Planet
 			{
 				Name = itemModel.Name,
 				Description = itemModel.Description,
-				Shard = itemModel.Shard
+				Shard = itemModel.Shard,
+				UpdatedBy = author
 			};
 			int newId = await planetService.CreatePlanet(newPlanet);
 			return TypedResults.Ok(newId);

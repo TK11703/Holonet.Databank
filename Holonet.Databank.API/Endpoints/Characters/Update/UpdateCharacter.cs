@@ -14,10 +14,21 @@ public class UpdateCharacter : IEndpoint
 			.WithTags(Tags.Characters);
 	}
 
-	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> Handle(int id, UpdateCharacterDto itemModel, ICharacterService characterService)
+	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> Handle(int id, UpdateCharacterDto itemModel, ICharacterService characterService, IAuthorService authorService, IUserService userService)
 	{
 		try
 		{
+			var azureId = userService.GetAzureId();
+			if (azureId == null)
+			{
+				return TypedResults.Problem("User not found");
+			}
+			var author = await authorService.GetAuthorByAzureId(azureId.Value);
+			if (author == null)
+			{
+				return TypedResults.Problem("Author not found");
+			}
+
 			var character = new Character
 			{
 				Id = itemModel.Id,
@@ -26,7 +37,8 @@ public class UpdateCharacter : IEndpoint
 				Description = itemModel.Description,
 				Shard = itemModel.Shard,
 				BirthDate = itemModel.BirthDate,
-				PlanetId = itemModel.PlanetId
+				PlanetId = itemModel.PlanetId,
+				UpdatedBy = author
 			};
 			var rowsUpdated = await characterService.UpdateCharacter(character);
 			return TypedResults.Ok(rowsUpdated);

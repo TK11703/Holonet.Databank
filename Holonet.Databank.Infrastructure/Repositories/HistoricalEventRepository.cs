@@ -54,14 +54,14 @@ public class HistoricalEventRepository(ISqlDataAccess dataAccess) : IHistoricalE
 		return results.FirstOrDefault();
 	}
 
-	public async Task<int> CreateHistoricalEvent(HistoricalEvent itemModel, string? createdBy = null)
+	public async Task<int> CreateHistoricalEvent(HistoricalEvent itemModel)
 	{
 		var p = new DynamicParameters();
 		p.Add(name: "@Name", itemModel.Name);
 		p.Add(name: "@Description", itemModel.Description);
 		p.Add(name: "@Shard", itemModel.Shard);
 		p.Add(name: "@DatePeriod", itemModel.DatePeriod);
-		p.Add(name: "@CreatedBy", createdBy);
+		p.Add(name: "@AzureAuthorId", itemModel.UpdatedBy.AzureId);
 		p.Add(name: "@Id", value: 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 		p.Add(name: "@Output", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
@@ -70,7 +70,7 @@ public class HistoricalEventRepository(ISqlDataAccess dataAccess) : IHistoricalE
 		return newId ?? 0;
 	}
 
-	public bool UpdateHistoricalEvent(HistoricalEvent itemModel, string? updatedBy = null)
+	public bool UpdateHistoricalEvent(HistoricalEvent itemModel)
 	{
 		var p = new DynamicParameters();
 		p.Add(name: "@Id", itemModel.Id);
@@ -78,7 +78,7 @@ public class HistoricalEventRepository(ISqlDataAccess dataAccess) : IHistoricalE
 		p.Add(name: "@Description", itemModel.Description);
 		p.Add(name: "@Shard", itemModel.Shard);
 		p.Add(name: "@DatePeriod", itemModel.DatePeriod);
-		p.Add(name: "@UpdatedBy", updatedBy);
+		p.Add(name: "@AzureAuthorId", itemModel.UpdatedBy.AzureId);
 		p.Add(name: "@Output", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
 		_dataAccess.SaveData<dynamic>("dbo.spHistoricalEvents_Update", p);
@@ -97,7 +97,7 @@ public class HistoricalEventRepository(ISqlDataAccess dataAccess) : IHistoricalE
 	{
 		var p = new DynamicParameters();
 		p.Add(name: "@Id", id);
-		p.Add(name: "@Name", name);		
+		p.Add(name: "@Name", name);
 		p.Add(name: "@Output", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 		await _dataAccess.LoadDataAsync<HistoricalEvent, dynamic>("dbo.spHistoricalEvents_Exists", p);
 		var exists = p.Get<int?>("@Output");

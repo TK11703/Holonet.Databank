@@ -60,6 +60,7 @@
     <Folder Include="dbo\Stored Procedures" />
     <Folder Include="dbo\Tables" />
     <Folder Include="dbo\Types" />
+    <Folder Include="dbo\Functions" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />
@@ -111,6 +112,11 @@
     <Build Include="dbo\Stored Procedures\spCharacterSpecies_GetByCharacterId.sql" />
     <Build Include="dbo\Stored Procedures\spCharacterSpecies_Insert.sql" />
     <Build Include="dbo\Types\CharacterSpeciesUDT.sql" />
+    <Build Include="dbo\Tables\Authors.sql" />
+    <Build Include="dbo\Stored Procedures\spAuthors_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\spAuthors_Update.sql" />
+    <Build Include="dbo\Functions\funcAuthor_GetId.sql" />
+    <Build Include="dbo\Stored Procedures\spAuthors_GetByAzureId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Holonet.Databank.DB.publish.xml" />

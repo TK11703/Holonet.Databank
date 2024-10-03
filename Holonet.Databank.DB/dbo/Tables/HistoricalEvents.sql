@@ -5,9 +5,8 @@
 	[Description] NVARCHAR(MAX) NULL,
 	[DatePeriod] NVARCHAR(200) NULL,
 	[Shard] NVARCHAR(500) NULL,
-	[CreatedOn] DATETIME NOT NULL, 
-	[CreatedBy] NVARCHAR(250) NOT NULL, 
 	[UpdatedOn] DATETIME NOT NULL, 
-	[UpdatedBy] NVARCHAR(250) NOT NULL, 
+	[AuthorId] INT NOT NULL, 
 	[Active] BIT NOT NULL Default 1,
+	CONSTRAINT [FK_HistoricalEvents_Authors] FOREIGN KEY ([AuthorId]) REFERENCES [Authors]([Id]),
 )

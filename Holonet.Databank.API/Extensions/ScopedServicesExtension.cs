@@ -10,6 +10,11 @@ public static class ScopedServicesExtension
 	{
 		services.AddScoped<ISqlDataAccess, SqlDataAccess>();
 
+		services.AddScoped<IUserService, UserService>();
+
+		services.AddScoped<IAuthorService, AuthorService>();
+		services.AddScoped<IAuthorRepository, AuthorRepository>();
+
 		services.AddScoped<ICharacterService, CharacterService>();
 		services.AddScoped<ICharacterRepository, CharacterRepository>();
 

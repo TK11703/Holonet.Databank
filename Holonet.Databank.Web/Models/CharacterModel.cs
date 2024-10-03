@@ -4,7 +4,6 @@ namespace Holonet.Databank.Web.Models;
 
 public class CharacterModel
 {
-	[Required]
 	public int Id { get; set; }
 
 	[Required]
@@ -32,13 +31,7 @@ public class CharacterModel
     public IEnumerable<int> SpeciesIds { get; set; } = [];
     public IEnumerable<SpeciesModel> Species { get; set; } = [];
 
+	public AuthorModel? UpdatedBy { get; set; }
 
-	[StringLength(250)]
-	public string CreatedBy { get; set; } = string.Empty;
-
-	[StringLength(250)]
-	public string UpdatedBy { get; set; } = string.Empty;
-
-	public DateTime CreatedOn { get; set; }
-	public DateTime UpdatedOn { get; set; }
+	public DateTime? UpdatedOn { get; set; }
 }

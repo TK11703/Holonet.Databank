@@ -54,7 +54,7 @@ public class CharacterRepository(ISqlDataAccess dataAccess) : ICharacterReposito
 		return results.FirstOrDefault();
 	}
 
-	public async Task<int> CreateCharacter(Character itemModel, string? createdBy = null)
+	public async Task<int> CreateCharacter(Character itemModel)
 	{
 		var p = new DynamicParameters();
 		p.Add(name: "@FirstName", itemModel.FirstName);
@@ -63,7 +63,7 @@ public class CharacterRepository(ISqlDataAccess dataAccess) : ICharacterReposito
 		p.Add(name: "@BirthDate", itemModel.BirthDate);
 		p.Add(name: "@Shard", itemModel.Shard);
 		p.Add(name: "@PlanetId", itemModel.PlanetId);
-		p.Add(name: "@CreatedBy", createdBy);
+		p.Add(name: "@AzureAuthorId", itemModel.UpdatedBy.AzureId);
 		p.Add(name: "@Id", value: 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 		p.Add(name: "@Output", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
@@ -72,7 +72,7 @@ public class CharacterRepository(ISqlDataAccess dataAccess) : ICharacterReposito
 		return newId ?? 0;
 	}
 
-	public bool UpdateCharacter(Character itemModel, string? updatedBy = null)
+	public bool UpdateCharacter(Character itemModel)
 	{
 		var p = new DynamicParameters();
 		p.Add(name: "@Id", itemModel.Id);
@@ -82,7 +82,7 @@ public class CharacterRepository(ISqlDataAccess dataAccess) : ICharacterReposito
 		p.Add(name: "@BirthDate", itemModel.BirthDate);
 		p.Add(name: "@Shard", itemModel.Shard);
 		p.Add(name: "@PlanetId", itemModel.PlanetId);
-		p.Add(name: "@UpdatedBy", updatedBy);
+		p.Add(name: "@AzureAuthorId", itemModel.UpdatedBy.AzureId);
 		p.Add(name: "@Output", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
 		_dataAccess.SaveData<dynamic>("dbo.spCharacters_Update", p);

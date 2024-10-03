@@ -5,6 +5,17 @@ namespace Holonet.Databank.Core.Entities;
 
 public static class EntityExtensions
 {
+	public static AuthorDto ToDto(this Author author)
+	{
+		return new AuthorDto
+		(
+			author.Id,
+			author.AzureId,
+			author.DisplayName,
+			author.Email ?? string.Empty
+		);
+	}
+
 	public static PlanetDto ToDto(this Planet planet)
 	{
 		return new PlanetDto

@@ -3,16 +3,27 @@
 	@Description nvarchar(max),
 	@DatePeriod nvarchar(200),
 	@Shard nvarchar(500),
-	@CreatedBy nvarchar(250),
+	@AzureAuthorId uniqueidentifier,
 	@Id int output
 AS
 BEGIN
-	INSERT INTO dbo.HistoricalEvents
-		([Name], [Description], [DatePeriod], [Shard], [CreatedOn], [CreatedBy], [UpdatedOn], [UpdatedBy], [Active])
-	Values
-		(@Name, @Description, @DatePeriod, @Shard, GETDATE(), @CreatedBy, GETDATE(), @CreatedBy, 1);
+	
+	DECLARE @AuthorId int;
+	SET @AuthorId = dbo.funcAuthor_GetId(@AzureAuthorId);
+	IF (@AuthorId = 0)
+	BEGIN
+		SET @Id = 0;
+		return 0;
+	END
+	ELSE
+	BEGIN
+		INSERT INTO dbo.HistoricalEvents
+			([Name], [Description], [DatePeriod], [Shard], [UpdatedOn], [AuthorId], [Active])
+		Values
+			(@Name, @Description, @DatePeriod, @Shard, GETDATE(), @AuthorId, 1);
 
-	SET @Id = SCOPE_IDENTITY();
+		SET @Id = SCOPE_IDENTITY();
 
-	return 1;
+		return 1;
+	END
 END		

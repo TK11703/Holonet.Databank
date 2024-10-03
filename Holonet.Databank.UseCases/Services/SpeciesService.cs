@@ -24,24 +24,24 @@ public class SpeciesService(ISpeciesRepository speciesRepository) : ISpeciesServ
         return await _speciesRepository.GetPagedAsync(pageRequest);
     }
 
-    public async Task<int> CreateSpecies(Species species, string? createdBy = null)
+    public async Task<int> CreateSpecies(Species species)
     {
         var exists = await _speciesRepository.SpeciesExists(0, species.Name);
         if (exists)
         {
             throw new DataException("Species already exists.");
         }
-        return await _speciesRepository.CreateSpecies(species, createdBy);
+        return await _speciesRepository.CreateSpecies(species);
     }
 
-    public async Task<bool> UpdateSpecies(Species species, string? updatedBy = null)
+    public async Task<bool> UpdateSpecies(Species species)
     {
         var exists = await _speciesRepository.SpeciesExists(species.Id, species.Name);
         if (exists)
         {
             throw new DataException("Species already exists.");
         }
-        return _speciesRepository.UpdateSpecies(species, updatedBy);
+        return _speciesRepository.UpdateSpecies(species);
     }
 
     public async Task<bool> DeleteSpecies(int id)

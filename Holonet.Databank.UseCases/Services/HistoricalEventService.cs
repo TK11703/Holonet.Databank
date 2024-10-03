@@ -67,37 +67,37 @@ public class HistoricalEventService(IHistoricalEventRepository historicalEventRe
 		return items;
 	}
 
-	public async Task<int> CreateHistoricalEvent(HistoricalEvent historicalEvent, string? createdBy = null)
+	public async Task<int> CreateHistoricalEvent(HistoricalEvent historicalEvent)
 	{
 		var exists = await _historicalEventRepository.HistoricalEventExists(0, historicalEvent.Name);
 		if (exists)
 		{
 			throw new DataException("Historical event already exists.");
 		}
-		var newId = await _historicalEventRepository.CreateHistoricalEvent(historicalEvent, createdBy);
+		var newId = await _historicalEventRepository.CreateHistoricalEvent(historicalEvent);
 		if (newId > 0)
 		{
-			await _historicalEventCharacterRepository.AddCharacters(GetCharacterTable(newId, historicalEvent.CharacterIds), createdBy);
-			await _historicalEventPlanetRepository.AddPlanets(GetPlanetTable(newId, historicalEvent.PlanetIds), createdBy);
+			await _historicalEventCharacterRepository.AddCharacters(GetCharacterTable(newId, historicalEvent.CharacterIds), historicalEvent.UpdatedBy.AzureId);
+			await _historicalEventPlanetRepository.AddPlanets(GetPlanetTable(newId, historicalEvent.PlanetIds), historicalEvent.UpdatedBy.AzureId);
 		}
 		return newId;
 	}
 
-	public async Task<bool> UpdateHistoricalEvent(HistoricalEvent historicalEvent, string? updatedBy = null)
+	public async Task<bool> UpdateHistoricalEvent(HistoricalEvent historicalEvent)
 	{
 		var exists = await _historicalEventRepository.HistoricalEventExists(historicalEvent.Id, historicalEvent.Name);
 		if (exists)
 		{
 			throw new DataException("Historical event already exists.");
 		}
-		bool updated = _historicalEventRepository.UpdateHistoricalEvent(historicalEvent, updatedBy);
+		bool updated = _historicalEventRepository.UpdateHistoricalEvent(historicalEvent);
 		if (updated)
 		{
 			int completedCmds = 0;
 			if (await _historicalEventPlanetRepository.DeletePlanets(historicalEvent.Id))
 			{
 				completedCmds++;
-				if (await _historicalEventPlanetRepository.AddPlanets(GetPlanetTable(historicalEvent.Id, historicalEvent.PlanetIds), updatedBy))
+				if (await _historicalEventPlanetRepository.AddPlanets(GetPlanetTable(historicalEvent.Id, historicalEvent.PlanetIds), historicalEvent.UpdatedBy.AzureId))
 				{
 					completedCmds++;
 				}
@@ -105,7 +105,7 @@ public class HistoricalEventService(IHistoricalEventRepository historicalEventRe
 			if (await _historicalEventCharacterRepository.DeleteCharacters(historicalEvent.Id))
 			{
 				completedCmds++;
-				if (await _historicalEventCharacterRepository.AddCharacters(GetCharacterTable(historicalEvent.Id, historicalEvent.CharacterIds), updatedBy))
+				if (await _historicalEventCharacterRepository.AddCharacters(GetCharacterTable(historicalEvent.Id, historicalEvent.CharacterIds), historicalEvent.UpdatedBy.AzureId))
 				{
 					completedCmds++;
 				}

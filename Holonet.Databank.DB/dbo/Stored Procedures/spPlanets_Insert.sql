@@ -2,16 +2,27 @@
 	@Name nvarchar(150),
 	@Description nvarchar(max),
 	@Shard nvarchar(500),
-	@CreatedBy nvarchar(250),
+	@AzureAuthorId uniqueidentifier,
 	@Id int output
 AS
 BEGIN
-	INSERT INTO dbo.Planets
-		([Name], [Description], [Shard], [CreatedOn], [CreatedBy], [UpdatedOn], [UpdatedBy], [Active])
-	Values	
-		(@Name, @Description, @Shard, GETDATE(), @CreatedBy, GETDATE(), @CreatedBy, 1);
 
-	SET @Id = SCOPE_IDENTITY();
+	DECLARE @AuthorId int;
+	SET @AuthorId = dbo.funcAuthor_GetId(@AzureAuthorId);
+	IF (@AuthorId = 0)
+	BEGIN
+		SET @Id = 0;
+		return 0;
+	END
+	ELSE
+	BEGIN
+		INSERT INTO dbo.Planets
+			([Name], [Description], [Shard], [UpdatedOn], [AuthorId], [Active])
+		Values	
+			(@Name, @Description, @Shard, GETDATE(), @AuthorId, 1);
 
-	return 1;
+		SET @Id = SCOPE_IDENTITY();
+
+		return 1;
+	END
 END		

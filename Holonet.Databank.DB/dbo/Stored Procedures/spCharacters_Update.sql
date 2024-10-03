@@ -6,22 +6,32 @@
 	@Description nvarchar(max),
 	@Shard nvarchar(500),
 	@BirthDate nvarchar(200),
-	@UpdatedBy nvarchar(250)
+	@AzureAuthorId uniqueidentifier
 AS
 BEGIN
 	SET NOCOUNT OFF;
 
-	UPDATE dbo.Characters
-		SET [PlanetId]=@PlanetId, [FirstName]=@FirstName, [LastName]=@LastName, [Description]=@Description, [Shard]=@Shard, 
-			[BirthDate]=@BirthDate, [UpdatedOn]=GETDATE(), [UpdatedBy]=@UpdatedBy
-	WHERE [Id]=@Id;
-
-	IF (@@ROWCOUNT > 0)
+	DECLARE @AuthorId int;
+	SET @AuthorId = dbo.funcAuthor_GetId(@AzureAuthorId);
+	IF (@AuthorId = 0)
 	BEGIN
-	   return 1;
+		return 0;
 	END
 	ELSE
 	BEGIN
-	   return 0;
+		UPDATE dbo.Characters
+			SET [PlanetId]=@PlanetId, [FirstName]=@FirstName, [LastName]=@LastName, [Description]=@Description, [Shard]=@Shard, 
+				[BirthDate]=@BirthDate, [UpdatedOn]=GETDATE(), [AuthorId]=@AuthorId
+		WHERE [Id]=@Id;
+
+		IF (@@ROWCOUNT > 0)
+		BEGIN
+		   return 1;
+		END
+		ELSE
+		BEGIN
+		   return 0;
+		END		
 	END
+
 END

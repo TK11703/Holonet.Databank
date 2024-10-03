@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
+builder.Services.AddHttpContextAccessor();
+
 // Add services to the container.
 builder.Services.AddAuthorization();
 

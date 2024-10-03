@@ -13,11 +13,11 @@ public class HistoricalEventCharacterRepository(ISqlDataAccess dataAccess) : IHi
 		return await _dataAccess.LoadDataAsync<Character, dynamic>("dbo.spHistoricalEventCharacters_GetByEventId", new { });
 	}
 
-	public async Task<bool> AddCharacters(DataTable historicalEventCharacters, string? createdBy = null)
+	public async Task<bool> AddCharacters(DataTable historicalEventCharacters, Guid azureId)
 	{
 		var p = new DynamicParameters();
 		p.Add(name: "@TableData", historicalEventCharacters.AsTableValuedParameter("HistoricalEventCharacterUDT"));
-		p.Add(name: "@CreatedBy", createdBy);
+		p.Add(name: "@AzureAuthorId", azureId);
 		p.Add(name: "@Output", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
 		await _dataAccess.SaveDataAsync("dbo.spHistoricalEventCharacters_Insert", p);

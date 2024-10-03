@@ -18,7 +18,20 @@ internal static class ClientConfigs
 
         if (!string.IsNullOrEmpty(baseApiAddress))
         {
-            services.AddHttpClient<CharacterClient>(client =>
+			services.AddHttpClient<AuthorClient>(client =>
+			{
+				client.BaseAddress = new Uri(new Uri(baseApiAddress), "Authors");
+			})
+			.ConfigurePrimaryHttpMessageHandler(() =>
+			{
+				return new SocketsHttpHandler
+				{
+					PooledConnectionLifetime = TimeSpan.FromMinutes(5)
+				};
+			})
+			.SetHandlerLifetime(Timeout.InfiniteTimeSpan);
+
+			services.AddHttpClient<CharacterClient>(client =>
             {
                 client.BaseAddress = new Uri(new Uri(baseApiAddress), "Characters");
             })

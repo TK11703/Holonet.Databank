@@ -3,9 +3,7 @@
 namespace Holonet.Databank.Web.Models;
 
 public class HistoricalEventModel
-{
-	[Required]
-	public int Id { get; set; }
+{	public int Id { get; set; }
 
 	[Required]
 	[StringLength(150)]
@@ -25,12 +23,7 @@ public class HistoricalEventModel
 	public IEnumerable<int> PlanetIds { get; set; } = [];
 	public IEnumerable<PlanetModel> Planets { get; set; } = [];
 
-	[StringLength(250)]
-	public string CreatedBy { get; set; } = string.Empty;
+	public AuthorModel? UpdatedBy { get; set; }
 
-	[StringLength(250)]
-	public string UpdatedBy { get; set; } = string.Empty;
-
-	public DateTime CreatedOn { get; set; }
-	public DateTime UpdatedOn { get; set; }
+	public DateTime? UpdatedOn { get; set; }
 }

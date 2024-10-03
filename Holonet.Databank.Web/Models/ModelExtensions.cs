@@ -4,6 +4,38 @@ namespace Holonet.Databank.Web.Models;
 
 public static class ModelExtensions
 {
+	public static CreateAuthorDto ToCreateAuthorDto(this AuthorModel author)
+	{
+		return new CreateAuthorDto
+		(
+			author.AzureId,
+			author.DisplayName,
+			author.Email ?? string.Empty
+		);
+	}
+
+	public static UpdateAuthorDto ToUpdateAuthorDto(this AuthorModel author)
+	{
+		return new UpdateAuthorDto
+		(
+			author.Id,
+			author.AzureId,
+			author.DisplayName,
+			author.Email ?? string.Empty
+		);
+	}
+
+	public static AuthorModel ToAuthorModel(this AuthorDto author)
+	{
+		return new AuthorModel()
+		{
+			Id = author.Id,
+			AzureId = author.AzureId,
+			DisplayName = author.DisplayName,
+			Email = author.Email
+		};
+	}
+
 	public static CreateCharacterDto ToCreateCharacterDto(this CharacterModel character)
 	{
 		return new CreateCharacterDto
@@ -14,8 +46,7 @@ public static class ModelExtensions
 			character.Shard,
 			character.BirthDate,
 			character.PlanetId,
-            character.SpeciesIds,
-			character.CreatedBy
+            character.SpeciesIds
         );
 	}
 
@@ -30,8 +61,7 @@ public static class ModelExtensions
 			character.Shard,
 			character.BirthDate,
 			character.PlanetId,
-            character.SpeciesIds,
-			character.UpdatedBy
+            character.SpeciesIds
 		);
 	}
 
@@ -58,8 +88,7 @@ public static class ModelExtensions
 		(
 			planet.Name,
 			planet.Description,
-			planet.Shard,
-			planet.CreatedBy
+			planet.Shard
 		);
 	}
 
@@ -70,8 +99,7 @@ public static class ModelExtensions
 			planet.Id,
 			planet.Name,
 			planet.Description,
-			planet.Shard,
-			planet.CreatedBy
+			planet.Shard
 		);
 	}
 
@@ -92,8 +120,7 @@ public static class ModelExtensions
         (
             species.Name,
             species.Description,
-            species.Shard,
-			species.CreatedBy
+            species.Shard
 		);
     }
 
@@ -104,8 +131,7 @@ public static class ModelExtensions
             species.Id,
             species.Name,
             species.Description,
-            species.Shard,
-			species.UpdatedBy
+            species.Shard
 		);
     }
 
@@ -129,8 +155,7 @@ public static class ModelExtensions
 			Shard: historicalEvent.Shard,
 			DatePeriod: historicalEvent.DatePeriod,
 			PlanetIds: historicalEvent.PlanetIds,
-			CharacterIds: historicalEvent.CharacterIds,
-			CreatedBy: historicalEvent.CreatedBy
+			CharacterIds: historicalEvent.CharacterIds
 		);
 	}
 
@@ -144,8 +169,7 @@ public static class ModelExtensions
 			Shard: historicalEvent.Shard,
 			DatePeriod: historicalEvent.DatePeriod,
 			PlanetIds: historicalEvent.PlanetIds,
-			CharacterIds: historicalEvent.CharacterIds,
-			UpdatedBy: historicalEvent.UpdatedBy
+			CharacterIds: historicalEvent.CharacterIds
 		);
 	}
 

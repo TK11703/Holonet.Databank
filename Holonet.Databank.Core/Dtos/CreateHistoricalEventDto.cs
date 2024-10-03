@@ -8,6 +8,5 @@ public record CreateHistoricalEventDto(
 	[StringLength(200)] string? DatePeriod,
 	[Url][StringLength(500)] string? Shard,
 	IEnumerable<int> CharacterIds,
-	IEnumerable<int> PlanetIds,
-	[Required][StringLength(250)] string CreatedBy
+	IEnumerable<int> PlanetIds
 );

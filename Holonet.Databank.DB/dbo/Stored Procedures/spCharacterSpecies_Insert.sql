@@ -1,12 +1,23 @@
 ﻿CREATE PROCEDURE [dbo].[spCharacterSpecies_Insert]
 	@TableData CharacterSpeciesUDT READONLY,
-	@CreatedBy nvarchar(250)
+	@AzureAuthorId uniqueidentifier
 AS
 BEGIN
-	INSERT INTO dbo.CharacterSpecies
-		([CharacterId], [SpeciesId], [CreatedOn], [CreatedBy])
-	SELECT CharacterId, SpeciesId, GETDATE(), @CreatedBy
-		FROM @TableData;
 
-	return 1;
+	DECLARE @AuthorId int;
+	SET @AuthorId = dbo.funcAuthor_GetId(@AzureAuthorId);
+	IF (@AuthorId = 0)
+	BEGIN
+		return 0;
+	END
+	ELSE
+	BEGIN
+		INSERT INTO dbo.CharacterSpecies
+			([CharacterId], [SpeciesId], [UpdatedOn], [AuthorId])
+		SELECT CharacterId, SpeciesId, GETDATE(), @AuthorId
+			FROM @TableData;
+
+		return 1;		
+	END
+
 END		

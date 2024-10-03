@@ -10,6 +10,5 @@ public record UpdateCharacterDto(
 	[Url][StringLength(500)] string? Shard,
 	[StringLength(200)] string? BirthDate,
 	int? PlanetId,
-    IEnumerable<int> SpeciesIds,
-	[Required][StringLength(250)] string UpdatedBy
+    IEnumerable<int> SpeciesIds
 );

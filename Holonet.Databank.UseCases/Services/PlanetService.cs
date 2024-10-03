@@ -24,24 +24,24 @@ public class PlanetService(IPlanetRepository planetRepository) : IPlanetService
 		return await _planetRepository.GetPagedAsync(pageRequest);
 	}
 
-	public async Task<int> CreatePlanet(Planet planet, string? createdBy = null)
+	public async Task<int> CreatePlanet(Planet planet)
 	{
 		var exists = await _planetRepository.PlanetExists(0, planet.Name);
 		if (exists)
 		{
 			throw new DataException("Planet already exists.");
 		}
-		return await _planetRepository.CreatePlanet(planet, createdBy);
+		return await _planetRepository.CreatePlanet(planet);
 	}
 
-	public async Task<bool> UpdatePlanet(Planet planet, string? updatedBy = null)
+	public async Task<bool> UpdatePlanet(Planet planet)
 	{
 		var exists = await _planetRepository.PlanetExists(planet.Id, planet.Name);
 		if (exists)
 		{
 			throw new DataException("Planet already exists.");
 		}
-		return _planetRepository.UpdatePlanet(planet, updatedBy);
+		return _planetRepository.UpdatePlanet(planet);
 	}
 
 	public async Task<bool> DeletePlanet(int id)

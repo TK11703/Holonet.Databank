@@ -16,27 +16,24 @@ BEGIN
 	(
 		Id int, 
 		[Name] varchar(150),
-		DateCreated datetime, 
 		DateUpdated datetime
 	)
 
 	--Populate table with content
-	INSERT INTO #TempResults ( Id, [Name], DateCreated, DateUpdated	)
-		Select Id, [Name] as 'Name', CreatedOn, UpdatedOn	From HistoricalEvents
+	INSERT INTO #TempResults ( Id, [Name], DateUpdated	)
+		Select Id, [Name] as 'Name', UpdatedOn	From HistoricalEvents
 
 	SELECT @Total = Count(Id) FROM #TempResults;
 
-	SELECT Id, [Name], DateCreated as 'CreatedOn', DateUpdated as 'UpdatedOn'
+	SELECT Id, [Name], DateUpdated as 'UpdatedOn'
 		FROM #TempResults 
 		WHERE 
 		(@Search IS NULL or ([Name] LIKE '%' + @Search +'%' OR [Name] LIKE '%' + @Search +'%'))
 		AND 
-		((@Begin IS NULL AND @End IS NULL) or DateCreated BETWEEN @Begin AND @End)
+		((@Begin IS NULL AND @End IS NULL) or DateUpdated BETWEEN @Begin AND @End)
 		ORDER BY 
 			CASE WHEN @SortBy = 'Name' AND @SortOrder = 'Asc' Then [Name] END Asc,
 			CASE WHEN @SortBy = 'Name' AND @SortOrder = 'Desc' Then [Name] END Desc,
-			CASE WHEN @SortBy = 'Created' AND @SortOrder = 'Asc' Then 'CreatedOn' END Asc,
-			CASE WHEN @SortBy = 'Created' AND @SortOrder = 'Desc' Then 'CreatedOn' END Desc,
 			CASE WHEN @SortBy = 'Modified' AND @SortOrder = 'Asc' Then 'UpdatedOn' END Asc,
 			CASE WHEN @SortBy = 'Modified' AND @SortOrder = 'Desc' Then 'UpdatedOn' END Desc
 		OFFSET @Start ROWS

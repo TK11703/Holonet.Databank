@@ -14,16 +14,27 @@ public class UpdatePlanet : IEndpoint
 			.WithTags(Tags.Planets);
 	}
 
-	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> Handle(int id, UpdatePlanetDto itemModel, IPlanetService planetService)
+	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> Handle(int id, UpdatePlanetDto itemModel, IPlanetService planetService, IAuthorService authorService, IUserService userService)
 	{
 		try
 		{
+			var azureId = userService.GetAzureId();
+			if (azureId == null)
+			{
+				return TypedResults.Problem("User not found");
+			}
+			var author = await authorService.GetAuthorByAzureId(azureId.Value);
+			if (author == null)
+			{
+				return TypedResults.Problem("Author not found");
+			}
 			var planet = new Planet
 			{
 				Id = itemModel.Id,
 				Name = itemModel.Name,
 				Description = itemModel.Description,
-				Shard = itemModel.Shard
+				Shard = itemModel.Shard,
+				UpdatedBy = author
 			};
 			var rowsUpdated = await planetService.UpdatePlanet(planet);
 			return TypedResults.Ok(rowsUpdated);

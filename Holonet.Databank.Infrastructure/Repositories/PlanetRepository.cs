@@ -14,14 +14,14 @@ public class PlanetRepository(ISqlDataAccess dataAccess) : IPlanetRepository
 		return await _dataAccess.LoadDataAsync<Planet, dynamic>("dbo.spPlanets_GetAll", new { });
 	}
 
-    public async Task<Planet?> GetPlanet(int id)
-    {
-        var results = await _dataAccess.LoadDataAsync<Planet, dynamic>("dbo.spPlanets_Get", new { Id = id });
+	public async Task<Planet?> GetPlanet(int id)
+	{
+		var results = await _dataAccess.LoadDataAsync<Planet, dynamic>("dbo.spPlanets_Get", new { Id = id });
 
-        return results.FirstOrDefault();
-    }
+		return results.FirstOrDefault();
+	}
 
-    public async Task<PageResult<Planet>> GetPagedAsync(PageRequest pageRequest)
+	public async Task<PageResult<Planet>> GetPagedAsync(PageRequest pageRequest)
 	{
 		PageResult<Planet> results = new PageResult<Planet>(pageRequest.PageSize, pageRequest.Start);
 		var p = new DynamicParameters();
@@ -54,13 +54,13 @@ public class PlanetRepository(ISqlDataAccess dataAccess) : IPlanetRepository
 		return new PageResult<Planet>();
 	}
 
-	public async Task<int> CreatePlanet(Planet itemModel, string? createdBy = null)
+	public async Task<int> CreatePlanet(Planet itemModel)
 	{
 		var p = new DynamicParameters();
 		p.Add(name: "@Name", itemModel.Name);
 		p.Add(name: "@Description", itemModel.Description);
 		p.Add(name: "@Shard", itemModel.Shard);
-		p.Add(name: "@CreatedBy", createdBy);
+		p.Add(name: "@AzureAuthorId", itemModel.UpdatedBy.AzureId);
 		p.Add(name: "@Id", value: 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 		p.Add(name: "@Output", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
@@ -69,14 +69,14 @@ public class PlanetRepository(ISqlDataAccess dataAccess) : IPlanetRepository
 		return newId ?? 0;
 	}
 
-	public bool UpdatePlanet(Planet itemModel, string? updatedBy = null)
+	public bool UpdatePlanet(Planet itemModel)
 	{
 		var p = new DynamicParameters();
 		p.Add(name: "@Id", itemModel.Id);
 		p.Add(name: "@Name", itemModel.Name);
 		p.Add(name: "@Description", itemModel.Description);
 		p.Add(name: "@Shard", itemModel.Shard);
-		p.Add(name: "@UpdatedBy", updatedBy);
+		p.Add(name: "@AzureAuthorId", itemModel.UpdatedBy.AzureId);
 		p.Add(name: "@Output", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
 		_dataAccess.SaveData<dynamic>("dbo.spPlanets_Update", p);

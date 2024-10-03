@@ -14,10 +14,20 @@ public class UpdateHistoricalEvent : IEndpoint
 			.WithTags(Tags.HistoricalEvents);
 	}
 
-	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> Handle(int id, UpdateHistoricalEventDto itemModel, IHistoricalEventService historicalEventService)
+	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> Handle(int id, UpdateHistoricalEventDto itemModel, IHistoricalEventService historicalEventService, IAuthorService authorService, IUserService userService)
 	{
 		try
 		{
+			var azureId = userService.GetAzureId();
+			if (azureId == null)
+			{
+				return TypedResults.Problem("User not found");
+			}
+			var author = await authorService.GetAuthorByAzureId(azureId.Value);
+			if (author == null)
+			{
+				return TypedResults.Problem("Author not found");
+			}
 			var historicalEvent = new HistoricalEvent
 			{
 				Id = itemModel.Id,
@@ -26,7 +36,8 @@ public class UpdateHistoricalEvent : IEndpoint
 				DatePeriod = itemModel.DatePeriod,
 				Shard = itemModel.Shard,
 				CharacterIds = itemModel.CharacterIds,
-				PlanetIds = itemModel.PlanetIds
+				PlanetIds = itemModel.PlanetIds,
+				UpdatedBy = author
 			};
 			var rowsUpdated = await historicalEventService.UpdateHistoricalEvent(historicalEvent);
 			return TypedResults.Ok(rowsUpdated);

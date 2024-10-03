@@ -13,11 +13,11 @@ public class HistoricalEventPlanetRepository(ISqlDataAccess dataAccess) : IHisto
 		return await _dataAccess.LoadDataAsync<Planet, dynamic>("dbo.spHistoricalEventPlanets_GetByEventId", new { });
 	}
 
-	public async Task<bool> AddPlanets(DataTable historicalEventPlanets, string? createdBy = null)
+	public async Task<bool> AddPlanets(DataTable historicalEventPlanets, Guid azureId)
 	{
 		var p = new DynamicParameters();
 		p.Add(name: "@TableData", historicalEventPlanets.AsTableValuedParameter("HistoricalEventPlanetUDT"));
-		p.Add(name: "@CreatedBy", createdBy);
+		p.Add(name: "@AzureAuthorId", azureId);
 		p.Add(name: "@Output", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
 		await _dataAccess.SaveDataAsync("dbo.spHistoricalEventPlanets_Insert", p);

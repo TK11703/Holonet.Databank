@@ -15,15 +15,26 @@ public class InsertNewSpecies : IEndpoint
 			.WithTags(Tags.Species);
 	}
 
-	protected virtual async Task<Results<Ok<int>, ProblemHttpResult>> HandleAsync(CreateSpeciesDto itemModel, ISpeciesService speciesService)
+	protected virtual async Task<Results<Ok<int>, ProblemHttpResult>> HandleAsync(CreateSpeciesDto itemModel, ISpeciesService speciesService, IAuthorService authorService, IUserService userService)
 	{
 		try
 		{
+			var azureId = userService.GetAzureId();
+			if (azureId == null)
+			{
+				return TypedResults.Problem("User not found");
+			}
+			var author = await authorService.GetAuthorByAzureId(azureId.Value);
+			if (author == null)
+			{
+				return TypedResults.Problem("Author not found");
+			}
 			var newSpecies = new Core.Entities.Species
             {
 				Name = itemModel.Name,
 				Description = itemModel.Description,
-				Shard = itemModel.Shard
+				Shard = itemModel.Shard,
+				UpdatedBy = author
 			};
 			int newId = await speciesService.CreateSpecies(newSpecies);
 			return TypedResults.Ok(newId);
