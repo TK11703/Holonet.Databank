@@ -22,9 +22,20 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.3.1
     - name: Restore dependencies
       run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
+    - name: Build all .csproj files
+      run: |
+        for file in $(find . -name '*.csproj'); do
+          dotnet build $file --no-restore
+        done
+
+    - name: Build all .sqlproj files
+      run: |
+        for file in $(find . -name '*.sqlproj'); do
+          msbuild $file /p:Configuration=Release
+        done
 #    - name: Test
 #     run: dotnet test --no-build --verbosity normal
