@@ -21,9 +21,13 @@ else
 					<div class="card">
 						<div class="card-body">
 							<div class="row">
-								<div class="col-auto">
-									<a href="/planets/create" class="btn btn-primary" title="Create a new item">Create</a>
-								</div>
+								<AuthorizeView>
+									<Authorized>
+										<div class="col-auto">
+											<a href="/planets/create" class="btn btn-primary" title="Create a new item">Create</a>
+										</div>
+									</Authorized>
+								</AuthorizeView>
 								<div class="col-auto">
 									<div class="input-group">
 										<input type="text" class="form-control" id="filterInput" placeholder="Filter by name" @bind-value=PageRequest.Filter>
