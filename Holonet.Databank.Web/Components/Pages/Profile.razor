@@ -1,11 +1,11 @@
 ﻿@page "/profile"
 @using Holonet.Databank.Web.Clients
+@using Holonet.Databank.Web.Services
 @using Holonet.Databank.Web.Models
 @using Microsoft.Graph.Models
 @using Microsoft.Identity.Web
 @inject GraphApiClient graphClient
-@inject AuthorClient authorClient
-@inject IHttpContextAccessor httpContextAccessor
+@inject AuthorMaintenanceService authorMaintenanceService
 @inject MicrosoftIdentityConsentAndConditionalAccessHandler msalHandler
 @attribute [Authorize]
 
@@ -63,17 +63,7 @@
 
 			if (user != null)
 			{
-				var author = await authorClient.Get(new Guid(httpContextAccessor.HttpContext.User.GetObjectId()));
-				if(author == null)
-				{
-					var newAuthor = new AuthorModel()
-					{
-						AzureId = new Guid(httpContextAccessor.HttpContext.User.GetObjectId()),
-						DisplayName = user.DisplayName,
-						Email = user.Mail
-					};
-					var created = await authorClient.Create(newAuthor);
-				}
+				await authorMaintenanceService.AddOrUpdateAuthenticatedUser(user.DisplayName ?? string.Empty, user.Mail ?? string.Empty);
 			}
 		}
 		catch (Exception ex)

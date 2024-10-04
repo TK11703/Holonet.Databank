@@ -1,9 +1,12 @@
 using Blazored.Toast;
 using Holonet.Databank.Core;
+using Holonet.Databank.Web.Clients;
 using Holonet.Databank.Web.Components;
 using Holonet.Databank.Web.Extensions;
+using Holonet.Databank.Web.Services;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
@@ -79,6 +82,8 @@ builder.Services.AddControllersWithViews(options =>
     var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
     options.Filters.Add(new AuthorizeFilter(policy));
 }).AddMicrosoftIdentityUI();
+
+builder.Services.AddScoped<AuthorMaintenanceService>();
 
 builder.Services.AddGraphClient(builder.Configuration.GetValue<string>("MicrosoftGraph:GraphApiUrl"), graphScopes, allowedHosts);
 
