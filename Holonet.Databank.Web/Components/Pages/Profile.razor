@@ -20,35 +20,49 @@
 			<th>Value</th>
 		</tr>
 	</thead>
-	<tbody>
-		<tr>
-			<td>Email Address</td>
-			<td>
-				@if (!string.IsNullOrEmpty(user?.Mail))
-				{
-					@user.Mail
-				}
-			</td>
-		</tr>
-		<tr>
-			<td>Display Name</td>
-			<td>
-				@if (!string.IsNullOrEmpty(user?.DisplayName))
-				{
-					@user.DisplayName
-				}
-			</td>
-		</tr>
-		<tr>
-			<td>Mobile Phone</td>
-			<td>
-				@if (!string.IsNullOrEmpty(user?.MobilePhone))
-				{
-					@user.MobilePhone
-				}
-			</td>
-		</tr>
-	</tbody>
+	@if (user == null)
+	{
+		<tbody>
+			<tr>
+				<td colspan="2">
+					<div class="spinner"></div>
+					<p>Loading...</p>
+				</td>
+			</tr>
+		</tbody>
+	}
+	else
+	{
+		<tbody>
+			<tr>
+				<td>Email Address</td>
+				<td>
+					@if (!string.IsNullOrEmpty(user?.Mail))
+					{
+						@user.Mail
+					}
+				</td>
+			</tr>
+			<tr>
+				<td>Display Name</td>
+				<td>
+					@if (!string.IsNullOrEmpty(user?.DisplayName))
+					{
+						@user.DisplayName
+					}
+				</td>
+			</tr>
+			<tr>
+				<td>Mobile Phone</td>
+				<td>
+					@if (!string.IsNullOrEmpty(user?.MobilePhone))
+					{
+						@user.MobilePhone
+					}
+				</td>
+			</tr>
+		</tbody>
+	}
 </table>
 
 <UserClaims />

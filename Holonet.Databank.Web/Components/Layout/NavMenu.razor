@@ -1,44 +1,72 @@
 <div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Databank #8808</a>
-    </div>
+	<div class="container-fluid">
+		<a class="navbar-brand" href="">Databank #8808</a>
+	</div>
 </div>
 
 <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <i class="bi-house me-2" style="font-size: 1.25rem; color: white;"></i> Home
-            </NavLink>
-        </div>
+	<nav class="d-flex align-items-start flex-column h-100 w-100">
+		<div class="mb-auto w-100">
+			<div class="nav-item px-3">
+				<NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+					<i class="bi-house me-2" style="font-size: 1.25rem; color: white;"></i> Home
+				</NavLink>
+			</div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="characters/index">
-                <i class="bi-person-rolodex me-2" style="font-size: 1.25rem; color: white;"></i> Characters
-            </NavLink>
-        </div>
+			<div class="nav-item px-3">
+				<NavLink class="nav-link" href="characters/index">
+					<i class="bi-person-rolodex me-2" style="font-size: 1.25rem; color: white;"></i> Characters
+				</NavLink>
+			</div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="planets/index">
-                <i class="bi-globe me-2" style="font-size: 1.25rem; color: white;"></i> Planets
-            </NavLink>
-        </div>
+			<div class="nav-item px-3">
+				<NavLink class="nav-link" href="planets/index">
+					<i class="bi-globe me-2" style="font-size: 1.25rem; color: white;"></i> Planets
+				</NavLink>
+			</div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="species/index">
-                <i class="bi-person-bounding-box me-2" style="font-size: 1.25rem; color: white;"></i> Species
-            </NavLink>
-        </div>
+			<div class="nav-item px-3">
+				<NavLink class="nav-link" href="species/index">
+					<i class="bi-person-bounding-box me-2" style="font-size: 1.25rem; color: white;"></i> Species
+				</NavLink>
+			</div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="historicalevents/index">
-                <i class="bi-book me-2" style="font-size: 1.25rem; color: white;"></i> Historical Events
-            </NavLink>
-        </div>
+			<div class="nav-item px-3">
+				<NavLink class="nav-link" href="historicalevents/index">
+					<i class="bi-book me-2" style="font-size: 1.25rem; color: white;"></i> Historical Events
+				</NavLink>
+			</div>
 
-        
-    </nav>
+			<div class="nav-item px-3">
+				<NavLink class="nav-link disabled" href="historicalevents/index">
+					<i class="bi-robot me-2" style="font-size: 1.25rem; color: white;"></i> Agent Discussion
+				</NavLink>
+			</div>
+		</div>
+		<div class="w-100">
+			<AuthorizeView>
+				<Authorized>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="/profile" title="Click to view your user profile.">
+							<i class="bi-person-badge me-2" style="font-size: 1.25rem; color: white;"></i> User Profile
+						</NavLink>
+					</div>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="MicrosoftIdentity/Account/SignOut" title="Click to sign out of your account.">
+							<i class="bi-door-open me-2" style="font-size: 1.25rem; color: white;"></i> Sign Out
+						</NavLink>
+					</div>
+				</Authorized>
+				<NotAuthorized>
+					<div class="nav-item px-3">
+						<NavLink class="nav-link" href="MicrosoftIdentity/Account/SignIn" title="Click to sign into your account.">
+							<i class="bi-box-arrow-in-right me-2" style="font-size: 1.25rem; color: white;"></i> Sign In
+						</NavLink>
+					</div>
+				</NotAuthorized>
+			</AuthorizeView>
+		</div>
+	</nav>
 </div>
