@@ -17,7 +17,7 @@ public class UpdateAuthorRequestDtoValidator : AbstractValidator<UpdateAuthorDto
 			.Length(2, 255);
 
 		RuleFor(x => x.Email)
-			.EmailAddress()
+			.EmailAddress().When(x => !string.IsNullOrEmpty(x.Email))
 			.Length(0, 255);
 	}
 }

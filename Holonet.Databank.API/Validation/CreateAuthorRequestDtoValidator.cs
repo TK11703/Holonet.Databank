@@ -14,7 +14,7 @@ public class CreateAuthorRequestDtoValidator : AbstractValidator<CreateAuthorDto
 			.Length(2, 255);
 
 		RuleFor(x => x.Email)
-			.EmailAddress()
+			.EmailAddress().When(x => !string.IsNullOrEmpty(x.Email))
 			.Length(0, 255);
 	}
 }
