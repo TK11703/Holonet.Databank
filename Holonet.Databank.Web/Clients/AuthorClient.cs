@@ -1,25 +1,62 @@
 ﻿using Holonet.Databank.Core.Dtos;
-using Holonet.Databank.Core.Models;
 using Holonet.Databank.Web.Models;
-using System.Net.Mime;
-using System.Text;
-using System.Text.Json;
+using Microsoft.Identity.Web;
+using System.Net.Http.Headers;
+using static System.Formats.Asn1.AsnWriter;
+
 namespace Holonet.Databank.Web.Clients;
 
 public sealed class AuthorClient
 {
 	private readonly HttpClient _httpClient;
 	private readonly ILogger<AuthorClient> _logger;
+	private readonly ITokenAcquisition _tokenAcquisition;
+	private readonly IEnumerable<string> _scopes;
 
-	public AuthorClient(HttpClient httpClient, ILogger<AuthorClient> logger)
+	public AuthorClient(HttpClient httpClient, ILogger<AuthorClient> logger, ITokenAcquisition tokenAcquisition, IConfiguration configuration)
 	{
 		_httpClient = httpClient;
 		_logger = logger;
+		_tokenAcquisition = tokenAcquisition;
+		_scopes = GetScopesFromConfiguration(configuration);
+		PerformClientChecks();
 	}
 
-	public async Task<AuthorModel?> Get(int id)
+	private static IEnumerable<string> GetScopesFromConfiguration(IConfiguration configuration)
 	{
-		using HttpResponseMessage response = await _httpClient.GetAsync($"{id}");
+		var section = configuration.GetSection("DatabankApi:Scopes");
+		if (section.Exists())
+		{
+			return section.Get<IEnumerable<string>>() ?? Array.Empty<string>();
+		}
+		else
+		{
+			return Array.Empty<string>();
+		}
+	}
+
+	private async Task AcquireBearerTokenForClient()
+	{
+		var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
+		if (!string.IsNullOrEmpty(accessToken))
+		{
+			_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+		}
+	}
+
+	private void PerformClientChecks()
+	{
+		if (_httpClient.BaseAddress == null)
+		{
+			_logger.LogError("BaseAddress of CharacterClient cannot be null.");
+		}
+	}
+
+	public async Task<AuthorModel?> Get(Guid azureId)
+	{
+		await AcquireBearerTokenForClient();
+
+		using HttpResponseMessage response = await _httpClient.GetAsync($"{azureId}");
 		if (!response.IsSuccessStatusCode)
 		{
 			_logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
@@ -37,6 +74,8 @@ public sealed class AuthorClient
 
 	public async Task<int> Create(AuthorModel item)
 	{
+		await AcquireBearerTokenForClient();
+
 		var createAuthorDto = item.ToCreateAuthorDto();
 		using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"", createAuthorDto);
 		if (response.IsSuccessStatusCode)
@@ -49,6 +88,8 @@ public sealed class AuthorClient
 
 	public async Task<bool> Update(AuthorModel item, int id)
 	{
+		await AcquireBearerTokenForClient();
+
 		var updateAuthorDto = item.ToUpdateAuthorDto();
 		using HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"{id}", updateAuthorDto);
 		if (response.IsSuccessStatusCode)

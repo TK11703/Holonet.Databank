@@ -1,6 +1,9 @@
 ﻿using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Core.Models;
 using Holonet.Databank.Web.Models;
+using Microsoft.Graph.Models.ExternalConnectors;
+using Microsoft.Identity.Web;
+using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
@@ -10,15 +13,52 @@ public sealed class HistoricalEventClient
 {
 	private readonly HttpClient _httpClient;
 	private readonly ILogger<HistoricalEventClient> _logger;
+	private readonly ITokenAcquisition _tokenAcquisition;
+	private readonly IEnumerable<string> _scopes;
 
-	public HistoricalEventClient(HttpClient httpClient, ILogger<HistoricalEventClient> logger)
+	public HistoricalEventClient(HttpClient httpClient, ILogger<HistoricalEventClient> logger, ITokenAcquisition tokenAcquisition, IConfiguration configuration)
 	{
 		_httpClient = httpClient;
 		_logger = logger;
+		_tokenAcquisition = tokenAcquisition;
+		_scopes = GetScopesFromConfiguration(configuration);
+		PerformClientChecks();
+	}
+
+	private static IEnumerable<string> GetScopesFromConfiguration(IConfiguration configuration)
+	{
+		var section = configuration.GetSection("DatabankApi:Scopes");
+		if (section.Exists())
+		{
+			return section.Get<IEnumerable<string>>() ?? Array.Empty<string>();
+		}
+		else
+		{
+			return Array.Empty<string>();
+		}
+	}
+
+	private async Task AcquireBearerTokenForClient()
+	{
+		var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
+		if (!string.IsNullOrEmpty(accessToken))
+		{
+			_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+		}
+	}
+
+	private void PerformClientChecks()
+	{
+		if (_httpClient.BaseAddress == null)
+		{
+			_logger.LogError("BaseAddress of HistoricalEventClient cannot be null.");
+		}
 	}
 
 	public async Task<IEnumerable<HistoricalEventModel>?> GetAll()
 	{
+		await AcquireBearerTokenForClient();
+
 		using HttpResponseMessage response = await _httpClient.GetAsync("");
 		if (!response.IsSuccessStatusCode)
 		{
@@ -38,11 +78,8 @@ public sealed class HistoricalEventClient
 
 	public async Task<PageResult<HistoricalEventModel>> GetAll(PageRequest pagedRequest)
 	{
-		if (_httpClient.BaseAddress == null)
-		{
-			_logger.LogError("BaseAddress of HistoricalEventClient cannot be null.");
-			throw new InvalidOperationException("BaseAddress of HistoricalEventClient cannot be null.");
-		}
+		await AcquireBearerTokenForClient();
+
 		var pageRequestDto = pagedRequest.ToPageRequestDto();
 		var request = new HttpRequestMessage()
 		{
@@ -77,6 +114,8 @@ public sealed class HistoricalEventClient
 
 	public async Task<HistoricalEventModel?> Get(int id)
 	{
+		await AcquireBearerTokenForClient();
+
 		using HttpResponseMessage response = await _httpClient.GetAsync($"{id}");
 		if (!response.IsSuccessStatusCode)
 		{
@@ -96,7 +135,9 @@ public sealed class HistoricalEventClient
 
 	public async Task<int> Create(HistoricalEventModel item)
 	{
-        var createHistoricalEventDto = item.ToCreateHistoricalEventDto();
+		await AcquireBearerTokenForClient();
+
+		var createHistoricalEventDto = item.ToCreateHistoricalEventDto();
         using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"", createHistoricalEventDto);
 		if (response.IsSuccessStatusCode)
 		{
@@ -108,7 +149,9 @@ public sealed class HistoricalEventClient
 
 	public async Task<bool> Update(HistoricalEventModel item, int id)
 	{
-        var updateHistoricalEventDto = item.ToUpdateHistoricalEventDto();
+		await AcquireBearerTokenForClient();
+
+		var updateHistoricalEventDto = item.ToUpdateHistoricalEventDto();
         using HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"{id}", updateHistoricalEventDto);
 		if (response.IsSuccessStatusCode)
 		{
@@ -120,6 +163,8 @@ public sealed class HistoricalEventClient
 
 	public async Task<bool> Delete(int id)
 	{
+		await AcquireBearerTokenForClient();
+
 		using HttpResponseMessage response = await _httpClient.DeleteAsync($"{id}");
 		if (response.IsSuccessStatusCode)
 		{

@@ -1,7 +1,12 @@
 ﻿@page "/profile"
 @using Holonet.Databank.Web.Clients
+@using Holonet.Databank.Web.Models
 @using Microsoft.Graph.Models
+@using Microsoft.Identity.Web
 @inject GraphApiClient graphClient
+@inject AuthorClient authorClient
+@inject IHttpContextAccessor httpContextAccessor
+@inject MicrosoftIdentityConsentAndConditionalAccessHandler msalHandler
 @attribute [Authorize]
 
 <PageTitle>User Profile</PageTitle>
@@ -52,7 +57,28 @@
 	private User? user { get; set; }
 	protected async override Task OnInitializedAsync()
 	{
-		user = await graphClient.GetGraphApiUser();
+		try
+		{
+			user = await graphClient.GetGraphApiUser();
 
+			if (user != null)
+			{
+				var author = await authorClient.Get(new Guid(httpContextAccessor.HttpContext.User.GetObjectId()));
+				if(author == null)
+				{
+					var newAuthor = new AuthorModel()
+					{
+						AzureId = new Guid(httpContextAccessor.HttpContext.User.GetObjectId()),
+						DisplayName = user.DisplayName,
+						Email = user.Mail
+					};
+					var created = await authorClient.Create(newAuthor);
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			msalHandler.HandleException(ex);
+		}
 	}
 }

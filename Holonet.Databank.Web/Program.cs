@@ -12,11 +12,12 @@ using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var scopes = builder.Configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
-if (scopes == null || scopes.Length == 0)
+var graphScopes = builder.Configuration.GetValue<string>("MicrosoftGraph:Scopes")?.Split(' ');
+if (graphScopes == null || graphScopes.Length == 0)
 {
-    scopes = ["user.read"];
+	graphScopes = ["user.read"];
 }
+var tokenAcquisitionScopes = builder.Configuration.GetValue<string[]>("TokenAquisitionScopes");
 var allowedHosts = builder.Configuration.GetValue<string>("AllowedHosts")?.Split(';');
 
 JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
@@ -42,7 +43,8 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
 			}
 		};
 	})
-    .EnableTokenAcquisitionToCallDownstreamApi(scopes)
+	.EnableTokenAcquisitionToCallDownstreamApi(tokenAcquisitionScopes)
+	//.AddDownstreamApi("Databank.Api", builder.Configuration.GetSection("DatabankApi"))
     .AddInMemoryTokenCaches();
 
 builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
@@ -78,7 +80,7 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(new AuthorizeFilter(policy));
 }).AddMicrosoftIdentityUI();
 
-builder.Services.AddGraphClient(builder.Configuration.GetValue<string>("DownstreamApi:GraphApiUrl"), scopes, allowedHosts);
+builder.Services.AddGraphClient(builder.Configuration.GetValue<string>("MicrosoftGraph:GraphApiUrl"), graphScopes, allowedHosts);
 
 builder.Services.ConfigureClients(builder.Configuration); //custom service extension method with configurations
 

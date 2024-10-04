@@ -20,7 +20,7 @@ internal static class ClientConfigs
         {
 			services.AddHttpClient<AuthorClient>(client =>
 			{
-				client.BaseAddress = new Uri(new Uri(baseApiAddress), "Authors");
+				client.BaseAddress = new Uri(new Uri(baseApiAddress), "Authors/");
 			})
 			.ConfigurePrimaryHttpMessageHandler(() =>
 			{
@@ -33,7 +33,7 @@ internal static class ClientConfigs
 
 			services.AddHttpClient<CharacterClient>(client =>
             {
-                client.BaseAddress = new Uri(new Uri(baseApiAddress), "Characters");
+                client.BaseAddress = new Uri(new Uri(baseApiAddress), "Characters/");
             })
             .ConfigurePrimaryHttpMessageHandler(() =>
             {
@@ -46,7 +46,7 @@ internal static class ClientConfigs
 
             services.AddHttpClient<PlanetClient>(client =>
             {
-                client.BaseAddress = new Uri(new Uri(baseApiAddress), "Planets");
+                client.BaseAddress = new Uri(new Uri(baseApiAddress), "Planets/");
             })
             .ConfigurePrimaryHttpMessageHandler(() =>
             {
@@ -59,7 +59,7 @@ internal static class ClientConfigs
 
             services.AddHttpClient<SpeciesClient>(client =>
             {
-                client.BaseAddress = new Uri(new Uri(baseApiAddress), "Species");
+                client.BaseAddress = new Uri(new Uri(baseApiAddress), "Species/");
             })
             .ConfigurePrimaryHttpMessageHandler(() =>
             {
@@ -72,7 +72,7 @@ internal static class ClientConfigs
 
             services.AddHttpClient<HistoricalEventClient>(client =>
             {
-                client.BaseAddress = new Uri(new Uri(baseApiAddress), "HistoricalEvents");
+                client.BaseAddress = new Uri(new Uri(baseApiAddress), "HistoricalEvents/");
             })
             .ConfigurePrimaryHttpMessageHandler(() =>
             {
