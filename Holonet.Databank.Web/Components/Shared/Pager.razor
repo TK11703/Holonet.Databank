@@ -5,13 +5,14 @@
 	<div class="btn-group" role="group" aria-label="Paging group">
 		@for (int i = 1; i <= TotalPages; i++)
 		{
+			int currentPageNumber = i;
 			if (PageIndex.Equals(i))
 			{
-				<button type="button" class="btn btn-sm btn-outline-secondary active">@i</button>
+				<button type="button" class="btn btn-sm btn-outline-secondary active">@currentPageNumber</button>
 			}
 			else
 			{
-				<button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(() => OnClick.InvokeAsync(i))">@i</button>
+				<button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(() => OnClick.InvokeAsync(@currentPageNumber))">@currentPageNumber</button>
 			}
 		}
 	</div>

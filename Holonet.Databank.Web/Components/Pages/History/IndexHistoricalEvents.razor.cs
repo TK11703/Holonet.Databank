@@ -78,8 +78,8 @@ public partial class IndexHistoricalEvents
     {
         if (sortField.Equals(PageRequest.SortBy))
         {
-            return PageRequest.SortDirection.Equals("Asc") ? "fa fa-sort-asc" : "fa fa-sort-desc";
-        }
+			return PageRequest.SortDirection.ToLower().Equals("asc") ? "bi-sort-down-alt" : "bi-sort-down";
+		}
         return string.Empty;
     }
 

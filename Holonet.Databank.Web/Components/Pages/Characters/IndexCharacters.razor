@@ -1,4 +1,5 @@
 ﻿@page "/characters/index"
+@using Holonet.Databank.Core
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @rendermode InteractiveServer
@@ -56,10 +57,10 @@ else
 			<table class="table">
 				<thead>
 					<tr>
-						<th><span @onclick="@(() => Sort("FirstName"))">First Name</span><i class="@(SortIndicator("FirstName"))"></i></th>
-						<th><span @onclick="@(() => Sort("LastName"))">Last Name</span><i class="@(SortIndicator("LastName"))"></i></th>
-						<th><span @onclick="@(() => Sort("BirthDate"))">Birth Date</span><i class="@(SortIndicator("BirthDate"))"></i></th>
-						<th><span @onclick="@(() => Sort("Planet"))">Planet</span><i class="@(SortIndicator("Planet"))"></i></th>
+						<th><span class="me-1" @onclick="@(() => Sort("FirstName"))">First Name</span><i class="@(SortIndicator("FirstName"))"></i></th>
+						<th><span class="me-1" @onclick="@(() => Sort("LastName"))">Last Name</span><i class="@(SortIndicator("LastName"))"></i></th>
+						<th><span class="me-1" @onclick="@(() => Sort("BirthDate"))">Birth Date</span><i class="@(SortIndicator("BirthDate"))"></i></th>
+						<th><span class="me-1" @onclick="@(() => Sort("Planet"))">Planet</span><i class="@(SortIndicator("Planet"))"></i></th>
 						<th></th>
 					</tr>
 				</thead>
@@ -68,7 +69,7 @@ else
 					{
 						@foreach (var characterModel in ResultPage.Collection)
 						{
-							<tr>
+							<tr class="align-middle">
 								<td>@characterModel.FirstName</td>
 								<td>@characterModel.LastName</td>
 								<td>@characterModel.BirthDate</td>
@@ -80,11 +81,11 @@ else
 								{
 									<td>Unknown</td>
 								})
-								<td>
-									<AuthorizeView Roles="Admin">
+								<td class="text-end">
+									<AuthorizeView Roles="@ApplicationRole.Administrator">
 										<Authorized>
-											<a href="/characters/update/@(characterModel.Id)"><i class="bi bi-pencil"></i></a>
-											<button class="btn btn-danger" @onclick="()=> { DeleteID = characterModel.Id; Modal.Open();}">Delete</button>
+											<a class="btn btn-secondary btn-sm" href="/characters/update/@(characterModel.Id)"><i class="bi bi-pencil"></i></a>
+											<button class="btn btn-danger btn-sm" @onclick="()=> { DeleteID = characterModel.Id; Modal.Open();}">Delete</button>
 										</Authorized>
 									</AuthorizeView>
 								</td>
@@ -112,7 +113,7 @@ else
 }
 
 <AppModal @ref="Modal">
-	<Title>Notification</Title>
+	<Title>Confirmation</Title>
 	<Body>
 		Do you sure want to delete this character?
 	</Body>
