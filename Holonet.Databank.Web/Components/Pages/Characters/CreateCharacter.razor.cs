@@ -48,7 +48,7 @@ public partial class CreateCharacter
 			if (result > 0)
 			{
 				ToastService.ShowSuccess("Character created successfully");
-				NavigationManager.NavigateTo("/characters");
+				NavigationManager.NavigateTo("/characters/index");
 			}
             else
             {

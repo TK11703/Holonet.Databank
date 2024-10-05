@@ -9,7 +9,7 @@ public class PageRequestDtoValidator : AbstractValidator<PageRequestDto>
 	public PageRequestDtoValidator()
 	{
 		RuleFor(x => x.Start)
-			.NotEmpty();
+			.GreaterThanOrEqualTo(0);
 
 		RuleFor(x => x.PageSize)
 			.NotEmpty()

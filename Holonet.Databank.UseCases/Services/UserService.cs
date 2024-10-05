@@ -10,7 +10,7 @@ public class UserService(IHttpContextAccessor httpContextAccessor) : IUserServic
 	public Guid? GetAzureId()
 	{
 		var user = _httpContextAccessor.HttpContext.User;
-		var oidClaim = user.FindFirst("oid")?.Value;
+		var oidClaim = user.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier")?.Value;
 		if (Guid.TryParse(oidClaim, out Guid oid))
 		{
 			return oid;

@@ -30,7 +30,7 @@ public partial class CreatePlanet
 			if (result > 0)
 			{
 				ToastService.ShowSuccess("Planet created successfully");
-				NavigationManager.NavigateTo("/planets");
+				NavigationManager.NavigateTo("/planets/index");
 			}
 			else
 			{

@@ -47,7 +47,7 @@ public partial class CreateHistoricalEvent
 			if (result > 0)
 			{
 				ToastService.ShowSuccess("Historical event created successfully");
-				NavigationManager.NavigateTo("/historicalevents");
+				NavigationManager.NavigateTo("/historicalevents/index");
 			}
 			else
 			{

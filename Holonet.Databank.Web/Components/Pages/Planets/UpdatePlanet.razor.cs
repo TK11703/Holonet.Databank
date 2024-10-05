@@ -43,7 +43,7 @@ public partial class UpdatePlanet
 			if (result)
 			{
 				ToastService.ShowSuccess("Planet updated successfully");
-				NavigationManager.NavigateTo("/planets");
+				NavigationManager.NavigateTo($"/planets/{ID}");
 			}
 			else
 			{

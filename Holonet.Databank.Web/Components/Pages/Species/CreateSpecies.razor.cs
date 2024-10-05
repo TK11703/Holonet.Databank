@@ -30,7 +30,7 @@ public partial class CreateSpecies
 			if (result > 0)
 			{
 				ToastService.ShowSuccess("Species created successfully");
-				NavigationManager.NavigateTo("/species");
+				NavigationManager.NavigateTo("/species/index");
 			}
 			else
 			{

@@ -55,7 +55,7 @@ public partial class UpdateHistoricalEvent
             if (result)
             {
                 ToastService.ShowSuccess("Historical event updated successfully");
-                NavigationManager.NavigateTo("/planets");
+                NavigationManager.NavigateTo($"/historicalevents/{ID}");
             }
             else
             {

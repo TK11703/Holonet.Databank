@@ -43,7 +43,7 @@ public partial class UpdateSpecies
 			if (result)
 			{
 				ToastService.ShowSuccess("Species updated successfully");
-				NavigationManager.NavigateTo("/species");
+				NavigationManager.NavigateTo($"/species/{ID}");
 			}
 			else
 			{

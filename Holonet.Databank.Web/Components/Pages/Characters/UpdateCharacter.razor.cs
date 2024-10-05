@@ -36,6 +36,11 @@ public partial class UpdateCharacter
 	{
 		await LoadPlanets();
 		//await base.OnInitializedAsync();
+		var currentItem = await CharacterClient.Get(ID);
+		if (currentItem != null)
+		{
+			Model = currentItem;
+		}
 	}
 
 	private async Task Submit()
@@ -46,15 +51,15 @@ public partial class UpdateCharacter
 		}
 		else
 		{
-			var result = await CharacterClient.Create(Model);
-			if (result > 0)
+			var result = await CharacterClient.Update(Model, ID);
+			if (result)
 			{
-				ToastService.ShowSuccess("Character created successfully");
-				NavigationManager.NavigateTo("/characters");
+				ToastService.ShowSuccess("Character updated successfully");
+				NavigationManager.NavigateTo($"/characters/{ID}");
 			}
 			else
 			{
-				ToastService.ShowError("An error occurred and the character was not created.");
+				ToastService.ShowError("An error occurred and the character was not updated.");
 			}
 		}
 	}

@@ -37,7 +37,7 @@ public partial class IndexPlanets
     {
         return new PageRequest()
         {
-            Start = 1,
+            Start = 0,
             PageSize = 10,
             BeginDate = null,
             EndDate = null,
@@ -69,7 +69,7 @@ public partial class IndexPlanets
             PageRequest.SortBy = sortField;
             PageRequest.SortDirection = "asc";
         }
-        PageRequest.Start = 1;
+        PageRequest.Start = 0;
 
         await GetData();
     }
@@ -89,14 +89,14 @@ public partial class IndexPlanets
         {
             return;
         }
-        PageRequest.Start = newPageNumber;
+        PageRequest.Start = ((newPageNumber -1) * PageRequest.PageSize);
         await GetData();
         StateHasChanged();
     }
 
 	private async Task FilterResults()
 	{
-		PageRequest.Start = 1;
+		PageRequest.Start = 0;
 		await GetData();
 	}
 }

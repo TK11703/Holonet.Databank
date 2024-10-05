@@ -33,7 +33,7 @@ public partial class IndexCharacters
     {
         return new PageRequest()
         {
-            Start = 1,
+            Start = 0,
             PageSize = 10,
             BeginDate = null,
             EndDate = null,
@@ -70,7 +70,7 @@ public partial class IndexCharacters
             PageRequest.SortBy = sortField;
             PageRequest.SortDirection = "asc";
         }
-        PageRequest.Start = 1;
+        PageRequest.Start = 0;
 
         await GetData();
     }
@@ -90,14 +90,14 @@ public partial class IndexCharacters
 		{
 			return;
 		}
-		PageRequest.Start = newPageNumber;
-        await GetData();
+		PageRequest.Start = ((newPageNumber - 1) * PageRequest.PageSize);
+		await GetData();
         StateHasChanged();
 	}
 
 	private async Task FilterResults()
     {
-		PageRequest.Start = 1;
+		PageRequest.Start = 0;
         await GetData();
 	}
 }

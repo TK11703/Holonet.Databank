@@ -22,7 +22,6 @@ public class CharacterRepository(ISqlDataAccess dataAccess) : ICharacterReposito
 		p.Add(name: "@SortOrder", pageRequest.SortDirection);
 		p.Add(name: "@PageSize", pageRequest.PageSize);
 		p.Add(name: "@Start", pageRequest.Start);
-		p.Add(name: "@PageSize", pageRequest.PageSize);
 		if (!string.IsNullOrEmpty(pageRequest.Filter))
 		{
 			p.Add(name: "@Search", pageRequest.Filter);
