@@ -16,16 +16,17 @@ BEGIN
 	(
 		Id int, 
 		[Name] varchar(150),
+		[Shard] nvarchar(500),
 		DateUpdated datetime
 	)
 
 	--Populate table with content
-	INSERT INTO #TempResults ( Id, [Name], DateUpdated)
-		Select Id, [Name] as 'Name', UpdatedOn	From Planets
+	INSERT INTO #TempResults ( Id, [Name], [Shard], DateUpdated)
+		Select Id, [Name] as 'Name', [Shard], UpdatedOn	From Planets
 
 	SELECT @Total = Count(Id) FROM #TempResults;
 
-	SELECT Id, [Name], DateUpdated as 'UpdatedOn'
+	SELECT Id, [Name], [Shard], DateUpdated as 'UpdatedOn'
 		FROM #TempResults 
 		WHERE 
 		(@Search IS NULL or ([Name] LIKE '%' + @Search +'%' OR [Name] LIKE '%' + @Search +'%'))

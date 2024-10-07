@@ -57,10 +57,11 @@ else
 			<table class="table">
 				<thead>
 					<tr>
-						<th><span class="me-1" @onclick="@(() => Sort("Name"))">Name</span><i class="@(SortIndicator("Name"))"></i></th>
+						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("Name"))">Name</a><i class="@(SortIndicator("Name"))"></i></th>
 						<th>Date Period</th>
 						<th>Planets</th>
 						<th>Characters</th>
+						<th>Shard</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -98,6 +99,12 @@ else
 								{
 									<td>Unknown</td>
 								})
+								<td>
+									<a class="icon-link" href="@historicalEventModel.Shard">
+										Shard link
+										<i class="bi bi-arrow-right"></i>
+									</a>
+								</td>
 								<td class="text-end">
 									<AuthorizeView Roles="@ApplicationRole.Administrator">
 										<Authorized>

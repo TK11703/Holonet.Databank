@@ -57,10 +57,11 @@ else
 			<table class="table">
 				<thead>
 					<tr>
-						<th><span class="me-1" @onclick="@(() => Sort("FirstName"))">First Name</span><i class="@(SortIndicator("FirstName"))"></i></th>
-						<th><span class="me-1" @onclick="@(() => Sort("LastName"))">Last Name</span><i class="@(SortIndicator("LastName"))"></i></th>
-						<th><span class="me-1" @onclick="@(() => Sort("BirthDate"))">Birth Date</span><i class="@(SortIndicator("BirthDate"))"></i></th>
-						<th><span class="me-1" @onclick="@(() => Sort("Planet"))">Planet</span><i class="@(SortIndicator("Planet"))"></i></th>
+						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("FirstName"))">First Name</a><i class="@(SortIndicator("FirstName"))"></i></th>
+						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("LastName"))">Last Name</a><i class="@(SortIndicator("LastName"))"></i></th>
+						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("BirthDate"))">Birth Date</a><i class="@(SortIndicator("BirthDate"))"></i></th>
+						<th>Shard</th>
+						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("Planet"))">Planet</a><i class="@(SortIndicator("Planet"))"></i></th>
 						<th></th>
 					</tr>
 				</thead>
@@ -73,6 +74,12 @@ else
 								<td>@characterModel.FirstName</td>
 								<td>@characterModel.LastName</td>
 								<td>@characterModel.BirthDate</td>
+								<td>
+									<a class="icon-link" href="@characterModel.Shard">
+										Shard link
+										<i class="bi bi-arrow-right"></i>
+									</a>
+								</td>
 								@if (characterModel.Planet != null)
 								{
 									<td>@characterModel.Planet.Name</td>

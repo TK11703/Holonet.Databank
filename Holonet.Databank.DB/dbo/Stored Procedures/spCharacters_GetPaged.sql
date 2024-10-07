@@ -18,17 +18,18 @@ BEGIN
 		[FirstName] varchar(150),
 		[LastName] varchar(150),
 		[PlanetName] varchar(150),
+		[Shard] nvarchar(500),
 		DateUpdated datetime
 	)
 
 	--Populate table with content
-	INSERT INTO #TempResults ( Id, [FirstName], [LastName], [PlanetName], DateUpdated	)
-		Select c.Id, c.[FirstName], c.[LastName], p.[Name] as 'PlanetName', c.UpdatedOn From Characters as c
+	INSERT INTO #TempResults ( Id, [FirstName], [LastName], [PlanetName], [Shard], DateUpdated	)
+		Select c.Id, c.[FirstName], c.[LastName], p.[Name] as 'PlanetName', c.[Shard], c.UpdatedOn From Characters as c
 		inner join Planets as p on c.PlanetId = p.Id;
 
 	SELECT @Total = Count(Id) FROM #TempResults;
 
-	SELECT Id, [FirstName], [LastName], [PlanetName], DateUpdated as 'UpdatedOn'
+	SELECT Id, [FirstName], [LastName], [PlanetName], [Shard], DateUpdated as 'UpdatedOn'
 		FROM #TempResults 
 		WHERE 
 		(@Search IS NULL or ([FirstName] LIKE '%' + @Search +'%' OR [LastName] LIKE '%' + @Search +'%'))
