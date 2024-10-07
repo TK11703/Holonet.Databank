@@ -74,7 +74,9 @@
 		</div>
 		<div class="row mb-3">
 			<div class="col-md-12">
-				<button type="submit" class="btn btn-primary">Create</button>
+				<button type="button" class="btn btn-link" @onclick="@(() => Verify())">Verify</button>
+				<button type="submit" class="btn btn-primary" disabled="@((CanSubmit) ? null : "disabled")">Update</button>
+				<a href="planets/index" class="btn btn-light">Cancel</a>
 			</div>
 		</div>
 	</div>

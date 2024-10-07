@@ -9,6 +9,8 @@ public partial class CreatePlanet
 {
 	public PlanetModel Model { get; set; } = new();
 
+	public bool CanSubmit { get; set; } = false;
+
 	[Inject]
 	private PlanetClient PlanetClient { get; set; } = default!;
 
@@ -35,6 +37,28 @@ public partial class CreatePlanet
 			else
 			{
 				ToastService.ShowError("An error occurred and the planet was not created.");
+			}
+		}
+	}
+
+	private async Task Verify()
+	{
+		CanSubmit = false;
+		if (Model == null)
+		{
+			ToastService.ShowError("The form data was not found to execute the check.");
+		}
+		else
+		{
+			var exists = await PlanetClient.Exists(Model.Id, Model.Name);
+			if (exists)
+			{
+				ToastService.ShowWarning("A planet with this name already exists.");
+			}
+			else
+			{
+				ToastService.ShowInfo("A record for this planet has not yet been entered, so this request has been validated.");
+				CanSubmit = true;
 			}
 		}
 	}

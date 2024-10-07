@@ -14,6 +14,12 @@ public class PlanetService(IPlanetRepository planetRepository) : IPlanetService
 		return await _planetRepository.GetPlanet(id);
 	}
 
+	public async Task<bool> PlanetExists(int id, string name)
+	{
+		bool exists = await _planetRepository.PlanetExists(id, name);
+		return exists;
+	}
+
 	public async Task<IEnumerable<Planet>> GetPlanets()
 	{
 		return await _planetRepository.GetPlanets();
@@ -26,7 +32,7 @@ public class PlanetService(IPlanetRepository planetRepository) : IPlanetService
 
 	public async Task<int> CreatePlanet(Planet planet)
 	{
-		var exists = await _planetRepository.PlanetExists(0, planet.Name);
+		var exists = await PlanetExists(0, planet.Name);
 		if (exists)
 		{
 			throw new DataException("Planet already exists.");
@@ -36,7 +42,7 @@ public class PlanetService(IPlanetRepository planetRepository) : IPlanetService
 
 	public async Task<bool> UpdatePlanet(Planet planet)
 	{
-		var exists = await _planetRepository.PlanetExists(planet.Id, planet.Name);
+		var exists = await PlanetExists(planet.Id, planet.Name);
 		if (exists)
 		{
 			throw new DataException("Planet already exists.");

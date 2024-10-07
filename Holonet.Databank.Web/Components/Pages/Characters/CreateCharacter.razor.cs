@@ -14,6 +14,8 @@ public partial class CreateCharacter
 
 	public IEnumerable<SpeciesModel> Species { get; set; } = [];
 
+	public bool CanSubmit { get; set; } = false;
+
 	[Inject]
     private CharacterClient CharacterClient { get; set; } = default!;
 
@@ -57,7 +59,29 @@ public partial class CreateCharacter
 		}
     }
 
-    private async Task RefreshPlanets()
+	private async Task Verify()
+	{
+		CanSubmit = false;
+		if (Model == null)
+		{
+			ToastService.ShowError("The form data was not found to execute the check.");
+		}
+		else
+		{
+			var exists = await CharacterClient.Exists(Model.Id, Model.FirstName, Model.LastName, Model.PlanetId);
+			if (exists)
+			{
+				ToastService.ShowWarning("A character with this name and (potential home planet) already exist.");
+			}
+			else
+			{
+				ToastService.ShowInfo("A record for this character has not yet been entered, so this request has been validated.");
+				CanSubmit = true;
+			}
+		}
+	}
+
+	private async Task RefreshPlanets()
     {
         await LoadPlanets();
 	}

@@ -11,6 +11,8 @@ public partial class UpdateCharacter
 	[Parameter]
 	public int ID { get; set; }
 
+	public bool CanSubmit { get; set; } = false;
+
 	public CharacterModel Model { get; set; } = new();
 
 	public IEnumerable<PlanetModel> Planets { get; set; } = [];
@@ -60,6 +62,28 @@ public partial class UpdateCharacter
 			else
 			{
 				ToastService.ShowError("An error occurred and the character was not updated.");
+			}
+		}
+	}
+
+	private async Task Verify()
+	{
+		CanSubmit = false;
+		if (Model == null)
+		{
+			ToastService.ShowError("The form data was not found to execute the check.");
+		}
+		else
+		{
+			var exists = await CharacterClient.Exists(Model.Id, Model.FirstName, Model.LastName, Model.PlanetId);
+			if (exists)
+			{
+				ToastService.ShowWarning("A character with this name and (potential planet) already exists.");
+			}
+			else
+			{
+				ToastService.ShowInfo("The data has been validated.");
+				CanSubmit = true;
 			}
 		}
 	}

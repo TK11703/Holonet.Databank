@@ -110,6 +110,20 @@ public sealed class CharacterClient
 		};
 	}
 
+	public async Task<bool> Exists(int id, string firstName, string lastName, int? planetId)
+	{
+		await AcquireBearerTokenForClient();
+
+		var getCharacterDto = new GetCharacterDto(id, firstName, lastName, planetId);
+		using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"/exists", getCharacterDto);
+		if (response.IsSuccessStatusCode)
+		{
+			return await response.Content.ReadFromJsonAsync<bool>();
+		}
+		_logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
+		return false;
+	}
+
 	public async Task<CharacterModel?> Get(int id)
 	{
 		await AcquireBearerTokenForClient();

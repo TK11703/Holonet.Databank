@@ -10,6 +10,8 @@ public partial class UpdateSpecies
 	[Parameter]
 	public int ID { get; set; }
 
+	public bool CanSubmit { get; set; } = false;
+
 	public SpeciesModel Model { get; set; } = new();
 
 	[Inject]
@@ -48,6 +50,28 @@ public partial class UpdateSpecies
 			else
 			{
 				ToastService.ShowError("An error occurred and the species was not updated.");
+			}
+		}
+	}
+
+	private async Task Verify()
+	{
+		CanSubmit = false;
+		if (Model == null)
+		{
+			ToastService.ShowError("The form data was not found to execute the check.");
+		}
+		else
+		{
+			var exists = await SpeciesClient.Exists(Model.Id, Model.Name);
+			if (exists)
+			{
+				ToastService.ShowWarning("A species with this name already exists.");
+			}
+			else
+			{
+				ToastService.ShowInfo("The data has been validated.");
+				CanSubmit = true;
 			}
 		}
 	}

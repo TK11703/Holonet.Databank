@@ -14,7 +14,13 @@ public class SpeciesService(ISpeciesRepository speciesRepository) : ISpeciesServ
         return await _speciesRepository.GetSpecies(id);
     }
 
-    public async Task<IEnumerable<Species>> GetSpecies()
+	public async Task<bool> SpeciesExists(int id, string name)
+	{
+		bool exists = await _speciesRepository.SpeciesExists(id, name);
+		return exists;
+	}
+
+	public async Task<IEnumerable<Species>> GetSpecies()
     {
         return await _speciesRepository.GetSpecies();
     }
@@ -26,7 +32,7 @@ public class SpeciesService(ISpeciesRepository speciesRepository) : ISpeciesServ
 
     public async Task<int> CreateSpecies(Species species)
     {
-        var exists = await _speciesRepository.SpeciesExists(0, species.Name);
+        var exists = await SpeciesExists(0, species.Name);
         if (exists)
         {
             throw new DataException("Species already exists.");
@@ -36,7 +42,7 @@ public class SpeciesService(ISpeciesRepository speciesRepository) : ISpeciesServ
 
     public async Task<bool> UpdateSpecies(Species species)
     {
-        var exists = await _speciesRepository.SpeciesExists(species.Id, species.Name);
+        var exists = await SpeciesExists(species.Id, species.Name);
         if (exists)
         {
             throw new DataException("Species already exists.");

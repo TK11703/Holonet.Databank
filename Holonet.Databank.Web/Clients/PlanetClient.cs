@@ -131,6 +131,20 @@ public sealed class PlanetClient
 		return default;
 	}
 
+	public async Task<bool> Exists(int id, string name)
+	{
+		await AcquireBearerTokenForClient();
+
+		var getPlanetDto = new GetPlanetDto(id, name);
+		using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"Exists", getPlanetDto);
+		if (response.IsSuccessStatusCode)
+		{
+			return await response.Content.ReadFromJsonAsync<bool>();
+		}
+		_logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
+		return false;
+	}
+
 	public async Task<int> Create(PlanetModel item)
 	{
 		await AcquireBearerTokenForClient();

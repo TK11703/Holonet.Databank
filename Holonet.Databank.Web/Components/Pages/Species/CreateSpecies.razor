@@ -12,8 +12,8 @@
 	<div class="container">
 		<div class="row mb-3">
 			<div class="col-md-12">
-				<label for="FirstName" class="form-label">Name</label>
-				<InputText id="FirstName" class="form-control" @bind-Value="Model.Name" />
+				<label for="Name" class="form-label">Name</label>
+				<InputText id="Name" class="form-control" @bind-Value="Model.Name" />
 				<ValidationMessage For="() => Model.Name" />
 			</div>
 		</div>
@@ -32,7 +32,9 @@
 		</div>
 		<div class="row mb-3">
 			<div class="col-md-12">
-				<button type="submit" class="btn btn-primary">Create</button>
+				<button type="button" class="btn btn-link" @onclick="@(() => Verify())">Verify</button>
+				<button type="submit" class="btn btn-primary" disabled="@((CanSubmit) ? null : "disabled")">Create</button>
+				<a href="planets/index" class="btn btn-light">Cancel</a>
 			</div>
 		</div>
 	</div>

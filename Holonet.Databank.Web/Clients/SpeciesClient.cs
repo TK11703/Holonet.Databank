@@ -111,6 +111,20 @@ public sealed class SpeciesClient
 		};
 	}
 
+	public async Task<bool> Exists(int id, string name)
+	{
+		await AcquireBearerTokenForClient();
+
+		var getSpeciesDto = new GetSpeciesDto(id, name);
+		using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"/exists", getSpeciesDto);
+		if (response.IsSuccessStatusCode)
+		{
+			return await response.Content.ReadFromJsonAsync<bool>();
+		}
+		_logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
+		return false;
+	}
+
 	public async Task<SpeciesModel?> Get(int id)
 	{
 		await AcquireBearerTokenForClient();

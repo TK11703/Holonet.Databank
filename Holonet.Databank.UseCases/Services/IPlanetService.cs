@@ -8,6 +8,7 @@ public interface IPlanetService
 	Task<bool> DeletePlanet(int id);
 	Task<PageResult<Planet>> GetPagedAsync(PageRequest pageRequest);
 	Task<Planet?> GetPlanetById(int id);
+	Task<bool> PlanetExists(int id, string name);
 	Task<IEnumerable<Planet>> GetPlanets();
 	Task<bool> UpdatePlanet(Planet planet);
 }
