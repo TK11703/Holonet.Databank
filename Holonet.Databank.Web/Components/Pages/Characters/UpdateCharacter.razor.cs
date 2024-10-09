@@ -58,6 +58,7 @@ public partial class UpdateCharacter
 	{
 		await base.OnInitializedAsync();
 		await LoadPlanets();
+		await LoadSpecies();
 	}
 
 	private async Task Submit()

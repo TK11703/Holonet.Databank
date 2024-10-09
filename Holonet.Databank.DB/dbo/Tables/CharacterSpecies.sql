@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[CharacterSpecies]
 (
-	[Id] INT NOT NULL PRIMARY KEY,
+	[Id] INT NOT NULL PRIMARY KEY identity,
 	[CharacterId] INT NOT NULL,
 	[SpeciesId] INT NOT NULL,
 	[UpdatedOn] DATETIME NOT NULL, 

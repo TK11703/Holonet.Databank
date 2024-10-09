@@ -41,6 +41,7 @@ public class InsertNewCharacter : IEndpoint
 				Shard = itemModel.Shard,
 				BirthDate = itemModel.BirthDate,
 				PlanetId = itemModel.PlanetId,
+				SpeciesIds = itemModel.SpeciesIds,
 				UpdatedBy = author
 			};
 

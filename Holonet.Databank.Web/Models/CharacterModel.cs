@@ -28,7 +28,7 @@ public class CharacterModel
 
 	public PlanetModel? Planet { get; set; }
 
-    public IEnumerable<int> SpeciesIds { get; set; } = [];
+    public List<int> SpeciesIds { get; set; } = [];
     public IEnumerable<SpeciesModel> Species { get; set; } = [];
 
 	public AuthorModel? UpdatedBy { get; set; }

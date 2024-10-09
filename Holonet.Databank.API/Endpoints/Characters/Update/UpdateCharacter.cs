@@ -42,6 +42,7 @@ public class UpdateCharacter : IEndpoint
 				Shard = itemModel.Shard,
 				BirthDate = itemModel.BirthDate,
 				PlanetId = itemModel.PlanetId,
+				SpeciesIds = itemModel.SpeciesIds,
 				UpdatedBy = author
 			};
 			var rowsUpdated = await characterService.UpdateCharacter(character);

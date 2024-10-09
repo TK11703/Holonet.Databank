@@ -39,6 +39,7 @@ public partial class CreateCharacter
 	{
 		await base.OnInitializedAsync();
 		await LoadPlanets();
+		await LoadSpecies();
 		EditContext = new EditContext(Model);
 		MessageStore = new ValidationMessageStore(EditContext);
 		EditContext.OnFieldChanged += HandleFieldChangedAsync;

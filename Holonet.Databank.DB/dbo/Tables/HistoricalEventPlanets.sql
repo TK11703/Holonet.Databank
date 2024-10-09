@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[HistoricalEventPlanets]
 (
-	[Id] INT NOT NULL PRIMARY KEY,
+	[Id] INT NOT NULL PRIMARY KEY identity,
 	[PlanetId] INT NOT NULL, 
 	[HistoricalEventId] INT NOT NULL,
 	[UpdatedOn] DATETIME NOT NULL, 

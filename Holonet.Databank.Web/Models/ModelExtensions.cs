@@ -77,7 +77,7 @@ public static class ModelExtensions
 			BirthDate = character.BirthDate,
 			PlanetId = character.Planet?.Id,
 			Planet = character.Planet?.ToPlanetModel(),
-            SpeciesIds = character.Species.Select(s => s.Id),
+            SpeciesIds = character.Species.Select(s => s.Id).ToList(),
             Species = character.Species.Select(s => s.ToSpeciesModel()),
 			UpdatedBy = character.UpdatedBy?.ToAuthorModel(),
 			UpdatedOn = character.UpdatedOn

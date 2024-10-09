@@ -34,14 +34,8 @@
 				<div class="col-md-6">
 					<label for="Species" class="form-label">Species</label>
 					<div class="input-group">
-						<InputSelect id="Species" class="form-select" @bind-Value="Model.SpeciesIds">
-							<option value="">Select a species</option>
-							@foreach (var species in Species)
-							{
-								<option value="@species.Id">@species.Name</option>
-							}
-						</InputSelect>
-						<button class="btn btn-primary" type="button" @onclick="RefreshSpecies"><i class="bi bi-arrow-clockwise"></i></button>
+						<MultipleSpeciesSelector SelectedSpeciesIds="Model.SpeciesIds" Species="@Species"></MultipleSpeciesSelector>
+						<button class="btn btn-primary" @onclick="RefreshSpecies"><i class="bi bi-arrow-clockwise"></i></button>						
 					</div>
 					<ValidationMessage For="() => Model.SpeciesIds" />
 				</div>

@@ -43,11 +43,11 @@ public class CharacterService(ICharacterRepository characterRepository, IPlanetR
 		bool exists;
 		if (planetId.HasValue)
 		{
-			exists = await _characterRepository.CharacterExists(0, firstName, lastName, planetId.Value);
+			exists = await _characterRepository.CharacterExists(id, firstName, lastName, planetId.Value);
 		}
 		else
 		{
-			exists = await _characterRepository.CharacterExists(0, firstName, lastName, default);
+			exists = await _characterRepository.CharacterExists(id, firstName, lastName, default);
 		}
         return exists;
 	}
@@ -96,8 +96,13 @@ public class CharacterService(ICharacterRepository characterRepository, IPlanetR
         {
             throw new DataException("Character already exists.");
         }
-        return await _characterRepository.CreateCharacter(character);
-    }
+        var newId = await _characterRepository.CreateCharacter(character);
+		if (newId > 0)
+        {
+			await _characterSpeciesRepository.AddSpecies(GetSpeciesTable(newId, character.SpeciesIds), character.UpdatedBy.AzureId);
+		}
+		return newId;
+	}
 
     public async Task<bool> UpdateCharacter(Character character)
     {
@@ -107,11 +112,37 @@ public class CharacterService(ICharacterRepository characterRepository, IPlanetR
         {
             throw new DataException("Character already exists.");
         }
-        return _characterRepository.UpdateCharacter(character);
-    }
+        bool updated = _characterRepository.UpdateCharacter(character);
+        if(updated)
+        {
+			int completedCmds = 0;
+			if (await _characterSpeciesRepository.DeleteSpecies(character.Id))
+			{
+				completedCmds++;
+				if (await _characterSpeciesRepository.AddSpecies(GetSpeciesTable(character.Id, character.SpeciesIds), character.UpdatedBy.AzureId))
+				{
+					completedCmds++;
+				}
+			}
+			updated = completedCmds == 2;
+		}
+        return updated;
+	}
 
     public async Task<bool> DeleteCharacter(int id)
     {
         return await _characterRepository.DeleteCharacter(id);
     }
+
+	private static DataTable GetSpeciesTable(int characterId, IEnumerable<int> speciesIds)
+	{
+		DataTable dt = new();
+		dt.Columns.Add("CharacterId", typeof(int));
+		dt.Columns.Add("SpeciesId", typeof(int));
+		foreach (var id in speciesIds)
+		{
+			dt.Rows.Add(characterId, id);
+		}
+		return dt;
+	}
 }

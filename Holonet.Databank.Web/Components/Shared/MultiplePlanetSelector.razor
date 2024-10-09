@@ -1,0 +1,16 @@
+﻿@if (Planets == null)
+{
+	<p>
+		<em>Loading ...</em>
+	</p>
+}
+else
+{
+	@foreach (var item in Planets)
+	{
+		<div>
+			<input type="checkbox" checked="@SelectedPlanetIds.Contains(item.Id)" @onchange="(e) => UpdateSelection(item.Id, (bool)e.Value)" />
+			<label>@item.Name</label>
+		</div>
+	}
+}
