@@ -7,6 +7,7 @@
             </div>
             <div class="modal-body">
                 @Body
+                @Specifics
             </div>
             <div class="modal-footer">
                 @Footer
@@ -26,8 +27,15 @@
     [Parameter]
     public RenderFragment Body { get; set; } = new RenderFragment(x => x.AddContent(0, string.Empty));
     [Parameter]
+    public RenderFragment Specifics { get; set; } = new RenderFragment(x => x.AddContent(0, string.Empty));
+    [Parameter]
     public RenderFragment Footer { get; set; } = new RenderFragment(x => x.AddContent(0, string.Empty));
     private bool showModal = false;
+
+    public void SetSpecifics(RenderFragment specific)
+    {
+        Specifics = specific;
+    }
 
     public void Open()
     {

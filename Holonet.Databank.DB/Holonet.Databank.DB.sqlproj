@@ -117,6 +117,7 @@
     <Build Include="dbo\Stored Procedures\spAuthors_Update.sql" />
     <Build Include="dbo\Functions\funcAuthor_GetId.sql" />
     <Build Include="dbo\Stored Procedures\spAuthors_GetByAzureId.sql" />
+    <Build Include="dbo\Stored Procedures\spAuthors_GetById.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Holonet.Databank.DB.publish.xml" />

@@ -3,6 +3,8 @@ using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Web.Clients;
 using Holonet.Databank.Web.Models;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Holonet.Databank.Web.Components.Pages.Characters;
 
@@ -11,9 +13,11 @@ public partial class UpdateCharacter
 	[Parameter]
 	public int ID { get; set; }
 
-	public bool CanSubmit { get; set; } = false;
-
 	public CharacterModel Model { get; set; } = new();
+
+	private EditContext EditContext { get; set; } = default!;
+
+	private ValidationMessageStore MessageStore { get; set; } = default!;
 
 	public IEnumerable<PlanetModel> Planets { get; set; } = [];
 
@@ -34,22 +38,33 @@ public partial class UpdateCharacter
 	[Inject]
 	private NavigationManager NavigationManager { get; set; } = default!;
 
+	protected override async Task OnParametersSetAsync()
+	{
+		await base.OnParametersSetAsync();
+		Model = await CharacterClient.Get(ID) ?? new();
+		if (Model.Id.Equals(0))
+		{
+			NavigationManager.NavigateTo("/notfound", true);
+		}
+		else
+		{
+			EditContext = new EditContext(Model);
+			MessageStore = new ValidationMessageStore(EditContext);
+			EditContext.OnFieldChanged += HandleFieldChangedAsync;
+		}
+	}
+
 	protected override async Task OnInitializedAsync()
 	{
+		await base.OnInitializedAsync();
 		await LoadPlanets();
-		//await base.OnInitializedAsync();
-		var currentItem = await CharacterClient.Get(ID);
-		if (currentItem != null)
-		{
-			Model = currentItem;
-		}
 	}
 
 	private async Task Submit()
 	{
 		if (Model == null)
 		{
-			ToastService.ShowError("The form data was not found within the model on submit.");
+			ToastService.ShowError("The form was missing the required data. Please ensure the fields contain data and try again.");
 		}
 		else
 		{
@@ -57,7 +72,7 @@ public partial class UpdateCharacter
 			if (result)
 			{
 				ToastService.ShowSuccess("Character updated successfully");
-				NavigationManager.NavigateTo($"/characters/{ID}");
+				//NavigationManager.NavigateTo($"/characters/update/{ID}");
 			}
 			else
 			{
@@ -66,24 +81,24 @@ public partial class UpdateCharacter
 		}
 	}
 
-	private async Task Verify()
+	private async void HandleFieldChangedAsync([NotNull] object? sender, FieldChangedEventArgs e)
 	{
-		CanSubmit = false;
-		if (Model == null)
+		MessageStore.Clear(e.FieldIdentifier);
+		if (e.FieldIdentifier.FieldName == nameof(Model.FirstName) && !string.IsNullOrEmpty(Model.LastName) && Model.PlanetId > 0)
 		{
-			ToastService.ShowError("The form data was not found to execute the check.");
+			await DuplicateItemCheck(e.FieldIdentifier);
 		}
-		else
+		EditContext.NotifyValidationStateChanged();
+	}
+
+	private async Task DuplicateItemCheck(FieldIdentifier fieldIdentifier)
+	{
+		if (Model != null)
 		{
 			var exists = await CharacterClient.Exists(Model.Id, Model.FirstName, Model.LastName, Model.PlanetId);
 			if (exists)
 			{
-				ToastService.ShowWarning("A character with this name and (potential planet) already exists.");
-			}
-			else
-			{
-				ToastService.ShowInfo("The data has been validated.");
-				CanSubmit = true;
+				MessageStore.Add(fieldIdentifier, "A character with this name and (potential planet) already exists.");
 			}
 		}
 	}

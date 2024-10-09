@@ -9,5 +9,7 @@ public record HistoricalEventDto(
 	string? DatePeriod,
 	string? Shard,
 	IEnumerable<CharacterDto> Characters,
-	IEnumerable<PlanetDto> Planets
+	IEnumerable<PlanetDto> Planets,
+	AuthorDto? UpdatedBy,
+	DateTime? UpdatedOn
 );

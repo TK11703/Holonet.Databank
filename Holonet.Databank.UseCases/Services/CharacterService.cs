@@ -5,18 +5,27 @@ using Holonet.Databank.Infrastructure.Repositories;
 using System.Data;
 
 namespace Holonet.Databank.Application.Services;
-public class CharacterService(ICharacterRepository characterRepository, IPlanetRepository planetRepository, ICharacterSpeciesRepository characterSpeciesRepository) : ICharacterService
+public class CharacterService(ICharacterRepository characterRepository, IPlanetRepository planetRepository, ICharacterSpeciesRepository characterSpeciesRepository, IAuthorService authorService) : ICharacterService
 {
     private readonly ICharacterRepository _characterRepository = characterRepository;
     private readonly IPlanetRepository _planetRepository = planetRepository;
     private readonly ICharacterSpeciesRepository _characterSpeciesRepository = characterSpeciesRepository;
+	private readonly IAuthorService _authorService = authorService;
 
-    public async Task<Character?> GetCharacterById(int id)
+	public async Task<Character?> GetCharacterById(int id)
     {
         var character = await _characterRepository.GetCharacter(id);
         if (character != null)
         {
-            if (character.PlanetId.HasValue)
+			if (character.AuthorId > 0)
+			{
+				var author = await _authorService.GetAuthorById(character.AuthorId, true);
+				if (author != null)
+				{
+					character.UpdatedBy = author;
+				}
+			}
+			if (character.PlanetId.HasValue)
             {
                 character.Planet = await _planetRepository.GetPlanet(character.PlanetId.Value);
             }

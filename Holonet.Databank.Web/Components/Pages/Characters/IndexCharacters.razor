@@ -59,10 +59,10 @@ else
 					<tr>
 						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("FirstName"))">First Name</a><i class="@(SortIndicator("FirstName"))"></i></th>
 						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("LastName"))">Last Name</a><i class="@(SortIndicator("LastName"))"></i></th>
-						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("BirthDate"))">Birth Date</a><i class="@(SortIndicator("BirthDate"))"></i></th>
 						<th>Shard</th>
 						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("Planet"))">Planet</a><i class="@(SortIndicator("Planet"))"></i></th>
-						<th></th>
+						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("UpdatedOn"))">Updated On</a><i class="@(SortIndicator("UpdatedOn"))"></i></th>
+						<th class="col-3 text-center">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -73,12 +73,13 @@ else
 							<tr class="align-middle">
 								<td>@characterModel.FirstName</td>
 								<td>@characterModel.LastName</td>
-								<td>@characterModel.BirthDate</td>
 								<td>
-									<a class="icon-link" href="@characterModel.Shard">
-										Shard link
-										<i class="bi bi-arrow-right"></i>
-									</a>
+									@if (!string.IsNullOrEmpty(@characterModel.Shard))
+									{
+										<a class="btn btn-link btn-sm" href="@characterModel.Shard" target="_blank" title="Click to view the source details.">
+											<i class="bi bi-link"></i> @characterModel.Shard
+										</a>
+									}
 								</td>
 								@if (characterModel.Planet != null)
 								{
@@ -88,11 +89,13 @@ else
 								{
 									<td>Unknown</td>
 								})
+								<td>@characterModel.UpdatedOn</td>
 								<td class="text-end">
+									<a class="btn btn-outline-primary btn-sm" href="/characters/item/@(characterModel.Id)"><i class="bi bi-binoculars"></i> Details</a>
 									<AuthorizeView Roles="@ApplicationRole.Administrator">
 										<Authorized>
-											<a class="btn btn-secondary btn-sm" href="/characters/update/@(characterModel.Id)"><i class="bi bi-pencil"></i></a>
-											<button class="btn btn-danger btn-sm" @onclick="()=> { DeleteID = characterModel.Id; Modal.Open();}">Delete</button>
+											<a class="btn btn-outline-info btn-sm" href="/characters/update/@(characterModel.Id)"><i class="bi bi-pencil"></i> Edit</a>
+											<button class="btn btn-outline-danger btn-sm" @onclick="()=> { DeleteID = characterModel.Id; Modal.Open(); Modal.SetSpecifics(CharacterIdentification(characterModel));}"><i class="bi bi-trash"></i> Delete</button>
 										</Authorized>
 									</AuthorizeView>
 								</td>

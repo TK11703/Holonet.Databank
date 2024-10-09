@@ -25,7 +25,8 @@ public partial class IndexCharacters
 
 	protected override async Task OnInitializedAsync()
     {
-        PageRequest = GetInitialPageObject();
+		await base.OnInitializedAsync();
+		PageRequest = GetInitialPageObject();
 		await GetData();
     }
 
@@ -100,4 +101,22 @@ public partial class IndexCharacters
 		PageRequest.Start = 0;
         await GetData();
 	}
+
+	private RenderFragment<Models.CharacterModel> CharacterIdentification = character => builder =>
+	{
+		builder.OpenElement(0, "dl");
+		builder.AddAttribute(1, "class", "row");
+
+		builder.OpenElement(2, "dt");
+		builder.AddAttribute(3, "class", "col-sm-3");
+		builder.AddContent(4, "Character:");
+		builder.CloseElement();
+
+		builder.OpenElement(5, "dd");
+		builder.AddAttribute(6, "class", "col-sm-9");
+		builder.AddContent(7, character.FirstName + " " + character.LastName);
+		builder.CloseElement();
+
+		builder.CloseElement();
+	};
 }

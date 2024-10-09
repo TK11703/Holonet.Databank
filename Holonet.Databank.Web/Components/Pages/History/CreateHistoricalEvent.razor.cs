@@ -2,12 +2,18 @@
 using Holonet.Databank.Web.Clients;
 using Holonet.Databank.Web.Models;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Holonet.Databank.Web.Components.Pages.History;
 
 public partial class CreateHistoricalEvent
 {
 	public HistoricalEventModel Model { get; set; } = new();
+
+	private EditContext EditContext { get; set; } = default!;
+
+	private ValidationMessageStore MessageStore { get; set; } = default!;
 
 	public IEnumerable<PlanetModel> Planets { get; set; } = [];
 
@@ -30,16 +36,19 @@ public partial class CreateHistoricalEvent
 
 	protected override async Task OnInitializedAsync()
 	{
+		await base.OnInitializedAsync();
 		await LoadPlanets();
 		await LoadCharacters();
-		//await base.OnInitializedAsync();
+		EditContext = new EditContext(Model);
+		MessageStore = new ValidationMessageStore(EditContext);
+		EditContext.OnFieldChanged += HandleFieldChangedAsync;
 	}
 
 	private async Task Submit()
 	{
 		if (Model == null)
 		{
-			ToastService.ShowError("The form data was not found within the model on submit.");
+			ToastService.ShowError("The form was missing the required data. Please ensure the fields contain data and try again.");
 		}
 		else
 		{
@@ -52,6 +61,28 @@ public partial class CreateHistoricalEvent
 			else
 			{
 				ToastService.ShowError("An error occurred and the historical event was not created.");
+			}
+		}
+	}
+
+	private async void HandleFieldChangedAsync([NotNull] object? sender, FieldChangedEventArgs e)
+	{
+		MessageStore.Clear(e.FieldIdentifier);
+		if (e.FieldIdentifier.FieldName == nameof(Model.Name))
+		{
+			await DuplicateItemCheck(e.FieldIdentifier);
+		}
+		EditContext.NotifyValidationStateChanged();
+	}
+
+	private async Task DuplicateItemCheck(FieldIdentifier fieldIdentifier)
+	{
+		if (Model != null)
+		{
+			var exists = await HistoricalEventClient.Exists(Model.Id, Model.Name);
+			if (exists)
+			{
+				MessageStore.Add(fieldIdentifier, "A historical event with this name already exists.");
 			}
 		}
 	}

@@ -23,7 +23,9 @@ public static class EntityExtensions
 			planet.Id,
 			planet.Name,
 			planet.Description,
-			planet.Shard
+			planet.Shard,
+			planet.UpdatedBy?.ToDto(),
+			planet.UpdatedOn
 		);
 	}
 
@@ -34,8 +36,10 @@ public static class EntityExtensions
             species.Id,
             species.Name,
             species.Description,
-            species.Shard
-        );
+            species.Shard,
+			species.UpdatedBy?.ToDto(),
+			species.UpdatedOn
+		);
     }
 
     public static HistoricalEventDto ToDto(this HistoricalEvent historicalEvent)
@@ -48,7 +52,9 @@ public static class EntityExtensions
 			historicalEvent.DatePeriod,
 			historicalEvent.Shard,
 			historicalEvent.Characters.Select(character => character.ToDto()),
-			historicalEvent.Planets.Select(planet => planet.ToDto())
+			historicalEvent.Planets.Select(planet => planet.ToDto()),
+			historicalEvent.UpdatedBy?.ToDto(),
+			historicalEvent.UpdatedOn
 		);
 	}
 
@@ -63,8 +69,11 @@ public static class EntityExtensions
 			character.Shard,
 			character.BirthDate,
 			character.Planet?.ToDto(),
-            character.Species.Select(species => species.ToDto())
-        );
+            character.Species.Select(species => species.ToDto()),
+			character.UpdatedBy?.ToDto(),
+			character.UpdatedOn
+
+		);
 	}
 
 	public static PageResultDto<CharacterDto> ToDto(this PageResult<Character> pageResult)

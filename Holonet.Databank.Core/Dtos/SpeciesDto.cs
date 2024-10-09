@@ -6,5 +6,7 @@ public record SpeciesDto(
 	int Id,
 	string Name,
 	string? Description,
-	string? Shard
+	string? Shard,
+	AuthorDto? UpdatedBy,
+	DateTime? UpdatedOn
 );

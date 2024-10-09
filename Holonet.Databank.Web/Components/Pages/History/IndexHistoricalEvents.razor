@@ -62,7 +62,8 @@ else
 						<th>Planets</th>
 						<th>Characters</th>
 						<th>Shard</th>
-						<th></th>
+						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("UpdatedOn"))">Updated On</a><i class="@(SortIndicator("UpdatedOn"))"></i></th>
+						<th class="text-center">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -100,16 +101,20 @@ else
 									<td>Unknown</td>
 								})
 								<td>
-									<a class="icon-link" href="@historicalEventModel.Shard">
-										Shard link
-										<i class="bi bi-arrow-right"></i>
-									</a>
+									@if (!string.IsNullOrEmpty(@historicalEventModel.Shard))
+									{
+										<a class="btn btn-link btn-sm" href="@historicalEventModel.Shard" target="_blank" title="Click to view the source details.">
+											<i class="bi bi-link"></i> @historicalEventModel.Shard
+										</a>
+									}
 								</td>
+								<td>@historicalEventModel.UpdatedOn</td>
 								<td class="text-end">
+									<a class="btn btn-outline-primary btn-sm" href="/historicalevents/item/@(historicalEventModel.Id)"><i class="bi bi-binoculars"></i> Details</a>
 									<AuthorizeView Roles="@ApplicationRole.Administrator">
 										<Authorized>
-											<a class="btn btn-secondary btn-sm" href="/historicalevents/update/@(historicalEventModel.Id)"><i class="bi bi-pencil"></i></a>
-											<button class="btn btn-danger btn-sm" @onclick="()=> { DeleteID = historicalEventModel.Id; Modal.Open();}">Delete</button>
+											<a class="btn btn-outline-info btn-sm" href="/historicalevents/update/@(historicalEventModel.Id)"><i class="bi bi-pencil"></i> Edit</a>
+											<button class="btn btn-outline-danger btn-sm" @onclick="()=> { DeleteID = historicalEventModel.Id; Modal.Open(); Modal.SetSpecifics(HistoricalEventIdentification(historicalEventModel));}"><i class="bi bi-trash"></i> Delete</button>
 										</Authorized>
 									</AuthorizeView>
 								</td>

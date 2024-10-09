@@ -3,71 +3,78 @@
 @attribute [Authorize]
 <PageTitle>Update Historical Event</PageTitle>
 
-<h1>Update Historical Event</h1>
+<h1><i class="bi bi-database-add"></i> Update Historical Event</h1>
 <hr />
-
-<EditForm Model="Model" FormName="CreateCharacter" OnValidSubmit="Submit">
-	<DataAnnotationsValidator />
-	<ValidationSummary />
-	<div class="container">
-		<div class="row mb-3">
-			<div class="col-md-6">
-				<label for="Name" class="form-label">Name</label>
-				<InputText id="Name" class="form-control" @bind-Value="Model.Name" />
-				<ValidationMessage For="() => Model.Name" />
-			</div>
-			<div class="col-md-6">
-				<label for="DatePeriod" class="form-label">Date Period</label>
-				<InputText id="DatePeriod" class="form-control" @bind-Value="Model.DatePeriod" />
-				<ValidationMessage For="() => Model.DatePeriod" />
-			</div>
-		</div>
-		<div class="row mb-3">
-			<div class="col-md-6">
-				<label for="Character" class="form-label">Characters</label>
-				<div class="input-group">
-					<InputSelect id="Character" class="form-select" @bind-Value="Model.CharacterIds">
-						<option value="">Select a character</option>
-						@foreach (var character in Characters)
-						{
-							<option value="@character.Id">@character.FirstName @character.LastName</option>
-						}
-					</InputSelect>
-					<button class="btn btn-primary" @onclick="RefreshCharacters"><i class="bi bi-arrow-clockwise"></i></button>
+@if (EditContext != null)
+{
+	<EditForm FormName="CreateCharacter" OnValidSubmit="Submit" EditContext="EditContext">
+		<DataAnnotationsValidator />
+		<ValidationSummary />
+		<div class="container">
+			<div class="row mb-3">
+				<div class="col-md-6">
+					<label for="Name" class="form-label">Name</label>
+					<InputText id="Name" class="form-control" @bind-Value="Model.Name" />
+					<ValidationMessage For="() => Model.Name" />
+				</div>
+				<div class="col-md-6">
+					<label for="DatePeriod" class="form-label">Date Period</label>
+					<InputText id="DatePeriod" class="form-control" @bind-Value="Model.DatePeriod" />
+					<ValidationMessage For="() => Model.DatePeriod" />
 				</div>
 			</div>
-			<div class="col-md-6">
-				<label for="Planet" class="form-label">Planets</label>
-				<div class="input-group">
-					<InputSelect id="Planet" class="form-select" @bind-Value="Model.PlanetIds">
-						<option value="">Select a planet</option>
-						@foreach (var planet in Planets)
-						{
-							<option value="@planet.Id">@planet.Name</option>
-						}
-					</InputSelect>
-					<button class="btn btn-primary" @onclick="RefreshPlanets"><i class="bi bi-arrow-clockwise"></i></button>
+			<div class="row mb-3">
+				<div class="col-md-6">
+					<label for="Character" class="form-label">Characters</label>
+					<div class="input-group">
+						<InputSelect id="Character" class="form-select" @bind-Value="Model.CharacterIds">
+							<option value="">Select a character</option>
+							@foreach (var character in Characters)
+							{
+								<option value="@character.Id">@character.FirstName @character.LastName</option>
+							}
+						</InputSelect>
+						<button class="btn btn-primary" @onclick="RefreshCharacters"><i class="bi bi-arrow-clockwise"></i></button>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<label for="Planet" class="form-label">Planets</label>
+					<div class="input-group">
+						<InputSelect id="Planet" class="form-select" @bind-Value="Model.PlanetIds">
+							<option value="">Select a planet</option>
+							@foreach (var planet in Planets)
+							{
+								<option value="@planet.Id">@planet.Name</option>
+							}
+						</InputSelect>
+						<button class="btn btn-primary" @onclick="RefreshPlanets"><i class="bi bi-arrow-clockwise"></i></button>
+					</div>
+				</div>
+			</div>
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<label for="Shard" class="form-label">Shard (External Data Link)</label>
+					<InputText id="Shard" class="form-control" @bind-Value="Model.Shard" />
+					<ValidationMessage For="() => Model.Shard" />
+				</div>
+			</div>
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<label for="Description" class="form-label">Description</label>
+					<InputTextArea id="Description" class="form-control" @bind-Value="Model.Description" />
+				</div>
+			</div>
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<button type="submit" class="btn btn-primary">Update</button>
+					<a href="historicalevents/index" class="btn btn-light">Cancel</a>
 				</div>
 			</div>
 		</div>
-		<div class="row mb-3">
-			<div class="col-md-12">
-				<label for="Shard" class="form-label">Shard (External Data Link)</label>
-				<InputText id="Shard" class="form-control" @bind-Value="Model.Shard" />
-				<ValidationMessage For="() => Model.Shard" />
-			</div>
-		</div>
-		<div class="row mb-3">
-			<div class="col-md-12">
-				<label for="Description" class="form-label">Description</label>
-				<InputTextArea id="Description" class="form-control" @bind-Value="Model.Description" />
-			</div>
-		</div>
-		<div class="row mb-3">
-			<div class="col-md-12">
-				<button type="submit" class="btn btn-primary">Update</button>
-				<a href="historicalevents/index" class="btn btn-light">Cancel</a>
-			</div>
-		</div>
-	</div>
-</EditForm>
+	</EditForm>
+}
+else
+{
+	<div class="spinner"></div>
+	<p>Loading...</p>
+}

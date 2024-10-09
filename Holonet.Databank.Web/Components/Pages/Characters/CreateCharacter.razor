@@ -3,81 +3,87 @@
 @attribute [Authorize]
 <PageTitle>Create Character</PageTitle>
 
-<h1>Create Character</h1>
+<h1><i class="bi bi-database-add"></i> Create Character</h1>
 <hr />
-
-<EditForm Model="Model" FormName="CreateCharacter" OnValidSubmit="Submit">
-	<DataAnnotationsValidator />
-	<ValidationSummary />
-	<div class="container">
-		<div class="row mb-3">
-			<div class="col-md-6">
-				<label for="FirstName" class="form-label">First Name</label>
-				<InputText id="FirstName" class="form-control" @bind-Value="Model.FirstName" />
-				<ValidationMessage For="() => Model.FirstName" />
-			</div>
-			<div class="col-md-6">
-				<label for="LastName" class="form-label">Last Name</label>
-				<InputText id="LastName" class="form-control" @bind-Value="Model.LastName" />
-				<ValidationMessage For="() => Model.LastName" />
-			</div>
-		</div>
-		<div class="row mb-3">
-			<div class="col-md-12">
-				<label for="DateOfBirth" class="form-label">Date of Birth</label>
-				<InputText id="DateOfBirth" class="form-control" @bind-Value="Model.BirthDate" />
-				<ValidationMessage For="() => Model.BirthDate" />
-			</div>
-		</div>
-		<div class="row mb-3">
-			<div class="col-md-6">
-				<label for="Species" class="form-label">Species</label>
-				<div class="input-group">
-					<InputSelect id="Species" class="form-select" @bind-Value="Model.SpeciesIds">
-						<option value="">Select a species</option>
-						@foreach (var species in Species)
-						{
-							<option value="@species.Id">@species.Name</option>
-						}
-					</InputSelect>
-					<button class="btn btn-primary" type="button" @onclick="RefreshSpecies"><i class="bi bi-arrow-clockwise"></i></button>
+@if (EditContext != null)
+{
+	<EditForm FormName="CreateCharacter" OnValidSubmit="Submit" EditContext="@EditContext">
+		<DataAnnotationsValidator />
+		<ValidationSummary />
+		<div class="container">
+			<div class="row mb-3">
+				<div class="col-md-6">
+					<label for="FirstName" class="form-label">First Name</label>
+					<InputText id="FirstName" class="form-control" @bind-Value="Model.FirstName" />
+					<ValidationMessage For="() => Model.FirstName" />
 				</div>
-				<ValidationMessage For="() => Model.SpeciesIds" />
-			</div>
-			<div class="col-md-6">
-				<label for="Planet" class="form-label">Birth Planet</label>
-				<div class="input-group">
-					<InputSelect id="Planet" class="form-select" @bind-Value="Model.PlanetId">
-						<option value="">Select a planet</option>
-						@foreach (var planet in Planets)
-						{
-							<option value="@planet.Id">@planet.Name</option>
-						}
-					</InputSelect>
-					<button class="btn btn-primary" type="button" @onclick="RefreshPlanets"><i class="bi bi-arrow-clockwise"></i></button>
+				<div class="col-md-6">
+					<label for="LastName" class="form-label">Last Name</label>
+					<InputText id="LastName" class="form-control" @bind-Value="Model.LastName" />
+					<ValidationMessage For="() => Model.LastName" />
 				</div>
-				<ValidationMessage For="() => Model.PlanetId" />
+			</div>
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<label for="DateOfBirth" class="form-label">Date of Birth</label>
+					<InputText id="DateOfBirth" class="form-control" @bind-Value="Model.BirthDate" />
+					<ValidationMessage For="() => Model.BirthDate" />
+				</div>
+			</div>
+			<div class="row mb-3">
+				<div class="col-md-6">
+					<label for="Species" class="form-label">Species</label>
+					<div class="input-group">
+						<InputSelect id="Species" class="form-select" @bind-Value="Model.SpeciesIds">
+							<option value="">Select a species</option>
+							@foreach (var species in Species)
+							{
+								<option value="@species.Id">@species.Name</option>
+							}
+						</InputSelect>
+						<button class="btn btn-primary" type="button" @onclick="RefreshSpecies"><i class="bi bi-arrow-clockwise"></i></button>
+					</div>
+					<ValidationMessage For="() => Model.SpeciesIds" />
+				</div>
+				<div class="col-md-6">
+					<label for="Planet" class="form-label">Birth Planet</label>
+					<div class="input-group">
+						<InputSelect id="Planet" class="form-select" @bind-Value="Model.PlanetId">
+							<option value="">Select a planet</option>
+							@foreach (var planet in Planets)
+							{
+								<option value="@planet.Id">@planet.Name</option>
+							}
+						</InputSelect>
+						<button class="btn btn-primary" type="button" @onclick="RefreshPlanets"><i class="bi bi-arrow-clockwise"></i></button>
+					</div>
+					<ValidationMessage For="() => Model.PlanetId" />
+				</div>
+			</div>
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<label for="Shard" class="form-label">Shard (External Data Link)</label>
+					<InputText id="Shard" class="form-control" @bind-Value="Model.Shard" />
+					<ValidationMessage For="() => Model.Shard" />
+				</div>
+			</div>
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<label for="Description" class="form-label">Description</label>
+					<InputTextArea id="Description" class="form-control" @bind-Value="Model.Description" />
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<button type="submit" class="btn btn-primary">Create</button>
+					<a href="characters/index" class="btn btn-light">Cancel</a>
+				</div>
 			</div>
 		</div>
-		<div class="row mb-3">
-			<div class="col-md-12">
-				<label for="Shard" class="form-label">Shard (External Data Link)</label>
-				<InputText id="Shard" class="form-control" @bind-Value="Model.Shard" />
-				<ValidationMessage For="() => Model.Shard" />
-			</div>
-		</div>
-		<div class="row mb-3">
-			<div class="col-md-12">
-				<label for="Description" class="form-label">Description</label>
-				<InputTextArea id="Description" class="form-control" @bind-Value="Model.Description" />
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<button type="button" class="btn btn-link" @onclick="@(() => Verify())">Verify</button>
-				<button type="submit" class="btn btn-primary" disabled="@((CanSubmit) ? null : "disabled")">Create</button>
-				<a href="characters/index" class="btn btn-light">Cancel</a>
-			</div>
-		</div>
-	</div>
-</EditForm>
+	</EditForm>
+}
+else
+{
+	<div class="spinner"></div>
+	<p>Loading...</p>
+}

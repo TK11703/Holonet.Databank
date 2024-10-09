@@ -7,6 +7,7 @@ public interface IHistoricalEventService
 	Task<int> CreateHistoricalEvent(HistoricalEvent historicalEvent);
 	Task<bool> DeleteHistoricalEvent(int id);
 	Task<HistoricalEvent?> GetHistoricalEventById(int id);
+	Task<bool> HistoricalEventExists(int id, string name);
 	Task<IEnumerable<HistoricalEvent>> GetHistoricalEvents();
 	Task<PageResult<HistoricalEvent>> GetPagedAsync(PageRequest pageRequest);
 	Task<bool> UpdateHistoricalEvent(HistoricalEvent historicalEvent);

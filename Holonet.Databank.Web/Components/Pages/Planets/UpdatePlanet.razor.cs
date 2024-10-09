@@ -2,6 +2,8 @@
 using Holonet.Databank.Web.Clients;
 using Holonet.Databank.Web.Models;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Holonet.Databank.Web.Components.Pages.Planets;
 
@@ -10,9 +12,11 @@ public partial class UpdatePlanet
 	[Parameter]
 	public int ID { get; set; }
 
-	public bool CanSubmit { get; set; } = false;
-
 	public PlanetModel Model { get; set; } = new();
+
+	private EditContext EditContext { get; set; } = default!;
+
+	private ValidationMessageStore MessageStore { get; set; } = default!;
 
 	[Inject]
 	private PlanetClient PlanetClient { get; set; } = default!;
@@ -23,21 +27,32 @@ public partial class UpdatePlanet
 	[Inject]
 	private NavigationManager NavigationManager { get; set; } = default!;
 
+	protected override async Task OnParametersSetAsync()
+	{
+		await base.OnParametersSetAsync();
+		Model = await PlanetClient.Get(ID) ?? new();
+		if (Model.Id.Equals(0))
+		{
+			NavigationManager.NavigateTo("/notfound", true);
+		}
+		else
+		{
+			EditContext = new EditContext(Model);
+			MessageStore = new ValidationMessageStore(EditContext);
+			EditContext.OnFieldChanged += HandleFieldChangedAsync;
+		}
+	}
+
 	protected override async Task OnInitializedAsync()
 	{
-		await base.OnInitializedAsync();
-		var currentItem = await PlanetClient.Get(ID);
-		if (currentItem != null)
-		{
-			Model = currentItem;
-		}
+		await base.OnInitializedAsync();	
 	}
 
 	private async Task Submit()
 	{
 		if (Model == null)
 		{
-			ToastService.ShowError("The form data was not found within the model on submit.");
+			ToastService.ShowError("The form was missing the required data. Please ensure the fields contain data and try again.");
 		}
 		else
 		{
@@ -45,7 +60,7 @@ public partial class UpdatePlanet
 			if (result)
 			{
 				ToastService.ShowSuccess("Planet updated successfully");
-				NavigationManager.NavigateTo($"/planets/{ID}");
+				//NavigationManager.NavigateTo($"/planets/update/{ID}");
 			}
 			else
 			{
@@ -54,24 +69,24 @@ public partial class UpdatePlanet
 		}
 	}
 
-	private async Task Verify()
+	private async void HandleFieldChangedAsync([NotNull] object? sender, FieldChangedEventArgs e)
 	{
-		CanSubmit = false;
-		if (Model == null)
+		MessageStore.Clear(e.FieldIdentifier);
+		if (e.FieldIdentifier.FieldName == nameof(Model.Name) && !string.IsNullOrEmpty(Model.Name))
 		{
-			ToastService.ShowError("The form data was not found to execute the check.");
+			await DuplicateItemCheck(e.FieldIdentifier);
 		}
-		else
+		EditContext.NotifyValidationStateChanged();
+	}
+
+	private async Task DuplicateItemCheck(FieldIdentifier fieldIdentifier)
+	{
+		if (Model != null)
 		{
 			var exists = await PlanetClient.Exists(Model.Id, Model.Name);
 			if (exists)
 			{
-				ToastService.ShowWarning("A planet with this name already exists.");
-			}
-			else
-			{
-				ToastService.ShowInfo("The data has been validated.");
-				CanSubmit = true;
+				MessageStore.Add(fieldIdentifier, "A planet with this name already exists.");
 			}
 		}
 	}

@@ -5,13 +5,23 @@ using Holonet.Databank.Infrastructure.Repositories;
 using System.Data;
 
 namespace Holonet.Databank.Application.Services;
-public class PlanetService(IPlanetRepository planetRepository) : IPlanetService
+public class PlanetService(IPlanetRepository planetRepository, IAuthorService authorService) : IPlanetService
 {
 	private readonly IPlanetRepository _planetRepository = planetRepository;
+	private readonly IAuthorService _authorService = authorService;
 
 	public async Task<Planet?> GetPlanetById(int id)
 	{
-		return await _planetRepository.GetPlanet(id);
+		var planet = await _planetRepository.GetPlanet(id);
+		if (planet != null && planet.AuthorId > 0)
+		{
+			var author = await _authorService.GetAuthorById(planet.AuthorId, true);
+			if (author != null)
+			{
+				planet.UpdatedBy = author;
+			}
+		}
+		return planet;
 	}
 
 	public async Task<bool> PlanetExists(int id, string name)

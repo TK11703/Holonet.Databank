@@ -5,6 +5,7 @@ using Holonet.Databank.Web.Clients;
 using Holonet.Databank.Web.Components.Shared;
 using Holonet.Databank.Web.Models;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Holonet.Databank.Web.Components.Pages.Planets;
 
@@ -24,7 +25,8 @@ public partial class IndexPlanets
 
 	protected override async Task OnInitializedAsync()
     {
-        PageRequest = GetInitialPageObject();
+		await base.OnInitializedAsync();
+		PageRequest = GetInitialPageObject();
         await GetData();
     }
 
@@ -99,4 +101,22 @@ public partial class IndexPlanets
 		PageRequest.Start = 0;
 		await GetData();
 	}
+
+	private RenderFragment<Models.PlanetModel> PlanetIdentification = planet => builder =>
+	{
+		builder.OpenElement(0, "dl");
+		builder.AddAttribute(1, "class", "row");
+
+		builder.OpenElement(2, "dt");
+		builder.AddAttribute(3, "class", "col-sm-3");
+		builder.AddContent(4, "Planet:");
+		builder.CloseElement();
+
+		builder.OpenElement(5, "dd");
+		builder.AddAttribute(6, "class", "col-sm-9");
+		builder.AddContent(7, planet.Name);
+		builder.CloseElement();
+
+		builder.CloseElement();
+	};
 }

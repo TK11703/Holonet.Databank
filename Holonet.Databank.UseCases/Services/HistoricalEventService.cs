@@ -2,19 +2,29 @@
 using Holonet.Databank.Core.Models;
 using Holonet.Databank.Infrastructure.Repositories;
 using System.Data;
+using System.Numerics;
 
 namespace Holonet.Databank.Application.Services;
-public class HistoricalEventService(IHistoricalEventRepository historicalEventRepository, IHistoricalEventCharacterRepository historicalEventCharacterRepository, IHistoricalEventPlanetRepository historicalEventPlanetRepository) : IHistoricalEventService
+public class HistoricalEventService(IHistoricalEventRepository historicalEventRepository, IHistoricalEventCharacterRepository historicalEventCharacterRepository, IHistoricalEventPlanetRepository historicalEventPlanetRepository, IAuthorService authorService) : IHistoricalEventService
 {
 	private readonly IHistoricalEventRepository _historicalEventRepository = historicalEventRepository;
 	private readonly IHistoricalEventCharacterRepository _historicalEventCharacterRepository = historicalEventCharacterRepository;
 	private readonly IHistoricalEventPlanetRepository _historicalEventPlanetRepository = historicalEventPlanetRepository;
+	private readonly IAuthorService _authorService = authorService;
 
 	public async Task<HistoricalEvent?> GetHistoricalEventById(int id)
 	{
 		var item = await _historicalEventRepository.GetHistoricalEvent(id);
 		if (item != null)
 		{
+			if (item.AuthorId > 0)
+			{
+				var author = await _authorService.GetAuthorById(item.AuthorId, true);
+				if (author != null)
+				{
+					item.UpdatedBy = author;
+				}
+			}
 			item.Characters = await _historicalEventCharacterRepository.GetCharacters(item.Id);
 			if(item.Characters.Any())
             {
@@ -27,6 +37,12 @@ public class HistoricalEventService(IHistoricalEventRepository historicalEventRe
             }
         }
 		return item;
+	}
+
+	public async Task<bool> HistoricalEventExists(int id, string name)
+	{
+		bool exists = await _historicalEventRepository.HistoricalEventExists(id, name);
+		return exists;
 	}
 
 	public async Task<IEnumerable<HistoricalEvent>> GetHistoricalEvents()

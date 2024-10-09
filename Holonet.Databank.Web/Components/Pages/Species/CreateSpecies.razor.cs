@@ -2,6 +2,8 @@
 using Holonet.Databank.Web.Clients;
 using Holonet.Databank.Web.Models;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Holonet.Databank.Web.Components.Pages.Species;
 
@@ -9,7 +11,9 @@ public partial class CreateSpecies
 {
 	public SpeciesModel Model { get; set; } = new();
 
-	public bool CanSubmit { get; set; } = false;
+	private EditContext EditContext { get; set; } = default!;
+
+	private ValidationMessageStore MessageStore { get; set; } = default!;
 
 	[Inject]
 	private SpeciesClient SpeciesClient { get; set; } = default!;
@@ -20,11 +24,19 @@ public partial class CreateSpecies
 	[Inject]
 	private NavigationManager NavigationManager { get; set; } = default!;
 
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		EditContext = new EditContext(Model);
+		MessageStore = new ValidationMessageStore(EditContext);
+		EditContext.OnFieldChanged += HandleFieldChangedAsync;
+	}
+
 	private async Task Submit()
 	{
 		if (Model == null)
 		{
-			ToastService.ShowError("The form data was not found within the model on submit.");
+			ToastService.ShowError("The form was missing the required data. Please ensure the fields contain data and try again.");
 		}
 		else
 		{
@@ -41,24 +53,24 @@ public partial class CreateSpecies
 		}
 	}
 
-	private async Task Verify()
+	private async void HandleFieldChangedAsync([NotNull] object? sender, FieldChangedEventArgs e)
 	{
-		CanSubmit = false;
-		if (Model == null)
+		MessageStore.Clear(e.FieldIdentifier);
+		if (e.FieldIdentifier.FieldName == nameof(Model.Name) && !string.IsNullOrEmpty(Model.Name))
 		{
-			ToastService.ShowError("The form data was not found to execute the check.");
+			await DuplicateItemCheck(e.FieldIdentifier);
 		}
-		else
+		EditContext.NotifyValidationStateChanged();
+	}
+
+	private async Task DuplicateItemCheck(FieldIdentifier fieldIdentifier)
+	{
+		if (Model != null)
 		{
 			var exists = await SpeciesClient.Exists(Model.Id, Model.Name);
 			if (exists)
 			{
-				ToastService.ShowWarning("A species with this name already exists.");
-			}
-			else
-			{
-				ToastService.ShowInfo("A record for this species has not yet been entered, so this request has been validated.");
-				CanSubmit = true;
+				MessageStore.Add(fieldIdentifier, "A species with this name already exists.");
 			}
 		}
 	}

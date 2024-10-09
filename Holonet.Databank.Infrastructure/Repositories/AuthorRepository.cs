@@ -8,6 +8,13 @@ public class AuthorRepository(ISqlDataAccess dataAccess) : IAuthorRepository
 {
 	private readonly ISqlDataAccess _dataAccess = dataAccess;
 
+	public async Task<Author?> GetAuthor(int id)
+	{
+		var results = await _dataAccess.LoadDataAsync<Author, dynamic>("dbo.spAuthors_GetById", new { Id = id });
+
+		return results.FirstOrDefault();
+	}
+
 	public async Task<Author?> GetAuthor(Guid azureId)
 	{
 		var results = await _dataAccess.LoadDataAsync<Author, dynamic>("dbo.spAuthors_GetByAzureId", new { AzureId = azureId });

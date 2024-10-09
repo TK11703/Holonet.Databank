@@ -9,5 +9,7 @@ public record CharacterDto(
 	string? Shard,
 	string? BirthDate,
 	PlanetDto? Planet,
-    IEnumerable<SpeciesDto> Species
+    IEnumerable<SpeciesDto> Species,
+	AuthorDto? UpdatedBy,
+	DateTime? UpdatedOn
 );

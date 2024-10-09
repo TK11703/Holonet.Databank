@@ -2,6 +2,8 @@
 using Holonet.Databank.Web.Clients;
 using Holonet.Databank.Web.Models;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Holonet.Databank.Web.Components.Pages.History;
 
@@ -11,6 +13,10 @@ public partial class UpdateHistoricalEvent
     public int ID { get; set; }
 
     public HistoricalEventModel Model { get; set; } = new();
+
+	private EditContext EditContext { get; set; } = default!;
+
+	private ValidationMessageStore MessageStore { get; set; } = default!;
 
 	public IEnumerable<PlanetModel> Planets { get; set; } = [];
 
@@ -31,31 +37,42 @@ public partial class UpdateHistoricalEvent
     [Inject]
     private NavigationManager NavigationManager { get; set; } = default!;
 
-    protected override async Task OnInitializedAsync()
-    {
-        //await base.OnInitializedAsync();
+	protected override async Task OnParametersSetAsync()
+	{
+		await base.OnParametersSetAsync();
+		Model = await HistoricalEventClient.Get(ID) ?? new();
+		if (Model.Id.Equals(0))
+		{
+			NavigationManager.NavigateTo("/notfound", true);
+		}
+		else
+		{
+			EditContext = new EditContext(Model);
+			MessageStore = new ValidationMessageStore(EditContext);
+			EditContext.OnFieldChanged += HandleFieldChangedAsync;
+		}
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
 		await LoadPlanets();
 		await LoadCharacters();
-		var currentItem = await HistoricalEventClient.Get(ID);
-        if (currentItem != null)
-        {
-            Model = currentItem;
-        }
-    }
+	}
 
     private async Task Submit()
     {
         if (Model == null)
         {
-            ToastService.ShowError("The form data was not found within the model on submit.");
-        }
+			ToastService.ShowError("The form was missing the required data. Please ensure the fields contain data and try again.");
+		}
         else
         {
             var result = await HistoricalEventClient.Update(Model, ID);
             if (result)
             {
                 ToastService.ShowSuccess("Historical event updated successfully");
-                NavigationManager.NavigateTo($"/historicalevents/{ID}");
+                //NavigationManager.NavigateTo($"/historicalevents/update/{ID}");
             }
             else
             {
@@ -63,6 +80,28 @@ public partial class UpdateHistoricalEvent
             }
         }
     }
+
+	private async void HandleFieldChangedAsync([NotNull] object? sender, FieldChangedEventArgs e)
+	{
+		MessageStore.Clear(e.FieldIdentifier);
+		if (e.FieldIdentifier.FieldName == nameof(Model.Name) && !string.IsNullOrEmpty(Model.Name))
+		{
+			await DuplicateItemCheck(e.FieldIdentifier);
+		}
+		EditContext.NotifyValidationStateChanged();
+	}
+
+	private async Task DuplicateItemCheck(FieldIdentifier fieldIdentifier)
+	{
+		if (Model != null)
+		{
+			var exists = await HistoricalEventClient.Exists(Model.Id, Model.Name);
+			if (exists)
+			{
+				MessageStore.Add(fieldIdentifier, "A historical event with this name already exists.");
+			}
+		}
+	}
 
 	private async Task RefreshPlanets()
 	{

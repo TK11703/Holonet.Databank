@@ -1,0 +1,33 @@
+﻿@page "/planets/item/{ID:int}"
+@rendermode InteractiveServer
+<PageTitle>Planet View</PageTitle>
+
+<h1><i class="bi bi-database"></i> @(@Model.Name)</h1>
+<hr />
+<div class="container">
+	<div class="row mb-3">
+		<p>
+			<a href="@Model.Shard" target="_blank" class="text-decoration-none">
+				<i class="bi bi-link"></i>
+				@Model.Shard
+			</a>
+		</p>
+		<div class="col-6">
+			<i class="bi bi-file-earmark-person"></i> Edited By: @Model.UpdatedBy?.DisplayName
+		</div>
+		<div class="col-6">
+			<i class="bi bi-calendar"></i> Updated On: @Model.UpdatedOn.ToString()
+		</div>
+	</div>
+	<div class="row mb-3">
+		<div class="col-md-12">
+			@GetFormattedDescription()
+		</div>
+	</div>
+	<div class="row mb-3">
+		<div class="col-md-12">
+			<a href="planets/update/@(ID)" class="btn btn-light">Update</a>
+			<a href="planets/index" class="btn btn-light">Cancel</a>
+		</div>
+	</div>
+</div>

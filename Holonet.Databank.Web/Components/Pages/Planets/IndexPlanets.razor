@@ -31,7 +31,7 @@ else
 								</AuthorizeView>
 								<div class="col-auto">
 									<div class="input-group">
-										<input type="text" class="form-control" id="filterInput" placeholder="Filter by name" @bind-value=PageRequest.Filter>
+										<input type="text" class="form-control" id="filterInput" placeholder="Filter by name" @bind-value="PageRequest.Filter">
 										<button class="btn btn-outline-secondary" type="button" id="button-addon2" title="Click to find." @onclick="FilterResults"><i class="bi bi-search"></i></button>
 									</div>
 								</div>
@@ -57,9 +57,10 @@ else
 			<table class="table">
 				<thead>
 					<tr>
-						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("Name"))">Name</a><i class="@(SortIndicator("Name"))"></i></th>
-						<th>Shard</th>
-						<th></th>
+						<th class="col-4"><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("Name"))">Name</a><i class="@(SortIndicator("Name"))"></i></th>
+						<th class="col-3">Shard</th>
+						<th class="col-2"><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("UpdatedOn"))">Updated On</a><i class="@(SortIndicator("UpdatedOn"))"></i></th>
+						<th class="col-3 text-center">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -70,16 +71,20 @@ else
 							<tr class="align-middle">
 								<td>@planetModel.Name</td>
 								<td>
-									<a class="icon-link" href="@planetModel.Shard">
-										Shard link
-										<i class="bi bi-arrow-right"></i>
-									</a>
+									@if (!string.IsNullOrEmpty(@planetModel.Shard))
+									{
+										<a class="btn btn-link btn-sm" href="@planetModel.Shard" target="_blank" title="Click to view the source details.">
+											<i class="bi bi-link"></i> @planetModel.Shard
+										</a>
+									}
 								</td>
-								<td class="text-end">
+								<td>@planetModel.UpdatedOn</td>
+								<td class="text-center">
+									<a class="btn btn-outline-primary btn-sm" href="/planets/item/@(planetModel.Id)"><i class="bi bi-binoculars"></i> Details</a>
 									<AuthorizeView Roles="@ApplicationRole.Administrator">
 										<Authorized>
-											<a class="btn btn-secondary btn-sm" href="/planets/update/@(planetModel.Id)"><i class="bi bi-pencil"></i></a>
-											<button class="btn btn-danger btn-sm" @onclick="()=> { DeleteID = planetModel.Id; Modal.Open();}">Delete</button>
+											<a class="btn btn-outline-info btn-sm" href="/planets/update/@(planetModel.Id)"><i class="bi bi-pencil"></i> Edit</a>
+											<button class="btn btn-outline-danger btn-sm" @onclick="()=> { DeleteID = planetModel.Id; Modal.Open(); Modal.SetSpecifics(PlanetIdentification(planetModel));}"><i class="bi bi-trash"></i> Delete</button>
 										</Authorized>
 									</AuthorizeView>
 								</td>

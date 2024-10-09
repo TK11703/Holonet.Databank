@@ -24,7 +24,8 @@ public partial class IndexHistoricalEvents
 
 	protected override async Task OnInitializedAsync()
     {
-        PageRequest = GetInitialPageObject();
+		await base.OnInitializedAsync();
+		PageRequest = GetInitialPageObject();
         await GetData();
     }
 
@@ -99,4 +100,22 @@ public partial class IndexHistoricalEvents
 		PageRequest.Start = 0;
 		await GetData();
 	}
+
+	private RenderFragment<Models.HistoricalEventModel> HistoricalEventIdentification = historicalEvent => builder =>
+	{
+		builder.OpenElement(0, "dl");
+		builder.AddAttribute(1, "class", "row");
+
+		builder.OpenElement(2, "dt");
+		builder.AddAttribute(3, "class", "col-sm-3");
+		builder.AddContent(4, "Historical Event:");
+		builder.CloseElement();
+
+		builder.OpenElement(5, "dd");
+		builder.AddAttribute(6, "class", "col-sm-9");
+		builder.AddContent(7, historicalEvent.Name);
+		builder.CloseElement();
+
+		builder.CloseElement();
+	};
 }

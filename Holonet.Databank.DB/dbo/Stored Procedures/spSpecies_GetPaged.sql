@@ -17,26 +17,28 @@ BEGIN
 		Id int, 
 		[Name] varchar(150),
 		[Shard] nvarchar(500),
-		DateUpdated datetime
+		[UpdatedOn] datetime
 	)
 
 	--Populate table with content
-	INSERT INTO #TempResults (Id, [Name], [Shard], DateUpdated)
-		Select Id, [Name] as 'Name', [Shard], UpdatedOn	From Species
+	INSERT INTO #TempResults (Id, [Name], [Shard], [UpdatedOn])
+		Select Id, [Name] as 'Name', [Shard], [UpdatedOn] 
+			From Species 
+				WHERE [Active]=1
 
 	SELECT @Total = Count(Id) FROM #TempResults;
 
-	SELECT Id, [Name], [Shard], DateUpdated as 'UpdatedOn'
+	SELECT Id, [Name], [Shard], [UpdatedOn]
 		FROM #TempResults 
 		WHERE 
 		(@Search IS NULL or ([Name] LIKE '%' + @Search +'%' OR [Name] LIKE '%' + @Search +'%'))
 		AND 
-		((@Begin IS NULL AND @End IS NULL) or DateUpdated BETWEEN @Begin AND @End)
+		((@Begin IS NULL AND @End IS NULL) or [UpdatedOn] BETWEEN @Begin AND @End)
 		ORDER BY 
 			CASE WHEN @SortBy = 'Name' AND @SortOrder = 'Asc' Then [Name] END Asc,
 			CASE WHEN @SortBy = 'Name' AND @SortOrder = 'Desc' Then [Name] END Desc,
-			CASE WHEN @SortBy = 'Modified' AND @SortOrder = 'Asc' Then 'UpdatedOn' END Asc,
-			CASE WHEN @SortBy = 'Modified' AND @SortOrder = 'Desc' Then 'UpdatedOn' END Desc
+			CASE WHEN @SortBy = 'UpdatedOn' AND @SortOrder = 'Asc' Then [UpdatedOn] END Asc,
+			CASE WHEN @SortBy = 'UpdatedOn' AND @SortOrder = 'Desc' Then [UpdatedOn] END Desc
 		OFFSET @Start ROWS
 		FETCH NEXT @PageSize ROWS ONLY;
 

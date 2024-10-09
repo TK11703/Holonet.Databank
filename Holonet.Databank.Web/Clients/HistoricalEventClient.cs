@@ -133,6 +133,20 @@ public sealed class HistoricalEventClient
 		return null;
 	}
 
+	public async Task<bool> Exists(int id, string name)
+	{
+		await AcquireBearerTokenForClient();
+
+		var getHistoricalEventDto = new GetHistoricalEventDto(id, name);
+		using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"Exists", getHistoricalEventDto);
+		if (response.IsSuccessStatusCode)
+		{
+			return await response.Content.ReadFromJsonAsync<bool>();
+		}
+		_logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
+		return false;
+	}
+
 	public async Task<int> Create(HistoricalEventModel item)
 	{
 		await AcquireBearerTokenForClient();

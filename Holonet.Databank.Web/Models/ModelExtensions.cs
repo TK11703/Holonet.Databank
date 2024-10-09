@@ -78,8 +78,10 @@ public static class ModelExtensions
 			PlanetId = character.Planet?.Id,
 			Planet = character.Planet?.ToPlanetModel(),
             SpeciesIds = character.Species.Select(s => s.Id),
-            Species = character.Species.Select(s => s.ToSpeciesModel())
-        };
+            Species = character.Species.Select(s => s.ToSpeciesModel()),
+			UpdatedBy = character.UpdatedBy?.ToAuthorModel(),
+			UpdatedOn = character.UpdatedOn
+		};
 	}
 
 	public static CreatePlanetDto ToCreatePlanetDto(this PlanetModel planet)
@@ -110,7 +112,9 @@ public static class ModelExtensions
 			Id = planet.Id,
 			Name = planet.Name,
 			Description = planet.Description,
-			Shard = planet.Shard
+			Shard = planet.Shard,
+			UpdatedBy = planet.UpdatedBy?.ToAuthorModel(),
+			UpdatedOn = planet.UpdatedOn
 		};
 	}
 
@@ -142,8 +146,10 @@ public static class ModelExtensions
             Id = species.Id,
             Name = species.Name,
             Description = species.Description,
-            Shard = species.Shard
-        };
+            Shard = species.Shard,
+			UpdatedBy = species.UpdatedBy?.ToAuthorModel(),
+			UpdatedOn = species.UpdatedOn
+		};
     }
 
     public static CreateHistoricalEventDto ToCreateHistoricalEventDto(this HistoricalEventModel historicalEvent)
@@ -185,7 +191,9 @@ public static class ModelExtensions
 			PlanetIds = historicalEventDto.Planets.Select(p => p.Id),
 			Planets = historicalEventDto.Planets.Select(p=>p.ToPlanetModel()),
 			CharacterIds = historicalEventDto.Characters.Select(c => c.Id),
-			Characters = historicalEventDto.Characters.Select(c => c.ToCharacterModel())
+			Characters = historicalEventDto.Characters.Select(c => c.ToCharacterModel()),
+			UpdatedBy = historicalEventDto.UpdatedBy?.ToAuthorModel(),
+			UpdatedOn = historicalEventDto.UpdatedOn
 		};
 	}
 }

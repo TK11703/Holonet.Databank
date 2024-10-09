@@ -1,0 +1,73 @@
+﻿@page "/historicalevents/item/{ID:int}"
+@rendermode InteractiveServer
+<PageTitle>Historical Event View</PageTitle>
+
+<h1><i class="bi bi-database"></i> @(@Model.Name)</h1>
+<hr />
+<div class="container">
+	<div class="row mb-3">
+		<p>
+			<a href="@Model.Shard" target="_blank" class="text-decoration-none">
+				<i class="bi bi-link"></i>
+				@Model.Shard
+			</a>
+		</p>
+		<div class="col-6">
+			<i class="bi bi-file-earmark-person"></i> Edited By: @Model.UpdatedBy?.DisplayName
+		</div>
+		<div class="col-6">
+			<i class="bi bi-calendar"></i> Updated On: @Model.UpdatedOn.ToString()
+		</div>
+	</div>
+	<div class="row mb-3">
+		<div class="col-md-12">
+			<p>
+				@Model.DatePeriod
+			</p>
+		</div>
+	</div>
+	<div class="row mb-3">
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">Characters</th>
+					<th scope="col">Planets</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<ul>
+							@foreach (var character in Model.Characters)
+							{
+								<li>@character.FirstName @character.LastName</li>
+							}
+						</ul>
+					</td>
+					<td>
+						<ul>
+							@foreach (var planet in Model.Planets)
+							{
+								<li>@planet.Name</li>
+							}
+						</ul>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="row mb-3">
+		<div class="col-md-12">
+			<p>
+				@GetFormattedDescription()
+			</p>
+		</div>
+	</div>
+	<div class="row mb-3">
+		<div class="col-md-12">
+			<a href="historicalevents/update/@(ID)" class="btn btn-light">Update</a>
+			<a href="historicalevents/index" class="btn btn-light">Cancel</a>
+		</div>
+	</div>
+</div>

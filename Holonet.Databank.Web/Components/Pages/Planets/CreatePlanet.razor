@@ -3,39 +3,45 @@
 @attribute [Authorize]
 <PageTitle>Create Planet</PageTitle>
 
-<h1>Create Planet</h1>
+<h1><i class="bi bi-database-add"></i> Create Planet</h1>
 <hr />
-
-<EditForm Model="Model" FormName="CreatePlanet" OnValidSubmit="Submit">
-	<DataAnnotationsValidator />
-	<ValidationSummary />
-	<div class="container">
-		<div class="row mb-3">
-			<div class="col-md-12">
-				<label for="Name" class="form-label">Name</label>
-				<InputText id="Name" class="form-control" @bind-Value="Model.Name" />
-				<ValidationMessage For="() => Model.Name" />
+@if (EditContext != null)
+{
+	<EditForm FormName="CreatePlanet" OnValidSubmit="Submit" EditContext="@EditContext">
+		<DataAnnotationsValidator />
+		<ValidationSummary />
+		<div class="container">
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<label for="Name" class="form-label">Name</label>
+					<InputText id="Name" class="form-control" @bind-Value="Model.Name" />
+					<ValidationMessage For="() => Model.Name" />
+				</div>
+			</div>
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<label for="Shard" class="form-label">Shard (External Data Link)</label>
+					<InputText id="Shard" class="form-control" @bind-Value="Model.Shard" />
+					<ValidationMessage For="() => Model.Shard" />
+				</div>
+			</div>
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<label for="Description" class="form-label">Description</label>
+					<InputTextArea id="Description" class="form-control" @bind-Value="Model.Description" />
+				</div>
+			</div>
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<button type="submit" class="btn btn-primary">Create</button>
+					<a href="planets/index" class="btn btn-light">Cancel</a>
+				</div>
 			</div>
 		</div>
-		<div class="row mb-3">
-			<div class="col-md-12">
-				<label for="Shard" class="form-label">Shard (External Data Link)</label>
-				<InputText id="Shard" class="form-control" @bind-Value="Model.Shard" />
-				<ValidationMessage For="() => Model.Shard" />
-			</div>
-		</div>
-		<div class="row mb-3">
-			<div class="col-md-12">
-				<label for="Description" class="form-label">Description</label>
-				<InputTextArea id="Description" class="form-control" @bind-Value="Model.Description" />
-			</div>
-		</div>
-		<div class="row mb-3">
-			<div class="col-md-12">
-				<button type="button" class="btn btn-link" @onclick="@(() => Verify())">Verify</button>
-				<button type="submit" class="btn btn-primary" disabled="@((CanSubmit) ? null : "disabled")">Create</button>
-				<a href="planets/index" class="btn btn-light">Cancel</a>
-			</div>
-		</div>
-	</div>
-</EditForm>
+	</EditForm>
+}
+else
+{
+	<div class="spinner"></div>
+	<p>Loading...</p>
+}

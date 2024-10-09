@@ -19,22 +19,23 @@ BEGIN
 		[LastName] varchar(150),
 		[PlanetName] varchar(150),
 		[Shard] nvarchar(500),
-		DateUpdated datetime
+		[UpdatedOn] datetime
 	)
 
 	--Populate table with content
-	INSERT INTO #TempResults ( Id, [FirstName], [LastName], [PlanetName], [Shard], DateUpdated	)
-		Select c.Id, c.[FirstName], c.[LastName], p.[Name] as 'PlanetName', c.[Shard], c.UpdatedOn From Characters as c
-		inner join Planets as p on c.PlanetId = p.Id;
+	INSERT INTO #TempResults ( Id, [FirstName], [LastName], [PlanetName], [Shard], [UpdatedOn] )
+		Select c.Id, c.[FirstName], c.[LastName], p.[Name] as 'PlanetName', c.[Shard], c.[UpdatedOn] 
+			From Characters as c inner join Planets as p on c.PlanetId = p.Id
+				WHERE c.[Active]=1;
 
 	SELECT @Total = Count(Id) FROM #TempResults;
 
-	SELECT Id, [FirstName], [LastName], [PlanetName], [Shard], DateUpdated as 'UpdatedOn'
+	SELECT Id, [FirstName], [LastName], [PlanetName], [Shard], [UpdatedOn]
 		FROM #TempResults 
 		WHERE 
 		(@Search IS NULL or ([FirstName] LIKE '%' + @Search +'%' OR [LastName] LIKE '%' + @Search +'%'))
 		AND 
-		((@Begin IS NULL AND @End IS NULL) or DateUpdated BETWEEN @Begin AND @End)
+		((@Begin IS NULL AND @End IS NULL) or [UpdatedOn] BETWEEN @Begin AND @End)
 		ORDER BY 
 			CASE WHEN @SortBy = 'FirstName' AND @SortOrder = 'Asc' Then [FirstName] END Asc,
 			CASE WHEN @SortBy = 'FirstName' AND @SortOrder = 'Desc' Then [FirstName] END Desc,
@@ -42,8 +43,8 @@ BEGIN
 			CASE WHEN @SortBy = 'LastName' AND @SortOrder = 'Desc' Then [LastName] END Desc,
 			CASE WHEN @SortBy = 'PlanetName' AND @SortOrder = 'Asc' Then [PlanetName] END Asc,
 			CASE WHEN @SortBy = 'PlanetName' AND @SortOrder = 'Desc' Then [PlanetName] END Desc,			
-			CASE WHEN @SortBy = 'Modified' AND @SortOrder = 'Asc' Then 'UpdatedOn' END Asc,
-			CASE WHEN @SortBy = 'Modified' AND @SortOrder = 'Desc' Then 'UpdatedOn' END Desc
+			CASE WHEN @SortBy = 'UpdatedOn' AND @SortOrder = 'Asc' Then [UpdatedOn] END Asc,
+			CASE WHEN @SortBy = 'UpdatedOn' AND @SortOrder = 'Desc' Then [UpdatedOn] END Desc
 		OFFSET @Start ROWS
 		FETCH NEXT @PageSize ROWS ONLY;
 
