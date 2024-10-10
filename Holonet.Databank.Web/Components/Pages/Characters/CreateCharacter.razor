@@ -24,20 +24,10 @@
 				</div>
 			</div>
 			<div class="row mb-3">
-				<div class="col-md-12">
+				<div class="col-md-6">
 					<label for="DateOfBirth" class="form-label">Date of Birth</label>
 					<InputText id="DateOfBirth" class="form-control" @bind-Value="Model.BirthDate" />
 					<ValidationMessage For="() => Model.BirthDate" />
-				</div>
-			</div>
-			<div class="row mb-3">
-				<div class="col-md-6">
-					<label for="Species" class="form-label">Species</label>
-					<div class="input-group">
-						<MultipleSpeciesSelector SelectedSpeciesIds="Model.SpeciesIds" Species="@Species"></MultipleSpeciesSelector>
-						<button class="btn btn-primary" @onclick="RefreshSpecies"><i class="bi bi-arrow-clockwise"></i></button>						
-					</div>
-					<ValidationMessage For="() => Model.SpeciesIds" />
 				</div>
 				<div class="col-md-6">
 					<label for="Planet" class="form-label">Birth Planet</label>
@@ -53,6 +43,20 @@
 					</div>
 					<ValidationMessage For="() => Model.PlanetId" />
 				</div>
+			</div>
+			<div class="row mb-3">
+				<div class="col-md-12">
+					<label for="Species" class="form-label">Species</label>
+					<div class="card">
+						<div class="card-body">
+							<CheckboxSelector SelectedOptionIds="Model.SpeciesIds" Options="@Species"></CheckboxSelector>
+						</div>
+						<div class="card-footer">
+							<button class="btn btn-primary" type="button" @onclick="RefreshSpecies"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+						</div>
+					</div>
+					<ValidationMessage For="() => Model.SpeciesIds" />
+				</div>				
 			</div>
 			<div class="row mb-3">
 				<div class="col-md-12">

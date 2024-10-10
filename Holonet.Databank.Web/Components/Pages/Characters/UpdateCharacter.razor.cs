@@ -21,7 +21,7 @@ public partial class UpdateCharacter
 
 	public IEnumerable<PlanetModel> Planets { get; set; } = [];
 
-	public IEnumerable<SpeciesModel> Species { get; set; } = [];
+	public IEnumerable<KeyValuePair<int, string>> Species { get; set; } = [];
 
 	[Inject]
 	private CharacterClient CharacterClient { get; set; } = default!;
@@ -132,7 +132,7 @@ public partial class UpdateCharacter
 		var species = await SpeciesClient.GetAll();
 		if (species != null)
 		{
-			Species = species;
+			Species = species.Select(s => new KeyValuePair<int, string>(s.Id, s.Name));
 		}
 		else
 		{

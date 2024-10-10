@@ -1,0 +1,19 @@
+﻿@if (Options == null)
+{
+	<p>
+		<em>Loading ...</em>
+	</p>
+}
+else
+{
+	<input type="text" class="form-control" @bind="SearchQuery" placeholder="Search..." />
+	<div class="scroll-container overflow-auto" style="max-height:150px;display: flex; flex-wrap: wrap;">
+	@foreach (var kvp in Options.Where(i => i.Value.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase)))
+	{
+			<div class="form-check form-check-inline ms-1" style="flex: 1 1 25%;">
+			<input class="form-check-input" type="checkbox" value="@kvp.Key" id="check@(kvp.Key)" checked="@SelectedOptionIds.Contains(kvp.Key)" @onchange="(e) => UpdateSelection(kvp.Key, (bool)e.Value)">
+			<label class="form-check-label" for="check@(kvp.Key)">@kvp.Value</label>
+		</div>
+	}
+	</div>
+}
