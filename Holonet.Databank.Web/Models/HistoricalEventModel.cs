@@ -18,9 +18,9 @@ public class HistoricalEventModel
 	[StringLength(200)]
 	public string? DatePeriod { get; set; }
 
-	public IEnumerable<int> CharacterIds { get; set; } = [];
+	public List<int> CharacterIds { get; set; } = [];
 	public IEnumerable<CharacterModel> Characters { get; set; } = [];
-	public IEnumerable<int> PlanetIds { get; set; } = [];
+	public List<int> PlanetIds { get; set; } = [];
 	public IEnumerable<PlanetModel> Planets { get; set; } = [];
 
 	public AuthorModel? UpdatedBy { get; set; }

@@ -15,9 +15,9 @@ public partial class CreateHistoricalEvent
 
 	private ValidationMessageStore MessageStore { get; set; } = default!;
 
-	public IEnumerable<PlanetModel> Planets { get; set; } = [];
+	IEnumerable<KeyValuePair<int, string>> Planets { get; set; } = [];
 
-	public IEnumerable<CharacterModel> Characters { get; set; } = [];
+	IEnumerable<KeyValuePair<int, string>> Characters { get; set; } = [];
 
 	[Inject]
 	private CharacterClient CharacterClient { get; set; } = default!;
@@ -102,7 +102,7 @@ public partial class CreateHistoricalEvent
 		var planets = await PlanetClient.GetAll();
 		if (planets != null)
 		{
-			Planets = planets;
+			Planets = planets.Select(i => new KeyValuePair<int, string>(i.Id, i.Name));
 		}
 		else
 		{
@@ -115,7 +115,7 @@ public partial class CreateHistoricalEvent
 		var characters = await CharacterClient.GetAll();
 		if (characters != null)
 		{
-			Characters = characters;
+			Characters = characters.Select(i => new KeyValuePair<int, string>(i.Id, $"{i.FirstName} {i.LastName}"));
 		}
 		else
 		{

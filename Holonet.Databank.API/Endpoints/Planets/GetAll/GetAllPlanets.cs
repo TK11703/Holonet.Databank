@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Identity.Web.Resource;
 
-namespace Holonet.Databank.API.Endpoints.Planets.GetById;
+namespace Holonet.Databank.API.Endpoints.Planets.GetAll;
 
 public class GetAllPlanets : IEndpoint
 {

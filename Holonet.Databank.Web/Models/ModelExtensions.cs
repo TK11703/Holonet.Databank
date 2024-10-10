@@ -188,9 +188,9 @@ public static class ModelExtensions
 			Description = historicalEventDto.Description,
 			Shard = historicalEventDto.Shard,
 			DatePeriod = historicalEventDto.DatePeriod,
-			PlanetIds = historicalEventDto.Planets.Select(p => p.Id),
+			PlanetIds = historicalEventDto.Planets.Select(p => p.Id).ToList(),
 			Planets = historicalEventDto.Planets.Select(p=>p.ToPlanetModel()),
-			CharacterIds = historicalEventDto.Characters.Select(c => c.Id),
+			CharacterIds = historicalEventDto.Characters.Select(c => c.Id).ToList(),
 			Characters = historicalEventDto.Characters.Select(c => c.ToCharacterModel()),
 			UpdatedBy = historicalEventDto.UpdatedBy?.ToAuthorModel(),
 			UpdatedOn = historicalEventDto.UpdatedOn

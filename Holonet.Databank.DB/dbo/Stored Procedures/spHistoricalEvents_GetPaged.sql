@@ -16,19 +16,20 @@ BEGIN
 	(
 		Id int, 
 		[Name] varchar(150),
+		[DatePeriod] nvarchar(200),
 		[Shard] nvarchar(500),
 		[UpdatedOn] datetime
 	)
 
 	--Populate table with content
-	INSERT INTO #TempResults ( Id, [Name], [Shard], [UpdatedOn]	)
-		Select Id, [Name] as 'Name', [Shard], [UpdatedOn] 
+	INSERT INTO #TempResults ( Id, [Name], [DatePeriod], [Shard], [UpdatedOn]	)
+		Select Id, [Name] as 'Name', [DatePeriod], [Shard], [UpdatedOn] 
 			From HistoricalEvents
 				WHERE [Active]=1;
 
 	SELECT @Total = Count(Id) FROM #TempResults;
 
-	SELECT Id, [Name], [Shard], [UpdatedOn]
+	SELECT Id, [Name], [DatePeriod], [Shard], [UpdatedOn]
 		FROM #TempResults 
 		WHERE 
 		(@Search IS NULL or ([Name] LIKE '%' + @Search +'%' OR [Name] LIKE '%' + @Search +'%'))

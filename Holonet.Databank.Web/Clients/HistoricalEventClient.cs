@@ -88,7 +88,7 @@ public sealed class HistoricalEventClient
 			Content = new StringContent(JsonSerializer.Serialize(pageRequestDto), Encoding.UTF8, MediaTypeNames.Application.Json)
 		};
 		using HttpResponseMessage response = await _httpClient.SendAsync(request);
-		if (response.IsSuccessStatusCode)
+		if (!response.IsSuccessStatusCode)
 		{
 			_logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
 		}

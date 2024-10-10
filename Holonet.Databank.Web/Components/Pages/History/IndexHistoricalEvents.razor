@@ -79,21 +79,21 @@ else
 									<td>
 										@foreach (var planetModel in historicalEventModel.Planets)
 										{
-											<span class="badge text-bg-light">@planetModel.Name</span>
-										})
+											<span class="badge bg-light text-dark">@planetModel.Name</span>
+										}
 									</td>
 								}
 								else
 								{
 									<td>Unknown</td>
-								})
+								}
 								@if (historicalEventModel.Characters != null)
 								{
 									<td>
 										@foreach (var characterModel in historicalEventModel.Characters)
 										{
-											<span class="badge text-bg-light">@characterModel.FirstName</span>
-										})
+											<span class="badge bg-light text-dark">@characterModel.FirstName</span>
+										}
 									</td>
 								}
 								else
