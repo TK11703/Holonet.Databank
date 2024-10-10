@@ -8,11 +8,10 @@ public class CharacterModel
 
 	[Required]
 	[StringLength(150)]
-	public string FirstName { get; set; } = string.Empty;
+	public string GivenName { get; set; } = string.Empty;
 
-	[Required]
 	[StringLength(150)]
-	public string LastName { get; set; } = string.Empty;
+	public string? FamilyName { get; set; } = string.Empty;
 
 	public string? Description { get; set; }
 

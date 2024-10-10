@@ -131,7 +131,7 @@ public partial class UpdateHistoricalEvent
 		var characters = await CharacterClient.GetAll();
 		if (characters != null)
 		{
-			Characters = characters.Select(i => new KeyValuePair<int, string>(i.Id, $"{i.FirstName} {i.LastName}"));
+			Characters = characters.Select(i => new KeyValuePair<int, string>(i.Id, $"{i.GivenName} {i.FamilyName}"));
 		}
 		else
 		{

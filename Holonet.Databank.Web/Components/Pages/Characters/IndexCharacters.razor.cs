@@ -39,7 +39,7 @@ public partial class IndexCharacters
             BeginDate = null,
             EndDate = null,
             Filter = null,
-            SortBy = nameof(CharacterDto.LastName),
+            SortBy = nameof(CharacterDto.FamilyName),
             SortDirection = "asc"
         };
     }
@@ -114,7 +114,7 @@ public partial class IndexCharacters
 
 		builder.OpenElement(5, "dd");
 		builder.AddAttribute(6, "class", "col-sm-9");
-		builder.AddContent(7, character.FirstName + " " + character.LastName);
+		builder.AddContent(7, character.GivenName + " " + character.FamilyName);
 		builder.CloseElement();
 
 		builder.CloseElement();

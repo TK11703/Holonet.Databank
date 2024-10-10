@@ -35,8 +35,8 @@ public class InsertNewCharacter : IEndpoint
 			}
 			var character = new Character
 			{
-				FirstName = itemModel.FirstName,
-				LastName = itemModel.LastName,
+				GivenName = itemModel.GivenName,
+				FamilyName = itemModel.FamilyName,
 				Description = itemModel.Description,
 				Shard = itemModel.Shard,
 				BirthDate = itemModel.BirthDate,

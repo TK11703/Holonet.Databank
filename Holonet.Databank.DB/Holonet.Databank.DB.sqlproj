@@ -123,4 +123,7 @@
     <None Include="Holonet.Databank.DB.publish.xml" />
     <Build Include="dbo\Types\HistoricalEventCharacterUDT.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="Holonet.Databank.DB.refactorlog" />
+  </ItemGroup>
 </Project>

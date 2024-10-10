@@ -40,8 +40,8 @@ public static class ModelExtensions
 	{
 		return new CreateCharacterDto
 		(
-			character.FirstName,
-			character.LastName,
+			character.GivenName,
+			character.FamilyName,
 			character.Description,
 			character.Shard,
 			character.BirthDate,
@@ -55,8 +55,8 @@ public static class ModelExtensions
 		return new UpdateCharacterDto
 		(
 			character.Id,
-			character.FirstName,
-			character.LastName,
+			character.GivenName,
+			character.FamilyName,
 			character.Description,
 			character.Shard,
 			character.BirthDate,
@@ -70,8 +70,8 @@ public static class ModelExtensions
 		return new CharacterModel()
 		{
 			Id = character.Id,
-			FirstName = character.FirstName,
-			LastName = character.LastName,
+			GivenName = character.GivenName,
+			FamilyName = character.FamilyName,
 			Description = character.Description,
 			Shard = character.Shard,
 			BirthDate = character.BirthDate,

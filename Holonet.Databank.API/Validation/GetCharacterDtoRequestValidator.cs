@@ -9,12 +9,11 @@ public class GetCharacterDtoRequestValidator : AbstractValidator<GetCharacterDto
 		RuleFor(x => x.Id)
 			.GreaterThanOrEqualTo(0);
 
-		RuleFor(x => x.FirstName)
+		RuleFor(x => x.GivenName)
 			.NotEmpty()
 			.Length(2, 150);
 
-		RuleFor(x => x.LastName)
-			.NotEmpty()
-			.Length(2, 150);
+		RuleFor(x => x.FamilyName)
+			.Length(0, 150);
 	}
 }

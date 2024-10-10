@@ -7,11 +7,10 @@ public class Character : EntityBase
 {
 	[Required]
 	[StringLength(150)]
-	public required string FirstName { get; set; }
-
-	[Required]
+	public required string GivenName { get; set; }
+	
 	[StringLength(150)]
-	public required string LastName { get; set; }
+	public string? FamilyName { get; set; }
 
 	[StringLength(150)]
 	public string? Description { get; set; }
@@ -26,7 +25,6 @@ public class Character : EntityBase
 	public int? PlanetId { get; set; }
 
 	public Planet? Planet { get; set; }
-
 
     public IEnumerable<int> SpeciesIds { get; set; } = [];
     public IEnumerable<Species> Species { get; set; } = [];

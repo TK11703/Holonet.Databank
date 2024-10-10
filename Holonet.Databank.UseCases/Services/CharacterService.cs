@@ -38,16 +38,16 @@ public class CharacterService(ICharacterRepository characterRepository, IPlanetR
         return character;
     }
 
-	public async Task<bool> CharacterExists(int id, string firstName, string lastName, int? planetId)
+	public async Task<bool> CharacterExists(int id, string givenName, string? familyName, int? planetId)
 	{
 		bool exists;
 		if (planetId.HasValue)
 		{
-			exists = await _characterRepository.CharacterExists(id, firstName, lastName, planetId.Value);
+			exists = await _characterRepository.CharacterExists(id, givenName, familyName, planetId.Value);
 		}
 		else
 		{
-			exists = await _characterRepository.CharacterExists(id, firstName, lastName, default);
+			exists = await _characterRepository.CharacterExists(id, givenName, familyName, default);
 		}
         return exists;
 	}
@@ -91,7 +91,7 @@ public class CharacterService(ICharacterRepository characterRepository, IPlanetR
 
     public async Task<int> CreateCharacter(Character character)
     {
-        bool exists = await CharacterExists(0, character.FirstName, character.LastName, character.PlanetId);
+        bool exists = await CharacterExists(0, character.GivenName, character.FamilyName, character.PlanetId);
         if (exists)
         {
             throw new DataException("Character already exists.");
@@ -106,7 +106,7 @@ public class CharacterService(ICharacterRepository characterRepository, IPlanetR
 
     public async Task<bool> UpdateCharacter(Character character)
     {
-        bool exists = await CharacterExists(character.Id, character.FirstName, character.LastName, character.PlanetId);
+        bool exists = await CharacterExists(character.Id, character.GivenName, character.FamilyName, character.PlanetId);
 		
         if (exists)
         {

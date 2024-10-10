@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[spCharacters_Insert]
 	@PlanetId int,
-	@FirstName nvarchar(150),
-	@LastName nvarchar(150),
+	@GivenName nvarchar(150),
+	@FamilyName nvarchar(150) = null,
 	@Description nvarchar(max),
 	@Shard nvarchar(500),
 	@BirthDate nvarchar(200),
@@ -20,9 +20,9 @@ BEGIN
 	ELSE
 	BEGIN
 		INSERT INTO dbo.Characters
-			([PlanetId], [FirstName], [LastName], [Description], [Shard], [BirthDate], [UpdatedOn], [AuthorId], [Active])
+			([PlanetId], [GivenName], [FamilyName], [Description], [Shard], [BirthDate], [UpdatedOn], [AuthorId], [Active])
 		Values	
-			(@PlanetId, @FirstName, @LastName, @Description, @Shard, @BirthDate, GETDATE(), @AuthorId, 1);
+			(@PlanetId, @GivenName, @FamilyName, @Description, @Shard, @BirthDate, GETDATE(), @AuthorId, 1);
 
 		SET @Id = SCOPE_IDENTITY();
 

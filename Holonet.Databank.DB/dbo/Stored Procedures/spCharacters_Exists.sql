@@ -1,8 +1,8 @@
 ﻿CREATE PROCEDURE [dbo].[spCharacters_Exists]
 	@Id int,
 	@PlanetId int,
-	@FirstName nvarchar(150),
-	@LastName nvarchar(150)
+	@GivenName nvarchar(150),
+	@FamilyName nvarchar(150) = null
 AS
 BEGIN
 
@@ -10,7 +10,7 @@ BEGIN
 	BEGIN
 		SELECT * 
 		FROM dbo.Characters
-		WHERE [PlanetId]=@PlanetId AND [FirstName]=@FirstName AND [LastName]=@LastName AND [Active]=1;
+		WHERE [PlanetId]=@PlanetId AND [GivenName]=@GivenName AND [FamilyName]=@FamilyName AND [Active]=1;
 		IF @@ROWCOUNT > 0
 		BEGIN
 			RETURN 1;
@@ -24,7 +24,7 @@ BEGIN
 	BEGIN
 		SELECT * 
 		FROM dbo.Characters
-		WHERE [Id]<>@Id AND [PlanetId]=@PlanetId AND [FirstName]=@FirstName AND [LastName]=@LastName AND [Active]=1;
+		WHERE [Id]<>@Id AND [PlanetId]=@PlanetId AND [GivenName]=@GivenName AND [FamilyName]=@FamilyName AND [Active]=1;
 		IF @@ROWCOUNT > 0
 		BEGIN
 			RETURN 1;

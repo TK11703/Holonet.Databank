@@ -63,8 +63,8 @@ public static class EntityExtensions
 		return new CharacterDto
 		(
 			character.Id,
-			character.FirstName,
-			character.LastName,
+			character.GivenName,
+			character.FamilyName,
 			character.Description,
 			character.Shard,
 			character.BirthDate,

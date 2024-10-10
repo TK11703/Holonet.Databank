@@ -110,11 +110,11 @@ public sealed class CharacterClient
 		};
 	}
 
-	public async Task<bool> Exists(int id, string firstName, string lastName, int? planetId)
+	public async Task<bool> Exists(int id, string givenName, string familyName, int? planetId)
 	{
 		await AcquireBearerTokenForClient();
 
-		var getCharacterDto = new GetCharacterDto(id, firstName, lastName, planetId);
+		var getCharacterDto = new GetCharacterDto(id, givenName, familyName, planetId);
 		using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"/exists", getCharacterDto);
 		if (response.IsSuccessStatusCode)
 		{

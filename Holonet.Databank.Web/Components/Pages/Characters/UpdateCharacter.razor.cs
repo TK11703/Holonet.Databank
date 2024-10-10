@@ -85,7 +85,7 @@ public partial class UpdateCharacter
 	private async void HandleFieldChangedAsync([NotNull] object? sender, FieldChangedEventArgs e)
 	{
 		MessageStore.Clear(e.FieldIdentifier);
-		if (e.FieldIdentifier.FieldName == nameof(Model.FirstName) && !string.IsNullOrEmpty(Model.LastName) && Model.PlanetId > 0)
+		if (e.FieldIdentifier.FieldName == nameof(Model.GivenName) && !string.IsNullOrEmpty(Model.FamilyName) && Model.PlanetId > 0)
 		{
 			await DuplicateItemCheck(e.FieldIdentifier);
 		}
@@ -96,7 +96,7 @@ public partial class UpdateCharacter
 	{
 		if (Model != null)
 		{
-			var exists = await CharacterClient.Exists(Model.Id, Model.FirstName, Model.LastName, Model.PlanetId);
+			var exists = await CharacterClient.Exists(Model.Id, Model.GivenName, Model.FamilyName, Model.PlanetId);
 			if (exists)
 			{
 				MessageStore.Add(fieldIdentifier, "A character with this name and (potential planet) already exists.");

@@ -8,7 +8,7 @@ public interface ICharacterService
     Task<bool> DeleteCharacter(int id);
     Task<Character?> GetCharacterById(int id);
     Task<IEnumerable<Character>> GetCharacters();
-    Task<bool> CharacterExists(int id, string firstName, string lastName, int? planetId);
+    Task<bool> CharacterExists(int id, string givenName, string? familyName, int? planetId);
 
 	Task<PageResult<Character>> GetPagedAsync(PageRequest pageRequest);
     Task<bool> UpdateCharacter(Character character);

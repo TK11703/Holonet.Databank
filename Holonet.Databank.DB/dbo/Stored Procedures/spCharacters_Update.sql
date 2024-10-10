@@ -1,8 +1,8 @@
 ﻿CREATE PROCEDURE [dbo].[spCharacters_Update]
 	@Id int,
 	@PlanetId int,
-	@FirstName nvarchar(150),
-	@LastName nvarchar(150),
+	@GivenName nvarchar(150),
+	@FamilyName nvarchar(150) = null,
 	@Description nvarchar(max),
 	@Shard nvarchar(500),
 	@BirthDate nvarchar(200),
@@ -20,7 +20,7 @@ BEGIN
 	ELSE
 	BEGIN
 		UPDATE dbo.Characters
-			SET [PlanetId]=@PlanetId, [FirstName]=@FirstName, [LastName]=@LastName, [Description]=@Description, [Shard]=@Shard, 
+			SET [PlanetId]=@PlanetId, [GivenName]=@GivenName, [FamilyName]=@FamilyName, [Description]=@Description, [Shard]=@Shard, 
 				[BirthDate]=@BirthDate, [UpdatedOn]=GETDATE(), [AuthorId]=@AuthorId
 		WHERE [Id]=@Id;
 

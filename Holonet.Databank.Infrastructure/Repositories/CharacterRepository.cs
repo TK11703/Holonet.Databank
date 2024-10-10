@@ -56,8 +56,8 @@ public class CharacterRepository(ISqlDataAccess dataAccess) : ICharacterReposito
 	public async Task<int> CreateCharacter(Character itemModel)
 	{
 		var p = new DynamicParameters();
-		p.Add(name: "@FirstName", itemModel.FirstName);
-		p.Add(name: "@LastName", itemModel.LastName);
+		p.Add(name: "@GivenName", itemModel.GivenName);
+		p.Add(name: "@FamilyName", itemModel.FamilyName);
 		p.Add(name: "@Description", itemModel.Description);
 		p.Add(name: "@BirthDate", itemModel.BirthDate);
 		p.Add(name: "@Shard", itemModel.Shard);
@@ -75,8 +75,8 @@ public class CharacterRepository(ISqlDataAccess dataAccess) : ICharacterReposito
 	{
 		var p = new DynamicParameters();
 		p.Add(name: "@Id", itemModel.Id);
-		p.Add(name: "@FirstName", itemModel.FirstName);
-		p.Add(name: "@LastName", itemModel.LastName);
+		p.Add(name: "@GivenName", itemModel.GivenName);
+		p.Add(name: "@FamilyName", itemModel.FamilyName);
 		p.Add(name: "@Description", itemModel.Description);
 		p.Add(name: "@BirthDate", itemModel.BirthDate);
 		p.Add(name: "@Shard", itemModel.Shard);
@@ -96,12 +96,12 @@ public class CharacterRepository(ISqlDataAccess dataAccess) : ICharacterReposito
 		}
 	}
 
-	public async Task<bool> CharacterExists(int id, string firstName, string lastName, int? planetId)
+	public async Task<bool> CharacterExists(int id, string givenName, string? familyName, int? planetId)
 	{
 		var p = new DynamicParameters();
 		p.Add(name: "@Id", id);
-		p.Add(name: "@FirstName", firstName);
-		p.Add(name: "@LastName", lastName);
+		p.Add(name: "@GivenName", givenName);
+		p.Add(name: "@FamilyName", familyName);
 		p.Add(name: "@PlanetId", planetId);
 		p.Add(name: "@Output", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 		await _dataAccess.LoadDataAsync<Character, dynamic>("dbo.spCharacters_Exists", p);

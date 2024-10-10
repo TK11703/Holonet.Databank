@@ -5,5 +5,5 @@ BEGIN
 	SELECT * 
 	FROM dbo.Characters
 	WHERE [Active]=1
-	ORDER BY [LastName];
+	ORDER BY [FamilyName], [GivenName];
 END

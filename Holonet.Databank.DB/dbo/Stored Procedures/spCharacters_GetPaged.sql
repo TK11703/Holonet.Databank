@@ -15,8 +15,8 @@ BEGIN
 	Create Table #TempResults 
 	(
 		Id int, 
-		[FirstName] varchar(150),
-		[LastName] varchar(150),
+		[GivenName] varchar(150) NOT NULL,
+		[FamilyName] varchar(150) NULL,
 		[PlanetId] int,
 		[PlanetName] varchar(150),
 		[Shard] nvarchar(500),
@@ -24,24 +24,24 @@ BEGIN
 	)
 
 	--Populate table with content
-	INSERT INTO #TempResults ( Id, [FirstName], [LastName], [PlanetId], [PlanetName], [Shard], [UpdatedOn] )
-		Select c.Id, c.[FirstName], c.[LastName], p.[Id] as 'PlanetId', p.[Name] as 'PlanetName', c.[Shard], c.[UpdatedOn] 
+	INSERT INTO #TempResults ( Id, [GivenName], [FamilyName], [PlanetId], [PlanetName], [Shard], [UpdatedOn] )
+		Select c.Id, c.[GivenName], c.[FamilyName], p.[Id] as 'PlanetId', p.[Name] as 'PlanetName', c.[Shard], c.[UpdatedOn] 
 			From Characters as c inner join Planets as p on c.PlanetId = p.Id
 				WHERE c.[Active]=1;
 
 	SELECT @Total = Count(Id) FROM #TempResults;
 
-	SELECT Id, [FirstName], [LastName], [PlanetId], [PlanetName], [Shard], [UpdatedOn]
+	SELECT Id, [GivenName], [FamilyName], [PlanetId], [PlanetName], [Shard], [UpdatedOn]
 		FROM #TempResults 
 		WHERE 
-		(@Search IS NULL or ([FirstName] LIKE '%' + @Search +'%' OR [LastName] LIKE '%' + @Search +'%' OR [PlanetName] LIKE '%' + @Search +'%'))
+		(@Search IS NULL or ([GivenName] LIKE '%' + @Search +'%' OR [FamilyName] LIKE '%' + @Search +'%' OR [PlanetName] LIKE '%' + @Search +'%'))
 		AND 
 		((@Begin IS NULL AND @End IS NULL) or [UpdatedOn] BETWEEN @Begin AND @End)
 		ORDER BY 
-			CASE WHEN @SortBy = 'FirstName' AND @SortOrder = 'Asc' Then [FirstName] END Asc,
-			CASE WHEN @SortBy = 'FirstName' AND @SortOrder = 'Desc' Then [FirstName] END Desc,
-			CASE WHEN @SortBy = 'LastName' AND @SortOrder = 'Asc' Then [LastName] END Asc,
-			CASE WHEN @SortBy = 'LastName' AND @SortOrder = 'Desc' Then [LastName] END Desc,
+			CASE WHEN @SortBy = 'GivenName' AND @SortOrder = 'Asc' Then [GivenName] END Asc,
+			CASE WHEN @SortBy = 'GivenName' AND @SortOrder = 'Desc' Then [GivenName] END Desc,
+			CASE WHEN @SortBy = 'FamilyName' AND @SortOrder = 'Asc' Then [FamilyName] END Asc,
+			CASE WHEN @SortBy = 'FamilyName' AND @SortOrder = 'Desc' Then [FamilyName] END Desc,
 			CASE WHEN @SortBy = 'PlanetName' AND @SortOrder = 'Asc' Then [PlanetName] END Asc,
 			CASE WHEN @SortBy = 'PlanetName' AND @SortOrder = 'Desc' Then [PlanetName] END Desc,			
 			CASE WHEN @SortBy = 'UpdatedOn' AND @SortOrder = 'Asc' Then [UpdatedOn] END Asc,

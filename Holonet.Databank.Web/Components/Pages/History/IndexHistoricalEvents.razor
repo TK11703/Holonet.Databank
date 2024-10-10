@@ -92,7 +92,7 @@ else
 									<td>
 										@foreach (var characterModel in historicalEventModel.Characters)
 										{
-											<span class="badge bg-light text-dark">@characterModel.FirstName</span>
+											<span class="badge bg-light text-dark">@characterModel.GivenName @characterModel.FamilyName</span>
 										}
 									</td>
 								}

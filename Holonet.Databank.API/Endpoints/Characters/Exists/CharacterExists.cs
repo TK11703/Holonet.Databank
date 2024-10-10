@@ -23,7 +23,7 @@ public class CharacterExists : IEndpoint
 	{
 		try
 		{
-			var exists = await characterService.CharacterExists(itemModel.Id, itemModel.FirstName, itemModel.LastName, itemModel.PlanetId);
+			var exists = await characterService.CharacterExists(itemModel.Id, itemModel.GivenName, itemModel.FamilyName, itemModel.PlanetId);
 			return TypedResults.Ok(exists);
 		}
 		catch (Exception ex)

@@ -36,8 +36,8 @@ public class UpdateCharacter : IEndpoint
 			var character = new Character
 			{
 				Id = itemModel.Id,
-				FirstName = itemModel.FirstName,
-				LastName = itemModel.LastName,
+				GivenName = itemModel.GivenName,
+				FamilyName = itemModel.FamilyName,
 				Description = itemModel.Description,
 				Shard = itemModel.Shard,
 				BirthDate = itemModel.BirthDate,

@@ -57,8 +57,8 @@ else
 			<table class="table">
 				<thead>
 					<tr>
-						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("FirstName"))">First Name</a><i class="@(SortIndicator("FirstName"))"></i></th>
-						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("LastName"))">Last Name</a><i class="@(SortIndicator("LastName"))"></i></th>
+						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("GivenName"))">Given Name</a><i class="@(SortIndicator("GivenName"))"></i></th>
+						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("FamilyName"))">Family Name</a><i class="@(SortIndicator("FamilyName"))"></i></th>
 						<th>Shard</th>
 						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("Planet"))">Planet</a><i class="@(SortIndicator("Planet"))"></i></th>
 						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("UpdatedOn"))">Updated On</a><i class="@(SortIndicator("UpdatedOn"))"></i></th>
@@ -71,8 +71,8 @@ else
 						@foreach (var characterModel in ResultPage.Collection)
 						{
 							<tr class="align-middle">
-								<td>@characterModel.FirstName</td>
-								<td>@characterModel.LastName</td>
+								<td>@characterModel.GivenName</td>
+								<td>@characterModel.FamilyName</td>
 								<td>
 									@if (!string.IsNullOrEmpty(@characterModel.Shard))
 									{
