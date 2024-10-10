@@ -10,7 +10,7 @@ public class CharacterSpeciesRepository(ISqlDataAccess dataAccess) : ICharacterS
 
 	public async Task<IEnumerable<Species>> GetSpecies(int characterId)
 	{
-		return await _dataAccess.LoadDataAsync<Species, dynamic>("dbo.spCharacterSpecies_GetByCharacterId", new { });
+		return await _dataAccess.LoadDataAsync<Species, dynamic>("dbo.spCharacterSpecies_GetByCharacterId", new { CharacterId = characterId });
 	}
 
 	public async Task<bool> AddSpecies(DataTable characterSpecies, Guid azureId)

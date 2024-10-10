@@ -10,7 +10,7 @@ public class HistoricalEventPlanetRepository(ISqlDataAccess dataAccess) : IHisto
 
 	public async Task<IEnumerable<Planet>> GetPlanets(int historicalEventId)
 	{
-		return await _dataAccess.LoadDataAsync<Planet, dynamic>("dbo.spHistoricalEventPlanets_GetByEventId", new { });
+		return await _dataAccess.LoadDataAsync<Planet, dynamic>("dbo.spHistoricalEventPlanets_GetByEventId", new { HistoricalEventId = historicalEventId });
 	}
 
 	public async Task<bool> AddPlanets(DataTable historicalEventPlanets, Guid azureId)

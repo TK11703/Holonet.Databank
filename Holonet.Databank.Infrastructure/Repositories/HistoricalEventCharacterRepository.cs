@@ -10,7 +10,7 @@ public class HistoricalEventCharacterRepository(ISqlDataAccess dataAccess) : IHi
 
 	public async Task<IEnumerable<Character>> GetCharacters(int historicalEventId)
 	{
-		return await _dataAccess.LoadDataAsync<Character, dynamic>("dbo.spHistoricalEventCharacters_GetByEventId", new { });
+		return await _dataAccess.LoadDataAsync<Character, dynamic>("dbo.spHistoricalEventCharacters_GetByEventId", new { HistoricalEventId = historicalEventId });
 	}
 
 	public async Task<bool> AddCharacters(DataTable historicalEventCharacters, Guid azureId)

@@ -14,7 +14,6 @@ public class CharacterModel
 	[StringLength(150)]
 	public string LastName { get; set; } = string.Empty;
 
-	[StringLength(150)]
 	public string? Description { get; set; }
 
 	[Url]

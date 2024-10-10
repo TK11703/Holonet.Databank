@@ -23,7 +23,7 @@
 	<div class="row mb-3">
 		<table class="table">
 			<thead>
-				<tr>					
+				<tr>
 					<th scope="col">Species</th>
 					<th scope="col">Homeworld</th>
 				</tr>
@@ -31,26 +31,26 @@
 			<tbody>
 				<tr>
 					<td>
-						@foreach(var species in Model.Species)
+						@foreach (var species in Model.Species)
 						{
-							<span class="badge text-bg-light">@species.Name</span>
-						}						
+							<span class="badge bg-light text-dark">@species.Name</span>
+						}
 					</td>
 					<td>
-						@if(Model.Planet != null)
+						@if (Model.Planet != null)
 						{
-							<span class="badge text-bg-light">@Model.Planet.Name</span>
+							<span class="badge bg-light text-dark">@Model.Planet.Name</span>
 						}
 						else
 						{
-							<span class="badge text-bg-light">Unknown</span>
+							<span class="badge bg-light text-dark">Unknown</span>
 						}
 					</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
-	
+
 	<div class="row mb-3">
 		<div class="col-md-12">
 			<p>
@@ -64,5 +64,4 @@
 			<a href="characters/index" class="btn btn-light">Cancel</a>
 		</div>
 	</div>
-
 </div>

@@ -20,14 +20,10 @@ public partial class ViewCharacter
 	protected override async Task OnParametersSetAsync()
 	{
 		await base.OnParametersSetAsync();
-		var requestedItem = await CharacterClient.Get(ID);
-		if (requestedItem == null)
+		Model = await CharacterClient.Get(ID) ?? new();
+		if (Model.Id.Equals(0))
 		{
 			NavigationManager.NavigateTo("/notfound", true);
-		}
-		else
-		{
-			Model = requestedItem;
 		}
 	}
 

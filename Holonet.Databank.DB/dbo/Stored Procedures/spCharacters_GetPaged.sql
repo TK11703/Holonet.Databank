@@ -17,23 +17,24 @@ BEGIN
 		Id int, 
 		[FirstName] varchar(150),
 		[LastName] varchar(150),
+		[PlanetId] int,
 		[PlanetName] varchar(150),
 		[Shard] nvarchar(500),
 		[UpdatedOn] datetime
 	)
 
 	--Populate table with content
-	INSERT INTO #TempResults ( Id, [FirstName], [LastName], [PlanetName], [Shard], [UpdatedOn] )
-		Select c.Id, c.[FirstName], c.[LastName], p.[Name] as 'PlanetName', c.[Shard], c.[UpdatedOn] 
+	INSERT INTO #TempResults ( Id, [FirstName], [LastName], [PlanetId], [PlanetName], [Shard], [UpdatedOn] )
+		Select c.Id, c.[FirstName], c.[LastName], p.[Id] as 'PlanetId', p.[Name] as 'PlanetName', c.[Shard], c.[UpdatedOn] 
 			From Characters as c inner join Planets as p on c.PlanetId = p.Id
 				WHERE c.[Active]=1;
 
 	SELECT @Total = Count(Id) FROM #TempResults;
 
-	SELECT Id, [FirstName], [LastName], [PlanetName], [Shard], [UpdatedOn]
+	SELECT Id, [FirstName], [LastName], [PlanetId], [PlanetName], [Shard], [UpdatedOn]
 		FROM #TempResults 
 		WHERE 
-		(@Search IS NULL or ([FirstName] LIKE '%' + @Search +'%' OR [LastName] LIKE '%' + @Search +'%'))
+		(@Search IS NULL or ([FirstName] LIKE '%' + @Search +'%' OR [LastName] LIKE '%' + @Search +'%' OR [PlanetName] LIKE '%' + @Search +'%'))
 		AND 
 		((@Begin IS NULL AND @End IS NULL) or [UpdatedOn] BETWEEN @Begin AND @End)
 		ORDER BY 
