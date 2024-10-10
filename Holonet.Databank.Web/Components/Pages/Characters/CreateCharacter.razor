@@ -25,8 +25,14 @@
 			</div>
 			<div class="row mb-3">
 				<div class="col-md-6">
-					<label for="DateOfBirth" class="form-label">Date of Birth</label>
-					<InputText id="DateOfBirth" class="form-control" @bind-Value="Model.BirthDate" />
+					<label for="BirthYear" class="form-label">Date of Birth</label>
+					<div class="input-group mb-3">
+						<InputNumber id="BirthYear" class="form-control" @bind-Value="Model.BirthYear" />
+						<InputSelect id="DatingSystem" class="form-select" aria-label="Select a date period." @bind-Value="Model.DateSystem">
+							<option value="BBY">BBY</option>
+							<option value="ABY">ABY</option>
+						</InputSelect>
+					</div>
 					<ValidationMessage For="() => Model.BirthDate" />
 				</div>
 				<div class="col-md-6">

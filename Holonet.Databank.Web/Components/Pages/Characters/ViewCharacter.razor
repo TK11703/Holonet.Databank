@@ -24,12 +24,23 @@
 		<table class="table">
 			<thead>
 				<tr>
+					<th scope="col">Born</th>
 					<th scope="col">Species</th>
 					<th scope="col">Homeworld</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
+					<td>
+						@if (Model.BirthDate != null)
+						{
+							<span class="badge bg-light text-dark">@Model.BirthDate</span>
+						}
+						else
+						{
+							<span class="badge bg-light text-dark">Unknown</span>
+						}
+					</td>
 					<td>
 						@foreach (var species in Model.Species)
 						{
