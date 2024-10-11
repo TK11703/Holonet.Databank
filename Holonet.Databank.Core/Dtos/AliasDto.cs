@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace Holonet.Databank.Core.Dtos;
-
-public record PlanetDto(
+public record AliasDto(
 	int Id,
 	string Name,
-	string? Description,
-	string? Shard,
-	IEnumerable<AliasDto> Aliases,
+	int? CharacterId,
+	int? PlanetId,
+	int? SpeciesId,
 	AuthorDto? UpdatedBy,
 	DateTime? UpdatedOn
 );

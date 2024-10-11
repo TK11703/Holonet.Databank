@@ -28,5 +28,8 @@ public class Character : EntityBase
 
     public IEnumerable<int> SpeciesIds { get; set; } = [];
     public IEnumerable<Species> Species { get; set; } = [];
+
+	public IEnumerable<int> AliasIds { get; set; } = [];
+	public IEnumerable<Alias> Aliases { get; set; } = [];
 }
 

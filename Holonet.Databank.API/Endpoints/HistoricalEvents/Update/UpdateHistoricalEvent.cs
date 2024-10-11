@@ -41,6 +41,7 @@ public class UpdateHistoricalEvent : IEndpoint
 				Shard = itemModel.Shard,
 				CharacterIds = itemModel.CharacterIds,
 				PlanetIds = itemModel.PlanetIds,
+				Aliases = itemModel.Aliases.Select(alias => new Alias { Name = alias, UpdatedBy = author }),
 				UpdatedBy = author
 			};
 			var rowsUpdated = await historicalEventService.UpdateHistoricalEvent(historicalEvent);

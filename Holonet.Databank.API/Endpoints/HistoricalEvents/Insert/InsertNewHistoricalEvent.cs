@@ -40,6 +40,7 @@ public class InsertNewHistoricalEvent : IEndpoint
 				DatePeriod = itemModel.DatePeriod,
 				CharacterIds = itemModel.CharacterIds,
 				PlanetIds = itemModel.PlanetIds,
+				Aliases = itemModel.Aliases.Select(alias => new Alias { Name = alias, UpdatedBy = author }),
 				Shard = itemModel.Shard,
 				UpdatedBy = author
 			};

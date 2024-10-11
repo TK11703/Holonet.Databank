@@ -10,7 +10,7 @@ public class GetPlanetRequestDtoValidator : AbstractValidator<GetPlanetDto>
 			.GreaterThanOrEqualTo(0);
 
 		RuleFor(x => x.Name)
-			.NotEmpty()
-			.Length(2, 150);
+			.NotEmpty().WithMessage("Name is required.")
+			.Length(2, 150).WithMessage("Name must be no more than 150 characters in length.");
 	}
 }

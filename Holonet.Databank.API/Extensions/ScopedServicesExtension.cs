@@ -15,6 +15,8 @@ public static class ScopedServicesExtension
 		services.AddScoped<IAuthorService, AuthorService>();
 		services.AddScoped<IAuthorRepository, AuthorRepository>();
 
+		services.AddScoped<IAliasRepository, AliasRepository>();
+
 		services.AddScoped<ICharacterService, CharacterService>();
 		services.AddScoped<ICharacterRepository, CharacterRepository>();
 

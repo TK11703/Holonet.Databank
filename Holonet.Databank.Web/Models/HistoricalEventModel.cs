@@ -94,6 +94,8 @@ public class HistoricalEventModel
 	public List<int> PlanetIds { get; set; } = [];
 	public IEnumerable<PlanetModel> Planets { get; set; } = [];
 
+	public List<AliasModel> Aliases { get; set; } = new();
+
 	public AuthorModel? UpdatedBy { get; set; }
 
 	public DateTime? UpdatedOn { get; set; }

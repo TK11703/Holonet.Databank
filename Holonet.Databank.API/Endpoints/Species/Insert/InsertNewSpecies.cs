@@ -38,6 +38,7 @@ public class InsertNewSpecies : IEndpoint
 				Name = itemModel.Name,
 				Description = itemModel.Description,
 				Shard = itemModel.Shard,
+				Aliases = itemModel.Aliases.Select(alias => new Alias { Name = alias, UpdatedBy = author }),
 				UpdatedBy = author
 			};
 			int newId = await speciesService.CreateSpecies(newSpecies);

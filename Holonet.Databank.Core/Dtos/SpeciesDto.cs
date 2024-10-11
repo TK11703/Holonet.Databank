@@ -7,6 +7,7 @@ public record SpeciesDto(
 	string Name,
 	string? Description,
 	string? Shard,
+	IEnumerable<AliasDto> Aliases,
 	AuthorDto? UpdatedBy,
 	DateTime? UpdatedOn
 );

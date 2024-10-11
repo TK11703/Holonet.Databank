@@ -1,4 +1,5 @@
 ﻿using Holonet.Databank.Core.Dtos;
+using Holonet.Databank.Core.Entities;
 
 namespace Holonet.Databank.Web.Models;
 
@@ -36,6 +37,15 @@ public static class ModelExtensions
 		};
 	}
 
+	public static AliasModel ToAliasModel(this AliasDto alias)
+	{
+		return new AliasModel()
+		{
+			Id = alias.Id,
+			Name = alias.Name
+		};
+	}
+
 	public static CreateCharacterDto ToCreateCharacterDto(this CharacterModel character)
 	{
 		return new CreateCharacterDto
@@ -46,8 +56,9 @@ public static class ModelExtensions
 			character.Shard,
 			character.BirthDate,
 			character.PlanetId,
-            character.SpeciesIds
-        );
+            character.SpeciesIds,
+			character.Aliases.Select(alias => alias.Name)
+		);
 	}
 
 	public static UpdateCharacterDto ToUpdateCharacterDto(this CharacterModel character)
@@ -61,7 +72,8 @@ public static class ModelExtensions
 			character.Shard,
 			character.BirthDate,
 			character.PlanetId,
-            character.SpeciesIds
+            character.SpeciesIds,
+			character.Aliases.Select(alias => alias.Name)
 		);
 	}
 
@@ -79,6 +91,7 @@ public static class ModelExtensions
 			Planet = character.Planet?.ToPlanetModel(),
             SpeciesIds = character.Species.Select(s => s.Id).ToList(),
             Species = character.Species.Select(s => s.ToSpeciesModel()),
+			Aliases = character.Aliases.Select(alias => alias.ToAliasModel()).ToList(),
 			UpdatedBy = character.UpdatedBy?.ToAuthorModel(),
 			UpdatedOn = character.UpdatedOn
 		};
@@ -90,7 +103,8 @@ public static class ModelExtensions
 		(
 			planet.Name,
 			planet.Description,
-			planet.Shard
+			planet.Shard,
+			planet.Aliases.Select(alias => alias.Name)
 		);
 	}
 
@@ -101,7 +115,8 @@ public static class ModelExtensions
 			planet.Id,
 			planet.Name,
 			planet.Description,
-			planet.Shard
+			planet.Shard,
+			planet.Aliases.Select(alias => alias.Name)
 		);
 	}
 
@@ -113,6 +128,7 @@ public static class ModelExtensions
 			Name = planet.Name,
 			Description = planet.Description,
 			Shard = planet.Shard,
+			Aliases = planet.Aliases.Select(alias => alias.ToAliasModel()).ToList(),
 			UpdatedBy = planet.UpdatedBy?.ToAuthorModel(),
 			UpdatedOn = planet.UpdatedOn
 		};
@@ -124,7 +140,8 @@ public static class ModelExtensions
         (
             species.Name,
             species.Description,
-            species.Shard
+            species.Shard,
+			species.Aliases.Select(alias => alias.Name)
 		);
     }
 
@@ -135,7 +152,8 @@ public static class ModelExtensions
             species.Id,
             species.Name,
             species.Description,
-            species.Shard
+            species.Shard,
+			species.Aliases.Select(alias => alias.Name)
 		);
     }
 
@@ -147,6 +165,7 @@ public static class ModelExtensions
             Name = species.Name,
             Description = species.Description,
             Shard = species.Shard,
+			Aliases = species.Aliases.Select(alias => alias.ToAliasModel()).ToList(),
 			UpdatedBy = species.UpdatedBy?.ToAuthorModel(),
 			UpdatedOn = species.UpdatedOn
 		};
@@ -161,7 +180,8 @@ public static class ModelExtensions
 			Shard: historicalEvent.Shard,
 			DatePeriod: historicalEvent.DatePeriod,
 			PlanetIds: historicalEvent.PlanetIds,
-			CharacterIds: historicalEvent.CharacterIds
+			CharacterIds: historicalEvent.CharacterIds,
+			Aliases: historicalEvent.Aliases.Select(alias => alias.Name)
 		);
 	}
 
@@ -175,7 +195,8 @@ public static class ModelExtensions
 			Shard: historicalEvent.Shard,
 			DatePeriod: historicalEvent.DatePeriod,
 			PlanetIds: historicalEvent.PlanetIds,
-			CharacterIds: historicalEvent.CharacterIds
+			CharacterIds: historicalEvent.CharacterIds,
+			Aliases: historicalEvent.Aliases.Select(alias => alias.Name)
 		);
 	}
 
@@ -192,6 +213,7 @@ public static class ModelExtensions
 			Planets = historicalEventDto.Planets.Select(p=>p.ToPlanetModel()),
 			CharacterIds = historicalEventDto.Characters.Select(c => c.Id).ToList(),
 			Characters = historicalEventDto.Characters.Select(c => c.ToCharacterModel()),
+			Aliases = historicalEventDto.Aliases.Select(alias => alias.ToAliasModel()).ToList(),
 			UpdatedBy = historicalEventDto.UpdatedBy?.ToAuthorModel(),
 			UpdatedOn = historicalEventDto.UpdatedOn
 		};

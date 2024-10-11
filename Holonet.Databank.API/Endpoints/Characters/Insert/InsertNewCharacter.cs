@@ -42,6 +42,7 @@ public class InsertNewCharacter : IEndpoint
 				BirthDate = itemModel.BirthDate,
 				PlanetId = itemModel.PlanetId,
 				SpeciesIds = itemModel.SpeciesIds,
+				Aliases = itemModel.Aliases.Select(alias => new Alias { Name = alias, UpdatedBy = author }),
 				UpdatedBy = author
 			};
 

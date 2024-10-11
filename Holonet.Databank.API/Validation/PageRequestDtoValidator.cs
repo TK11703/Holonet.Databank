@@ -12,7 +12,7 @@ public class PageRequestDtoValidator : AbstractValidator<PageRequestDto>
 			.GreaterThanOrEqualTo(0);
 
 		RuleFor(x => x.PageSize)
-			.NotEmpty()
+			.NotEmpty().WithMessage("Page size is required.")
 			.GreaterThanOrEqualTo(10)
 			.LessThanOrEqualTo(100);
 

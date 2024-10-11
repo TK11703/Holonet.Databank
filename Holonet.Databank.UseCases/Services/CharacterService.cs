@@ -5,18 +5,19 @@ using Holonet.Databank.Infrastructure.Repositories;
 using System.Data;
 
 namespace Holonet.Databank.Application.Services;
-public class CharacterService(ICharacterRepository characterRepository, IPlanetRepository planetRepository, ICharacterSpeciesRepository characterSpeciesRepository, IAuthorService authorService) : ICharacterService
+public class CharacterService(ICharacterRepository characterRepository, IPlanetRepository planetRepository, ICharacterSpeciesRepository characterSpeciesRepository, IAuthorService authorService, IAliasRepository aliasRepository) : ICharacterService
 {
-    private readonly ICharacterRepository _characterRepository = characterRepository;
-    private readonly IPlanetRepository _planetRepository = planetRepository;
-    private readonly ICharacterSpeciesRepository _characterSpeciesRepository = characterSpeciesRepository;
+	private readonly ICharacterRepository _characterRepository = characterRepository;
+	private readonly IPlanetRepository _planetRepository = planetRepository;
+	private readonly ICharacterSpeciesRepository _characterSpeciesRepository = characterSpeciesRepository;
 	private readonly IAuthorService _authorService = authorService;
+	private readonly IAliasRepository _aliasRepository = aliasRepository;
 
 	public async Task<Character?> GetCharacterById(int id)
-    {
-        var character = await _characterRepository.GetCharacter(id);
-        if (character != null)
-        {
+	{
+		var character = await _characterRepository.GetCharacter(id);
+		if (character != null)
+		{
 			if (character.AuthorId > 0)
 			{
 				var author = await _authorService.GetAuthorById(character.AuthorId, true);
@@ -26,17 +27,23 @@ public class CharacterService(ICharacterRepository characterRepository, IPlanetR
 				}
 			}
 			if (character.PlanetId.HasValue)
-            {
-                character.Planet = await _planetRepository.GetPlanet(character.PlanetId.Value);
-            }
-            character.Species = await _characterSpeciesRepository.GetSpecies(character.Id);
-            if (character.Species.Any())
-            {
-                character.SpeciesIds = character.Species.Select(c => c.Id);
-            }
-        }
-        return character;
-    }
+			{
+				character.Planet = await _planetRepository.GetPlanet(character.PlanetId.Value);
+			}
+			character.Species = await _characterSpeciesRepository.GetSpecies(character.Id);
+			if (character.Species.Any())
+			{
+				character.SpeciesIds = character.Species.Select(c => c.Id);
+			}
+
+			character.Aliases = await _aliasRepository.GetAliases(characterId: character.Id);
+			if (character.Aliases.Any())
+			{
+				character.AliasIds = character.Aliases.Select(c => c.Id);
+			}
+		}
+		return character;
+	}
 
 	public async Task<bool> CharacterExists(int id, string givenName, string? familyName, int? planetId)
 	{
@@ -49,72 +56,65 @@ public class CharacterService(ICharacterRepository characterRepository, IPlanetR
 		{
 			exists = await _characterRepository.CharacterExists(id, givenName, familyName, default);
 		}
-        return exists;
+		return exists;
 	}
 
 
-	public async Task<IEnumerable<Character>> GetCharacters()
-    {
-        var characters = await _characterRepository.GetCharacters();
-        foreach (var character in characters)
-        {
-            if (character.PlanetId.HasValue)
-            {
-                character.Planet = await _planetRepository.GetPlanet(character.PlanetId.Value);
-            }
-            character.Species = await _characterSpeciesRepository.GetSpecies(character.Id);
-            if (character.Species.Any())
-            {
-                character.SpeciesIds = character.Species.Select(c => c.Id);
-            }
-        }
-        return characters;
-    }
+	public async Task<IEnumerable<Character>> GetCharacterList()
+	{
+		return await _characterRepository.GetCharacters();
+	}
 
-    public async Task<PageResult<Character>> GetPagedAsync(PageRequest pageRequest)
-    {
-        var characters = await _characterRepository.GetPagedAsync(pageRequest);
-        foreach (var character in characters.Collection)
-        {
-            if (character.PlanetId.HasValue)
-            {
-                character.Planet = await _planetRepository.GetPlanet(character.PlanetId.Value);
-            }
-            character.Species = await _characterSpeciesRepository.GetSpecies(character.Id);
-            if (character.Species.Any())
-            {
-                character.SpeciesIds = character.Species.Select(c => c.Id);
-            }
-        }
-        return characters;
-    }
+	public async Task<PageResult<Character>> GetPagedAsync(PageRequest pageRequest)
+	{
+		var characters = await _characterRepository.GetPagedAsync(pageRequest);
+		foreach (var character in characters.Collection)
+		{
+			if (character.PlanetId.HasValue)
+			{
+				character.Planet = await _planetRepository.GetPlanet(character.PlanetId.Value);
+			}
+			character.Species = await _characterSpeciesRepository.GetSpecies(character.Id);
+			if (character.Species.Any())
+			{
+				character.SpeciesIds = character.Species.Select(c => c.Id);
+			}
+			character.Aliases = await _aliasRepository.GetAliases(characterId: character.Id);
+			if (character.Aliases.Any())
+			{
+				character.AliasIds = character.Aliases.Select(c => c.Id);
+			}
+		}
+		return characters;
+	}
 
-    public async Task<int> CreateCharacter(Character character)
-    {
-        bool exists = await CharacterExists(0, character.GivenName, character.FamilyName, character.PlanetId);
-        if (exists)
-        {
-            throw new DataException("Character already exists.");
-        }
-        var newId = await _characterRepository.CreateCharacter(character);
+	public async Task<int> CreateCharacter(Character character)
+	{
+		bool exists = await CharacterExists(0, character.GivenName, character.FamilyName, character.PlanetId);
+		if (exists)
+		{
+			throw new DataException("Character already exists.");
+		}
+		var newId = await _characterRepository.CreateCharacter(character);
 		if (newId > 0)
-        {
+		{
 			await _characterSpeciesRepository.AddSpecies(GetSpeciesTable(newId, character.SpeciesIds), character.UpdatedBy.AzureId);
+			await _aliasRepository.AddAliases(GetAliasTable(newId, character.Aliases), character.UpdatedBy.AzureId);
 		}
 		return newId;
 	}
 
-    public async Task<bool> UpdateCharacter(Character character)
-    {
-        bool exists = await CharacterExists(character.Id, character.GivenName, character.FamilyName, character.PlanetId);
-		
-        if (exists)
-        {
-            throw new DataException("Character already exists.");
-        }
-        bool updated = _characterRepository.UpdateCharacter(character);
-        if(updated)
-        {
+	public async Task<bool> UpdateCharacter(Character character)
+	{
+		bool exists = await CharacterExists(character.Id, character.GivenName, character.FamilyName, character.PlanetId);
+
+		if (exists)
+		{
+			throw new DataException("Character already exists.");
+		}
+		bool updated = _characterRepository.UpdateCharacter(character);
+		if (updated)
+		{
 			int completedCmds = 0;
 			if (await _characterSpeciesRepository.DeleteSpecies(character.Id))
 			{
@@ -124,15 +124,23 @@ public class CharacterService(ICharacterRepository characterRepository, IPlanetR
 					completedCmds++;
 				}
 			}
-			updated = completedCmds == 2;
+			if (await _aliasRepository.DeleteAliases(characterId: character.Id))
+			{
+				completedCmds++;
+				if (await _aliasRepository.AddAliases(GetAliasTable(character.Id, character.Aliases), character.UpdatedBy.AzureId))
+				{
+					completedCmds++;
+				}
+			}
+			updated = completedCmds == 4;
 		}
-        return updated;
+		return updated;
 	}
 
-    public async Task<bool> DeleteCharacter(int id)
-    {
-        return await _characterRepository.DeleteCharacter(id);
-    }
+	public async Task<bool> DeleteCharacter(int id)
+	{
+		return await _characterRepository.DeleteCharacter(id);
+	}
 
 	private static DataTable GetSpeciesTable(int characterId, IEnumerable<int> speciesIds)
 	{
@@ -142,6 +150,21 @@ public class CharacterService(ICharacterRepository characterRepository, IPlanetR
 		foreach (var id in speciesIds)
 		{
 			dt.Rows.Add(characterId, id);
+		}
+		return dt;
+	}
+
+	private static DataTable GetAliasTable(int characterId, IEnumerable<Alias> aliases)
+	{
+		DataTable dt = new();
+		dt.Columns.Add("AliasName", typeof(string));
+		dt.Columns.Add("CharacterId", typeof(int));
+		dt.Columns.Add("HistoricalEventId", typeof(int));
+		dt.Columns.Add("PlanetId", typeof(int));
+		dt.Columns.Add("SpeciesId", typeof(int));
+		foreach (var alias in aliases)
+		{
+			dt.Rows.Add(alias.Name, characterId, null, null, null);
 		}
 		return dt;
 	}

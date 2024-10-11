@@ -110,7 +110,7 @@ public sealed class CharacterClient
 		};
 	}
 
-	public async Task<bool> Exists(int id, string givenName, string familyName, int? planetId)
+	public async Task<bool> Exists(int id, string givenName, string? familyName, int? planetId)
 	{
 		await AcquireBearerTokenForClient();
 

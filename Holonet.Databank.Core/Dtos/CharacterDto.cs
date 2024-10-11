@@ -10,6 +10,7 @@ public record CharacterDto(
 	string? BirthDate,
 	PlanetDto? Planet,
     IEnumerable<SpeciesDto> Species,
+	IEnumerable<AliasDto> Aliases,
 	AuthorDto? UpdatedBy,
 	DateTime? UpdatedOn
 );

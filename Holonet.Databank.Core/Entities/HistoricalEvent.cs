@@ -14,14 +14,17 @@ public class HistoricalEvent : EntityBase
 	[StringLength(200)]
 	public string? DatePeriod { get; set; }
 
+	[Url]
+	[StringLength(500)]
+	public string? Shard { get; set; }
+
 	public IEnumerable<int> CharacterIds { get; set; } = [];
 	public IEnumerable<Character> Characters { get; set; } = [];
 
 	public IEnumerable<int> PlanetIds { get; set; } = [];
 	public IEnumerable<Planet> Planets { get; set; } = [];
 
-	[Url]
-	[StringLength(500)]
-	public string? Shard { get; set; }
+	public IEnumerable<int> AliasIds { get; set; } = [];
+	public IEnumerable<Alias> Aliases { get; set; } = [];
 
 }

@@ -9,5 +9,6 @@ public record UpdateHistoricalEventDto(
 	[StringLength(200)] string? DatePeriod,
 	[Url][StringLength(500)] string? Shard,
 	IEnumerable<int> CharacterIds,
-	IEnumerable<int> PlanetIds
+	IEnumerable<int> PlanetIds,
+	IEnumerable<string> Aliases
 );

@@ -11,6 +11,12 @@
 		<DataAnnotationsValidator />
 		<ValidationSummary />
 		<div class="container">
+			<nav class="navbar navbar-light bg-light">
+				<div class="container-fluid justify-content-start">
+					<button type="submit" class="btn btn-outline-primary btn-sm">Update</button>
+					<a href="characters/index" class="btn btn-outline-secondary btn-sm">Cancel</a>
+				</div>
+			</nav>
 			<div class="row mb-3">
 				<div class="col-md-6">
 					<label for="GivenName" class="form-label">Given Name</label>
@@ -52,6 +58,13 @@
 			</div>
 			<div class="row mb-3">
 				<div class="col-md-12">
+					<label for="Shard" class="form-label">Shard (External Data Link)</label>
+					<InputText id="Shard" class="form-control" @bind-Value="Model.Shard" />
+					<ValidationMessage For="() => Model.Shard" />
+				</div>
+			</div>
+			<div class="row mb-3">
+				<div class="col-md-12">
 					<label for="Species" class="form-label">Species</label>
 					<div class="card">
 						<div class="card-body">
@@ -66,21 +79,13 @@
 			</div>
 			<div class="row mb-3">
 				<div class="col-md-12">
-					<label for="Shard" class="form-label">Shard (External Data Link)</label>
-					<InputText id="Shard" class="form-control" @bind-Value="Model.Shard" />
-					<ValidationMessage For="() => Model.Shard" />
-				</div>
-			</div>
-			<div class="row mb-3">
-				<div class="col-md-12">
 					<label for="Description" class="form-label">Description</label>
 					<InputTextArea id="Description" class="form-control" @bind-Value="Model.Description" />
 				</div>
 			</div>
 			<div class="row mb-3">
 				<div class="col-md-12">
-					<button type="submit" class="btn btn-primary">Update</button>
-					<a href="characters/index" class="btn btn-light">Cancel</a>
+					<AliasSelector Aliases="@Model.Aliases" />
 				</div>
 			</div>
 		</div>

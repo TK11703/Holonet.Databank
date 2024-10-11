@@ -10,5 +10,6 @@ public record CreateCharacterDto(
 	[Url][StringLength(500)] string? Shard,
 	[StringLength(200)] string? BirthDate,
 	int? PlanetId,
-    IEnumerable<int> SpeciesIds
+    IEnumerable<int> SpeciesIds,
+	IEnumerable<string> Aliases
 );

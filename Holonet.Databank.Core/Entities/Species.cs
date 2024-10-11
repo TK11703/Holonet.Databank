@@ -15,4 +15,7 @@ public class Species : EntityBase
 	[StringLength(500)]
 	public string? Shard { get; set; }
 
+	public IEnumerable<int> AliasIds { get; set; } = [];
+	public IEnumerable<Alias> Aliases { get; set; } = [];
+
 }

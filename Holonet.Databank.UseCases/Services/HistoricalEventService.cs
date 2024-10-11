@@ -5,12 +5,13 @@ using System.Data;
 using System.Numerics;
 
 namespace Holonet.Databank.Application.Services;
-public class HistoricalEventService(IHistoricalEventRepository historicalEventRepository, IHistoricalEventCharacterRepository historicalEventCharacterRepository, IHistoricalEventPlanetRepository historicalEventPlanetRepository, IAuthorService authorService) : IHistoricalEventService
+public class HistoricalEventService(IHistoricalEventRepository historicalEventRepository, IHistoricalEventCharacterRepository historicalEventCharacterRepository, IHistoricalEventPlanetRepository historicalEventPlanetRepository, IAuthorService authorService, IAliasRepository aliasRepository) : IHistoricalEventService
 {
 	private readonly IHistoricalEventRepository _historicalEventRepository = historicalEventRepository;
 	private readonly IHistoricalEventCharacterRepository _historicalEventCharacterRepository = historicalEventCharacterRepository;
 	private readonly IHistoricalEventPlanetRepository _historicalEventPlanetRepository = historicalEventPlanetRepository;
 	private readonly IAuthorService _authorService = authorService;
+	private readonly IAliasRepository _aliasRepository = aliasRepository;
 
 	public async Task<HistoricalEvent?> GetHistoricalEventById(int id)
 	{
@@ -35,7 +36,12 @@ public class HistoricalEventService(IHistoricalEventRepository historicalEventRe
             {
                 item.PlanetIds = item.Planets.Select(c => c.Id);
             }
-        }
+			item.Aliases = await _aliasRepository.GetAliases(historicalEventId: item.Id);
+			if (item.Aliases.Any())
+			{
+				item.AliasIds = item.Aliases.Select(c => c.Id);
+			}
+		}
 		return item;
 	}
 
@@ -60,7 +66,12 @@ public class HistoricalEventService(IHistoricalEventRepository historicalEventRe
             {
                 item.PlanetIds = item.Planets.Select(c => c.Id);
             }
-        }
+			item.Aliases = await _aliasRepository.GetAliases(historicalEventId: item.Id);
+			if (item.Aliases.Any())
+			{
+				item.AliasIds = item.Aliases.Select(c => c.Id);
+			}
+		}
 		return items;
 	}
 
@@ -79,7 +90,12 @@ public class HistoricalEventService(IHistoricalEventRepository historicalEventRe
             {
                 item.PlanetIds = item.Planets.Select(c => c.Id);
             }
-        }
+			item.Aliases = await _aliasRepository.GetAliases(historicalEventId: item.Id);
+			if (item.Aliases.Any())
+			{
+				item.AliasIds = item.Aliases.Select(c => c.Id);
+			}
+		}
 		return items;
 	}
 
@@ -95,6 +111,7 @@ public class HistoricalEventService(IHistoricalEventRepository historicalEventRe
 		{
 			await _historicalEventCharacterRepository.AddCharacters(GetCharacterTable(newId, historicalEvent.CharacterIds), historicalEvent.UpdatedBy.AzureId);
 			await _historicalEventPlanetRepository.AddPlanets(GetPlanetTable(newId, historicalEvent.PlanetIds), historicalEvent.UpdatedBy.AzureId);
+			await _aliasRepository.AddAliases(GetAliasTable(newId, historicalEvent.Aliases), historicalEvent.UpdatedBy.AzureId);
 		}
 		return newId;
 	}
@@ -126,7 +143,15 @@ public class HistoricalEventService(IHistoricalEventRepository historicalEventRe
 					completedCmds++;
 				}
 			}
-			updated = completedCmds == 4;
+			if (await _aliasRepository.DeleteAliases(historicalEventId: historicalEvent.Id))
+			{
+				completedCmds++;
+				if (await _aliasRepository.AddAliases(GetAliasTable(historicalEvent.Id, historicalEvent.Aliases), historicalEvent.UpdatedBy.AzureId))
+				{
+					completedCmds++;
+				}
+			}
+			updated = completedCmds == 6;
 		}
 		return updated;
 	}
@@ -156,6 +181,21 @@ public class HistoricalEventService(IHistoricalEventRepository historicalEventRe
 		foreach (var planetId in planetIds)
 		{
 			dt.Rows.Add(historicalEventId, planetId);
+		}
+		return dt;
+	}
+
+	private static DataTable GetAliasTable(int historicalEventId, IEnumerable<Alias> aliases)
+	{
+		DataTable dt = new();
+		dt.Columns.Add("AliasName", typeof(string));
+		dt.Columns.Add("CharacterId", typeof(int));
+		dt.Columns.Add("HistoricalEventId", typeof(int));
+		dt.Columns.Add("PlanetId", typeof(int));
+		dt.Columns.Add("SpeciesId", typeof(int));
+		foreach (var alias in aliases)
+		{
+			dt.Rows.Add(alias.Name, null, historicalEventId, null, null);
 		}
 		return dt;
 	}

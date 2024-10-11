@@ -1,10 +1,25 @@
 ﻿using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Core.Models;
+using System.Numerics;
 
 namespace Holonet.Databank.Core.Entities;
 
 public static class EntityExtensions
 {
+	public static AliasDto ToDto(this Alias alias)
+	{
+		return new AliasDto
+		(
+			alias.Id,
+			alias.Name,
+			alias.CharacterId,
+			alias.PlanetId,
+			alias.SpeciesId,
+			alias.UpdatedBy?.ToDto(),
+			alias.UpdatedOn
+		);
+	}
+
 	public static AuthorDto ToDto(this Author author)
 	{
 		return new AuthorDto
@@ -24,25 +39,27 @@ public static class EntityExtensions
 			planet.Name,
 			planet.Description,
 			planet.Shard,
+			planet.Aliases.Select(alias => alias.ToDto()),
 			planet.UpdatedBy?.ToDto(),
 			planet.UpdatedOn
 		);
 	}
 
-    public static SpeciesDto ToDto(this Species species)
-    {
-        return new SpeciesDto
-        (
-            species.Id,
-            species.Name,
-            species.Description,
-            species.Shard,
+	public static SpeciesDto ToDto(this Species species)
+	{
+		return new SpeciesDto
+		(
+			species.Id,
+			species.Name,
+			species.Description,
+			species.Shard,
+			species.Aliases.Select(alias => alias.ToDto()),
 			species.UpdatedBy?.ToDto(),
 			species.UpdatedOn
 		);
-    }
+	}
 
-    public static HistoricalEventDto ToDto(this HistoricalEvent historicalEvent)
+	public static HistoricalEventDto ToDto(this HistoricalEvent historicalEvent)
 	{
 		return new HistoricalEventDto
 		(
@@ -53,6 +70,7 @@ public static class EntityExtensions
 			historicalEvent.Shard,
 			historicalEvent.Characters.Select(character => character.ToDto()),
 			historicalEvent.Planets.Select(planet => planet.ToDto()),
+			historicalEvent.Aliases.Select(alias => alias.ToDto()),
 			historicalEvent.UpdatedBy?.ToDto(),
 			historicalEvent.UpdatedOn
 		);
@@ -69,7 +87,8 @@ public static class EntityExtensions
 			character.Shard,
 			character.BirthDate,
 			character.Planet?.ToDto(),
-            character.Species.Select(species => species.ToDto()),
+			character.Species.Select(species => species.ToDto()),
+			character.Aliases.Select(alias => alias.ToDto()),
 			character.UpdatedBy?.ToDto(),
 			character.UpdatedOn
 
@@ -81,7 +100,7 @@ public static class EntityExtensions
 		return new PageResultDto<CharacterDto>
 		(
 			pageResult.Start,
-			pageResult.PageSize, 
+			pageResult.PageSize,
 			pageResult.ItemCount,
 			pageResult.TotalPages,
 			pageResult.CurrentPage,
@@ -106,22 +125,22 @@ public static class EntityExtensions
 		);
 	}
 
-    public static PageResultDto<SpeciesDto> ToDto(this PageResult<Species> pageResult)
-    {
-        return new PageResultDto<SpeciesDto>
-        (
-            pageResult.Start,
-            pageResult.PageSize,
-            pageResult.ItemCount,
-            pageResult.TotalPages,
-            pageResult.CurrentPage,
-            pageResult.IsFirstPage,
-            pageResult.IsLastPage,
-            pageResult.Collection.Select(species => species.ToDto())
-        );
-    }
+	public static PageResultDto<SpeciesDto> ToDto(this PageResult<Species> pageResult)
+	{
+		return new PageResultDto<SpeciesDto>
+		(
+			pageResult.Start,
+			pageResult.PageSize,
+			pageResult.ItemCount,
+			pageResult.TotalPages,
+			pageResult.CurrentPage,
+			pageResult.IsFirstPage,
+			pageResult.IsLastPage,
+			pageResult.Collection.Select(species => species.ToDto())
+		);
+	}
 
-    public static PageResultDto<HistoricalEventDto> ToDto(this PageResult<HistoricalEvent> pageResult)
+	public static PageResultDto<HistoricalEventDto> ToDto(this PageResult<HistoricalEvent> pageResult)
 	{
 		return new PageResultDto<HistoricalEventDto>
 		(

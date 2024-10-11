@@ -21,7 +21,7 @@ public class GetAllCharacters : IEndpoint
 	{
 		try
 		{
-			var results = await characterService.GetCharacters();
+			var results = await characterService.GetCharacterList();
 			if (results != null && results.Any())
 			{
 				return TypedResults.Ok(results.Select(planet => planet.ToDto()));

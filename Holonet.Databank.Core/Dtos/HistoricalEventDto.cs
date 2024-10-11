@@ -10,6 +10,7 @@ public record HistoricalEventDto(
 	string? Shard,
 	IEnumerable<CharacterDto> Characters,
 	IEnumerable<PlanetDto> Planets,
+	IEnumerable<AliasDto> Aliases,
 	AuthorDto? UpdatedBy,
 	DateTime? UpdatedOn
 );

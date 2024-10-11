@@ -10,7 +10,7 @@ namespace Holonet.Databank.Web.Components.Pages.Characters;
 
 public partial class CreateCharacter
 {
-    public CharacterModel Model { get; set; } = new();
+    public CharacterModel Model { get; set; } = new();	
 
 	private EditContext EditContext { get; set; } = default!;
 
@@ -93,7 +93,7 @@ public partial class CreateCharacter
 				MessageStore.Add(fieldIdentifier, "A character with this name and (potential home planet) already exist.");
 			}
 		}
-	}
+	}	
 
 	private async Task RefreshPlanets()
     {

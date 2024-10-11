@@ -57,6 +57,8 @@ public class CharacterModel
     public List<int> SpeciesIds { get; set; } = [];
     public IEnumerable<SpeciesModel> Species { get; set; } = [];
 
+	public List<AliasModel> Aliases { get; set; } = new();
+
 	public AuthorModel? UpdatedBy { get; set; }
 
 	public DateTime? UpdatedOn { get; set; }

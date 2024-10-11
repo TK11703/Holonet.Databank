@@ -5,10 +5,11 @@ using Holonet.Databank.Infrastructure.Repositories;
 using System.Data;
 
 namespace Holonet.Databank.Application.Services;
-public class PlanetService(IPlanetRepository planetRepository, IAuthorService authorService) : IPlanetService
+public class PlanetService(IPlanetRepository planetRepository, IAuthorService authorService, IAliasRepository aliasRepository) : IPlanetService
 {
 	private readonly IPlanetRepository _planetRepository = planetRepository;
 	private readonly IAuthorService _authorService = authorService;
+	private readonly IAliasRepository _aliasRepository = aliasRepository;
 
 	public async Task<Planet?> GetPlanetById(int id)
 	{
@@ -19,6 +20,12 @@ public class PlanetService(IPlanetRepository planetRepository, IAuthorService au
 			if (author != null)
 			{
 				planet.UpdatedBy = author;
+			}
+
+			planet.Aliases = await _aliasRepository.GetAliases(planetId: planet.Id);
+			if (planet.Aliases.Any())
+			{
+				planet.AliasIds = planet.Aliases.Select(c => c.Id);
 			}
 		}
 		return planet;
@@ -47,7 +54,12 @@ public class PlanetService(IPlanetRepository planetRepository, IAuthorService au
 		{
 			throw new DataException("Planet already exists.");
 		}
-		return await _planetRepository.CreatePlanet(planet);
+		int newId = await _planetRepository.CreatePlanet(planet);
+		if (newId > 0)
+		{
+			await _aliasRepository.AddAliases(GetAliasTable(newId, planet.Aliases), planet.UpdatedBy.AzureId);
+		}
+		return newId;
 	}
 
 	public async Task<bool> UpdatePlanet(Planet planet)
@@ -57,11 +69,40 @@ public class PlanetService(IPlanetRepository planetRepository, IAuthorService au
 		{
 			throw new DataException("Planet already exists.");
 		}
-		return _planetRepository.UpdatePlanet(planet);
+		bool updated = _planetRepository.UpdatePlanet(planet);
+		if(updated)
+		{
+			int completedCmds = 0;
+			if (await _aliasRepository.DeleteAliases(planetId: planet.Id))
+			{
+				completedCmds++;
+				if (await _aliasRepository.AddAliases(GetAliasTable(planet.Id, planet.Aliases), planet.UpdatedBy.AzureId))
+				{
+					completedCmds++;
+				}
+			}
+			updated = completedCmds == 2;
+		}
+		return updated;
 	}
 
 	public async Task<bool> DeletePlanet(int id)
 	{
 		return await _planetRepository.DeletePlanet(id);
+	}
+
+	private static DataTable GetAliasTable(int planetId, IEnumerable<Alias> aliases)
+	{
+		DataTable dt = new();
+		dt.Columns.Add("AliasName", typeof(string));
+		dt.Columns.Add("CharacterId", typeof(int));
+		dt.Columns.Add("HistoricalEventId", typeof(int));
+		dt.Columns.Add("PlanetId", typeof(int));
+		dt.Columns.Add("SpeciesId", typeof(int));
+		foreach (var alias in aliases)
+		{
+			dt.Rows.Add(alias.Name, null, null, planetId, null);
+		}
+		return dt;
 	}
 }

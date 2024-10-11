@@ -16,6 +16,8 @@ public class SpeciesModel
 	[StringLength(500)]
 	public string? Shard { get; set; }
 
+	public List<AliasModel> Aliases { get; set; } = new();
+
 	public AuthorModel? UpdatedBy { get; set; }
 
 	public DateTime? UpdatedOn { get; set; }

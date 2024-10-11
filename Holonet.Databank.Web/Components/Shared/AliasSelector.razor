@@ -1,0 +1,32 @@
+﻿<div class="row border-top border-bottom pt-2 pb-2">
+	<div class="col-6">
+		<div class="card">
+			<div class="card-header">
+				Assign a New Alias
+			</div>
+			<div class="card-body">
+				<div class="input-group col-3">
+					<InputText id="NewAlias" class="form-control" @bind-Value="@NewAlias.Name"></InputText>
+					<button type="button" class="btn btn-secondary" @onclick="AddNewAlias">Add</button>
+				</div>
+				<ValidationMessage For="() => NewAlias.Name" />
+			</div>
+		</div>
+	</div>
+	<div class="col-6">
+		<div class="card">
+			<div class="card-header">
+				Current Assigned Aliases
+			</div>
+			<div class="card-body">
+				@foreach (var alias in Aliases)
+				{
+					<span class="badge bg-light text-dark me-1">
+						@alias.Name
+						<a href="javascript:void(0);" class="btn-close ms-2" aria-label="Close" @onclick="() => RemoveAlias(alias.Name)" title="Click to delete this alias, but don't forget to save/update!'"></a>
+					</span>
+				}
+			</div>
+		</div>
+	</div>
+</div>

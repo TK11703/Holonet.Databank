@@ -35,6 +35,13 @@
 				</div>
 			</div>
 			<div class="row mb-3">
+				<div class="col-md-12">
+					<label for="Shard" class="form-label">Shard (External Data Link)</label>
+					<InputText id="Shard" class="form-control" @bind-Value="Model.Shard" />
+					<ValidationMessage For="() => Model.Shard" />
+				</div>
+			</div>
+			<div class="row mb-3">
 				<div class="col-md-6">
 					<label for="Character" class="form-label">Characters</label>
 					<div class="card">
@@ -60,15 +67,13 @@
 			</div>
 			<div class="row mb-3">
 				<div class="col-md-12">
-					<label for="Shard" class="form-label">Shard (External Data Link)</label>
-					<InputText id="Shard" class="form-control" @bind-Value="Model.Shard" />
-					<ValidationMessage For="() => Model.Shard" />
+					<label for="Description" class="form-label">Description</label>
+					<InputTextArea id="Description" class="form-control" @bind-Value="Model.Description" />
 				</div>
 			</div>
 			<div class="row mb-3">
 				<div class="col-md-12">
-					<label for="Description" class="form-label">Description</label>
-					<InputTextArea id="Description" class="form-control" @bind-Value="Model.Description" />
+					<AliasSelector Aliases="@Model.Aliases" />
 				</div>
 			</div>
 			<div class="row mb-3">

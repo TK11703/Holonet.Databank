@@ -4,8 +4,13 @@
 
 <h1><i class="bi bi-database"></i> @(@Model.GivenName) @(@Model.FamilyName)</h1>
 <hr />
-
 <div class="container">
+	<nav class="navbar navbar-light bg-light">
+		<div class="container-fluid justify-content-start">
+			<a href="characters/update/@(ID)" class="btn btn-outline-primary btn-sm me-2">Update</a>
+			<a href="characters/index" class="btn btn-outline-secondary btn-sm">Index</a>
+		</div>
+	</nav>
 	<div class="row mb-3">
 		<p>
 			<a href="@Model.Shard" target="_blank" class="text-decoration-none">
@@ -27,6 +32,7 @@
 					<th scope="col">Born</th>
 					<th scope="col">Species</th>
 					<th scope="col">Homeworld</th>
+					<th scope="col">Aliases</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -44,7 +50,7 @@
 					<td>
 						@foreach (var species in Model.Species)
 						{
-							<span class="badge bg-light text-dark">@species.Name</span>
+							<span class="badge bg-light text-dark me-1">@species.Name</span>
 						}
 					</td>
 					<td>
@@ -57,6 +63,12 @@
 							<span class="badge bg-light text-dark">Unknown</span>
 						}
 					</td>
+					<td>
+						@foreach (var alias in Model.Aliases)
+						{
+							<span class="badge bg-light text-dark me-1">@alias.Name</span>
+						}
+					</td>
 				</tr>
 			</tbody>
 		</table>
@@ -67,12 +79,6 @@
 			<p>
 				@GetFormattedDescription()
 			</p>
-		</div>
-	</div>
-	<div class="row mb-3">
-		<div class="col-md-12">
-			<a href="characters/update/@(ID)" class="btn btn-light">Update</a>
-			<a href="characters/index" class="btn btn-light">Cancel</a>
 		</div>
 	</div>
 </div>
