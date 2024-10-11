@@ -19,7 +19,18 @@
 				</div>
 				<div class="col-md-6">
 					<label for="DatePeriod" class="form-label">Date Period</label>
-					<InputText id="DatePeriod" class="form-control" @bind-Value="Model.DatePeriod" />
+					<div class="input-group mb-3">
+						<InputNumber id="YearStarted" class="form-control" @bind-Value="Model.YearStarted" />
+						<InputSelect id="YearStartedDatingSystem" class="form-select" aria-label="Select a period." @bind-Value="Model.YearStartedDateSystem">
+							<option value="BBY">BBY</option>
+							<option value="ABY">ABY</option>
+						</InputSelect>
+						<InputNumber id="YearEnded" class="form-control" @bind-Value="Model.YearEnded" />
+						<InputSelect id="YearEndedDatingSystem" class="form-select" aria-label="Select a period." @bind-Value="Model.YearEndedDateSystem">
+							<option value="BBY">BBY</option>
+							<option value="ABY">ABY</option>
+						</InputSelect>
+					</div>
 					<ValidationMessage For="() => Model.DatePeriod" />
 				</div>
 			</div>

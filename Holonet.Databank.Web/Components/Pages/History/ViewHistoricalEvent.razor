@@ -22,7 +22,14 @@
 	<div class="row mb-3">
 		<div class="col-md-12">
 			<p>
-				@Model.DatePeriod
+				@if (Model.DatePeriod != null)
+				{
+					<span class="badge bg-light text-dark">@Model.DatePeriod</span>
+				}
+				else
+				{
+					<span class="badge bg-light text-dark">Unknown</span>
+				}
 			</p>
 		</div>
 	</div>
