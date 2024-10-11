@@ -12,83 +12,89 @@
 		<DataAnnotationsValidator />
 		<ValidationSummary />
 		<div class="container">
-			<nav class="navbar navbar-light bg-light">
-				<div class="container-fluid justify-content-start">
-					<button type="submit" class="btn btn-outline-primary btn-sm">Create</button>
-					<a href="characters/index" class="btn btn-outline-secondary btn-sm">Cancel</a>
-				</div>
-			</nav>
-			<div class="row mb-3">
-				<div class="col-md-6">
-					<label for="GivenName" class="form-label">Given Name</label>
-					<InputText id="GivenName" class="form-control" @bind-Value="Model.GivenName" />
-					<ValidationMessage For="() => Model.GivenName" />
-				</div>
-				<div class="col-md-6">
-					<label for="FamilyName" class="form-label">Family Name</label>
-					<InputText id="FamilyName" class="form-control" @bind-Value="Model.FamilyName" />
-					<ValidationMessage For="() => Model.FamilyName" />
-				</div>
-			</div>
-			<div class="row mb-3">
-				<div class="col-md-6">
-					<label for="BirthYear" class="form-label">Date of Birth</label>
-					<div class="input-group mb-3">
-						<InputNumber id="BirthYear" class="form-control" @bind-Value="Model.BirthYear" />
-						<InputSelect id="DatingSystem" class="form-select" aria-label="Select a date period." @bind-Value="Model.DateSystem">
-							<option value="BBY">BBY</option>
-							<option value="ABY">ABY</option>
-						</InputSelect>
-					</div>
-					<ValidationMessage For="() => Model.BirthDate" />
-				</div>
-				<div class="col-md-6">
-					<label for="Planet" class="form-label">Birth Planet</label>
-					<div class="input-group">
-						<InputSelect id="Planet" class="form-select" @bind-Value="Model.PlanetId">
-							<option value="">Select a planet</option>
-							@foreach (var planet in Planets)
-							{
-								<option value="@planet.Id">@planet.Name</option>
-							}
-						</InputSelect>
-						<button class="btn btn-primary" type="button" @onclick="RefreshPlanets"><i class="bi bi-arrow-clockwise"></i></button>
-					</div>
-					<ValidationMessage For="() => Model.PlanetId" />
-				</div>
-			</div>
-			<div class="row mb-3">
-				<div class="col-md-12">
-					<label for="Shard" class="form-label">Shard (External Data Link)</label>
-					<InputText id="Shard" class="form-control" @bind-Value="Model.Shard" />
-					<ValidationMessage For="() => Model.Shard" />
-				</div>
-			</div>
-			<div class="row mb-3">
-				<div class="col-md-12">
-					<label for="Species" class="form-label">Species</label>
-					<div class="card">
-						<div class="card-body">
-							<CheckboxSelector SelectedOptionIds="Model.SpeciesIds" Options="@Species"></CheckboxSelector>
+			<div class="card mb-3">
+				<div class="card-header">Enter the basic character data</div>
+				<div class="card-body">
+					<div class="row mb-3">
+						<div class="col-md-6">
+							<label for="GivenName" class="form-label">Given Name</label>
+							<InputText id="GivenName" class="form-control" @bind-Value="Model.GivenName" />
+							<ValidationMessage For="() => Model.GivenName" />
 						</div>
-						<div class="card-footer">
-							<button class="btn btn-primary" type="button" @onclick="RefreshSpecies"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+						<div class="col-md-6">
+							<label for="FamilyName" class="form-label">Family Name</label>
+							<InputText id="FamilyName" class="form-control" @bind-Value="Model.FamilyName" />
+							<ValidationMessage For="() => Model.FamilyName" />
 						</div>
 					</div>
-					<ValidationMessage For="() => Model.SpeciesIds" />
+					<div class="row">
+						<div class="col-md-6">
+							<label for="BirthYear" class="form-label">Date of Birth</label>
+							<div class="input-group">
+								<InputNumber id="BirthYear" class="form-control" @bind-Value="Model.BirthYear" />
+								<InputSelect id="DatingSystem" class="form-select" aria-label="Select a date period." @bind-Value="Model.DateSystem">
+									<option value="BBY">BBY</option>
+									<option value="ABY">ABY</option>
+								</InputSelect>
+							</div>
+							<ValidationMessage For="() => Model.BirthDate" />
+						</div>
+						<div class="col-md-6">
+							<label for="Planet" class="form-label">Birth Planet</label>
+							<div class="input-group">
+								<InputSelect id="Planet" class="form-select" @bind-Value="Model.PlanetId">
+									<option value="">Select a planet</option>
+									@foreach (var planet in Planets)
+									{
+										<option value="@planet.Id">@planet.Name</option>
+									}
+								</InputSelect>
+								<button class="btn btn-secondary" type="button" @onclick="RefreshPlanets" title="Click to refresh the listing."><i class="bi bi-arrow-clockwise"></i></button>
+							</div>
+							<ValidationMessage For="() => Model.PlanetId" />
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="row mb-3">
-				<div class="col-md-12">
-					<label for="Description" class="form-label">Description</label>
-					<InputTextArea id="Description" class="form-control" @bind-Value="Model.Description" />
+			<div class="card mb-3">
+				<div class="card-header">Make the character's species selections</div>
+				<div class="card-body">
+					<CheckboxSelector SelectedOptionIds="Model.SpeciesIds" Options="@Species"></CheckboxSelector>
+				</div>
+				<div class="card-footer">
+					<button class="btn btn-secondary btn-sm" type="button" @onclick="RefreshSpecies" title="Click to refresh the listing."><i class="bi bi-arrow-clockwise"></i> Refresh</button>
 				</div>
 			</div>
-			<div class="row mb-3">
-				<div class="col-md-12">
+			<div class="card mb-3">
+				<div class="card-header">Enter additional name aliases</div>
+				<div class="card-body">
 					<AliasSelector Aliases="@Model.Aliases" />
 				</div>
 			</div>
+			<div class="card mb-3">
+				<div class="card-header">Link to another databank record an/or provide additional data</div>
+				<div class="card-body">
+					<div class="row mb-3">
+						<div class="col-md-12">
+							<label for="Shard" class="form-label">Shard (External Data Link)</label>
+							<InputText id="Shard" class="form-control" @bind-Value="Model.Shard" />
+							<ValidationMessage For="() => Model.Shard" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<label for="Description" class="form-label">Description</label>
+							<InputTextArea id="Description" class="form-control" @bind-Value="Model.Description" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<nav class="navbar navbar-light bg-dark mb-3">
+				<div class="container-fluid justify-content-start">
+					<button type="submit" class="btn btn-primary btn-sm me-3" title="Click to create this item.">Create</button>
+					<a href="characters/index" class="btn btn-secondary btn-sm" title="Click to cancel this action and return to the index.">Cancel</a>
+				</div>
+			</nav>
 		</div>
 	</EditForm>
 }

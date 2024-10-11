@@ -5,80 +5,93 @@
 <h1><i class="bi bi-database"></i> @(@Model.GivenName) @(@Model.FamilyName)</h1>
 <hr />
 <div class="container">
-	<nav class="navbar navbar-light bg-light">
+	<nav class="navbar navbar-light bg-dark mb-3">
 		<div class="container-fluid justify-content-start">
-			<a href="characters/update/@(ID)" class="btn btn-outline-primary btn-sm me-2">Update</a>
-			<a href="characters/index" class="btn btn-outline-secondary btn-sm">Index</a>
+			<a href="characters/update/@(ID)" class="btn btn-primary btn-sm me-2">Update</a>
+			<a href="characters/index" class="btn btn-secondary btn-sm">Index</a>
 		</div>
 	</nav>
-	<div class="row mb-3">
-		<p>
-			<a href="@Model.Shard" target="_blank" class="text-decoration-none">
-				<i class="bi bi-link"></i>
-				@Model.Shard
-			</a>
-		</p>
-		<div class="col-6">
-			<i class="bi bi-file-earmark-person"></i> Edited By: @Model.UpdatedBy?.DisplayName
-		</div>
-		<div class="col-6">
-			<i class="bi bi-calendar"></i> Updated On: @Model.UpdatedOn.ToString()
+	<div class="card mb-3">
+		<div class="card-header">View the character information</div>
+		<div class="card-body">
+			<div class="row">
+				<div class="col-6">
+					<ol class="list-group list-group">
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">Born</div>
+								@if (Model.BirthDate != null)
+								{
+									<span class="badge bg-light text-dark">@Model.BirthDate</span>
+								}
+								else
+								{
+									<span class="badge bg-light text-dark">Unknown</span>
+								}
+							</div>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">Species</div>
+								@foreach (var species in Model.Species)
+								{
+									<span class="badge bg-light text-dark me-1">@species.Name</span>
+								}
+							</div>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">Homeworld</div>
+								@if (Model.Planet != null)
+								{
+									<span class="badge bg-light text-dark">@Model.Planet.Name</span>
+								}
+								else
+								{
+									<span class="badge bg-light text-dark">Unknown</span>
+								}
+							</div>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">Aliases</div>
+								@foreach (var alias in Model.Aliases)
+								{
+									<span class="badge bg-light text-dark me-1">@alias.Name</span>
+								}
+							</div>
+						</li>
+					</ol>
+				</div>
+				<div class="col-6">
+					<dl>
+						<dt><i class="bi bi-file-earmark-person"></i> Edited By:</dt>
+						<dd>@Model.UpdatedBy?.DisplayName</dd>
+						<dt><i class="bi bi-calendar"></i> Updated On:</dt>
+						<dd>@Model.UpdatedOn.ToString()</dd>
+					</dl>
+				</div>
+			</div>
 		</div>
 	</div>
-	<div class="row mb-3">
-		<table class="table">
-			<thead>
-				<tr>
-					<th scope="col">Born</th>
-					<th scope="col">Species</th>
-					<th scope="col">Homeworld</th>
-					<th scope="col">Aliases</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>
-						@if (Model.BirthDate != null)
-						{
-							<span class="badge bg-light text-dark">@Model.BirthDate</span>
-						}
-						else
-						{
-							<span class="badge bg-light text-dark">Unknown</span>
-						}
-					</td>
-					<td>
-						@foreach (var species in Model.Species)
-						{
-							<span class="badge bg-light text-dark me-1">@species.Name</span>
-						}
-					</td>
-					<td>
-						@if (Model.Planet != null)
-						{
-							<span class="badge bg-light text-dark">@Model.Planet.Name</span>
-						}
-						else
-						{
-							<span class="badge bg-light text-dark">Unknown</span>
-						}
-					</td>
-					<td>
-						@foreach (var alias in Model.Aliases)
-						{
-							<span class="badge bg-light text-dark me-1">@alias.Name</span>
-						}
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-
-	<div class="row mb-3">
-		<div class="col-md-12">
-			<p>
-				@GetFormattedDescription()
-			</p>
+	<div class="card">
+		<div class="card-header">View more character details</div>
+		<div class="card-body">
+			<div class="row mb-3">
+				<div class="col-12">
+					<a href="@Model.Shard" target="_blank" class="text-decoration-none">
+						<i class="bi bi-link"></i>
+						@Model.Shard
+					</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<p>
+						@GetFormattedDescription()
+					</p>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

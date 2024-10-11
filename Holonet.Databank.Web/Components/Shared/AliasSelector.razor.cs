@@ -12,7 +12,7 @@ public partial class AliasSelector : ComponentBase
 
 	private void AddNewAlias()
 	{
-		if (!string.IsNullOrEmpty(NewAlias.Name))
+		if (!string.IsNullOrEmpty(NewAlias.Name) && !Aliases.Exists(x => x.Name.Equals(NewAlias.Name, StringComparison.CurrentCultureIgnoreCase)))
 		{
 			Aliases.Add(new AliasModel { Name = NewAlias.Name });
 			NewAlias = new();

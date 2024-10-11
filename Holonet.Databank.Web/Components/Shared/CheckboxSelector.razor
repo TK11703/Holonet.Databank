@@ -6,7 +6,7 @@
 }
 else
 {
-	<input type="text" class="form-control" @bind="SearchQuery" placeholder="Search..." />
+	<input type="text" class="form-control mb-2" @bind="SearchQuery" placeholder="Search..." />
 	<div class="scroll-container overflow-auto" style="max-height:150px;display: flex; flex-wrap: wrap;">
 	@foreach (var kvp in Options.Where(i => i.Value.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase)))
 	{

@@ -11,37 +11,48 @@
 		<DataAnnotationsValidator />
 		<ValidationSummary />
 		<div class="container">
-			<div class="row mb-3">
-				<div class="col-md-12">
-					<label for="Name" class="form-label">Name</label>
-					<InputText id="Name" class="form-control" @bind-Value="Model.Name" />
-					<ValidationMessage For="() => Model.Name" />
+			<div class="card mb-3">
+				<div class="card-header">Enter the basic species details</div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col-md-12">
+							<label for="Name" class="form-label">Name</label>
+							<InputText id="Name" class="form-control" @bind-Value="Model.Name" />
+							<ValidationMessage For="() => Model.Name" />
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="row mb-3">
-				<div class="col-md-12">
-					<label for="Shard" class="form-label">Shard (External Data Link)</label>
-					<InputText id="Shard" class="form-control" @bind-Value="Model.Shard" />
-					<ValidationMessage For="() => Model.Shard" />
-				</div>
-			</div>
-			<div class="row mb-3">
-				<div class="col-md-12">
-					<label for="Description" class="form-label">Description</label>
-					<InputTextArea id="Description" class="form-control" @bind-Value="Model.Description" />
-				</div>
-			</div>
-			<div class="row mb-3">
-				<div class="col-md-12">
+			<div class="card mb-3">
+				<div class="card-header">Enter additional name aliases</div>
+				<div class="card-body">
 					<AliasSelector Aliases="@Model.Aliases" />
 				</div>
 			</div>
-			<div class="row mb-3">
-				<div class="col-md-12">
-					<button type="submit" class="btn btn-primary">Update</button>
-					<a href="species/index" class="btn btn-light">Cancel</a>
+			<div class="card mb-3">
+				<div class="card-header">Link to another databank record an/or provide additional data</div>
+				<div class="card-body">
+					<div class="row mb-3">
+						<div class="col-md-12">
+							<label for="Shard" class="form-label">Shard (External Data Link)</label>
+							<InputText id="Shard" class="form-control" @bind-Value="Model.Shard" />
+							<ValidationMessage For="() => Model.Shard" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<label for="Description" class="form-label">Description</label>
+							<InputTextArea id="Description" class="form-control" @bind-Value="Model.Description" />
+						</div>
+					</div>
 				</div>
 			</div>
+			<nav class="navbar navbar-light bg-dark mb-3">
+				<div class="container-fluid justify-content-start">
+					<button type="submit" class="btn btn-primary btn-sm me-3" title="Click to update this item with the new information.">Update</button>
+					<a href="species/index" class="btn btn-secondary btn-sm" title="Click to cancel this action and return to the index.">Cancel</a>
+				</div>
+			</nav>
 		</div>
 	</EditForm>
 }
