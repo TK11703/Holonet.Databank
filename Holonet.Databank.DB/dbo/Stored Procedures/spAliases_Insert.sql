@@ -13,8 +13,8 @@ BEGIN
 	ELSE
 	BEGIN
 		INSERT INTO dbo.Aliases
-			([Name], [CharacterId], [PlanetId], [SpeciesId], [UpdatedOn], [AuthorId])
-		SELECT [AliasName], [CharacterId], [PlanetId], [SpeciesId], GETDATE(), @AuthorId
+			([Name], [CharacterId], [HistoricalEventId], [PlanetId], [SpeciesId], [UpdatedOn], [AuthorId])
+		SELECT [AliasName], [CharacterId], [HistoricalEventId], [PlanetId], [SpeciesId], GETDATE(), @AuthorId
 			FROM @TableData;
 
 		return 1;		
