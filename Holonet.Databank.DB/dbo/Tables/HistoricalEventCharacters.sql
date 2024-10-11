@@ -9,3 +9,9 @@
 	CONSTRAINT [FK_HistoricalEventCharacters_HistoricalEvents] FOREIGN KEY ([HistoricalEventId]) REFERENCES [HistoricalEvents]([Id]),
 	CONSTRAINT [FK_HistoricalEventCharacters_Authors] FOREIGN KEY ([AuthorId]) REFERENCES [Authors]([Id]),
 )
+
+GO
+CREATE INDEX [idx_HistoricalEventCharacters_CharacterId] ON [dbo].[HistoricalEventCharacters]([CharacterId]);
+GO
+CREATE INDEX [idx_HistoricalEventCharacters_HistoricalEventId] ON [dbo].[HistoricalEventCharacters]([HistoricalEventId]);
+GO

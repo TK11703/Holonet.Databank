@@ -118,6 +118,11 @@
     <Build Include="dbo\Functions\funcAuthor_GetId.sql" />
     <Build Include="dbo\Stored Procedures\spAuthors_GetByAzureId.sql" />
     <Build Include="dbo\Stored Procedures\spAuthors_GetById.sql" />
+    <Build Include="dbo\Tables\Aliases.sql" />
+    <Build Include="dbo\Types\AliasesUDT.sql" />
+    <Build Include="dbo\Stored Procedures\spAliases_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\spAliases_GetById.sql" />
+    <Build Include="dbo\Stored Procedures\spAliases_DeleteById.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Holonet.Databank.DB.publish.xml" />

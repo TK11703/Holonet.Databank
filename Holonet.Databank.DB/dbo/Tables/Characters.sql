@@ -13,3 +13,11 @@
 	CONSTRAINT [FK_Characters_Planets] FOREIGN KEY ([PlanetId]) REFERENCES [Planets]([Id]),
 	CONSTRAINT [FK_Characters_Authors] FOREIGN KEY ([AuthorId]) REFERENCES [Authors]([Id]),
 )
+
+GO
+CREATE INDEX [idx_Characters_GivenName] ON [dbo].[Characters]([GivenName]);
+GO
+CREATE INDEX [idx_Characters_FamilyName] ON [dbo].[Characters]([FamilyName]);
+GO
+CREATE INDEX [idx_Characters_PlanetId] ON [dbo].[Characters]([PlanetId]);
+GO

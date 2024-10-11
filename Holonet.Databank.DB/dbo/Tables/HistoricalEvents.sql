@@ -10,3 +10,7 @@
 	[Active] BIT NOT NULL Default 1,
 	CONSTRAINT [FK_HistoricalEvents_Authors] FOREIGN KEY ([AuthorId]) REFERENCES [Authors]([Id]),
 )
+
+GO
+CREATE INDEX [idx_HistoricalEvents_Name] ON [dbo].[HistoricalEvents]([Name]);
+GO

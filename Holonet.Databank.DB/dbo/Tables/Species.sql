@@ -9,3 +9,7 @@
 	[Active] BIT NOT NULL Default 1,
 	CONSTRAINT [FK_Species_Authors] FOREIGN KEY ([AuthorId]) REFERENCES [Authors]([Id]),
 )
+
+GO
+CREATE INDEX [idx_Species_Name] ON [dbo].[Species]([Name]);
+GO

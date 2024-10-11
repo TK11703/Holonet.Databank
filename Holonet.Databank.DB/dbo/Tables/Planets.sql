@@ -9,3 +9,7 @@
 	[Active] BIT NOT NULL Default 1,
 	CONSTRAINT [FK_Planets_Authors] FOREIGN KEY ([AuthorId]) REFERENCES [Authors]([Id]),
 )
+
+GO
+CREATE INDEX [idx_Planets_Name] ON [dbo].[Planets]([Name]);
+GO

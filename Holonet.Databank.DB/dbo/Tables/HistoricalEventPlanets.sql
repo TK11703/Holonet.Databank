@@ -10,3 +10,9 @@
 	CONSTRAINT [FK_HistoricalEventPlanets_Authors] FOREIGN KEY ([AuthorId]) REFERENCES [Authors]([Id]),
 
 )
+
+GO
+CREATE INDEX [idx_HistoricalEventPlanets_PlanetId] ON [dbo].[HistoricalEventPlanets]([PlanetId]);
+GO
+CREATE INDEX [idx_HistoricalEventPlanets_HistoricalEventId] ON [dbo].[HistoricalEventPlanets]([HistoricalEventId]);
+GO
