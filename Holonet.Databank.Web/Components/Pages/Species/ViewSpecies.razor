@@ -5,31 +5,42 @@
 <h1><i class="bi bi-database"></i> @(@Model.Name)</h1>
 <hr />
 <div class="container">
-	<div class="row mb-3">
-		<p>
-			<a href="@Model.Shard" target="_blank" class="text-decoration-none">
-				<i class="bi bi-link"></i>
-				@Model.Shard				
-			</a>
-		</p>
-		<div class="col-6">
-			<i class="bi bi-file-earmark-person"></i> Edited By: @Model.UpdatedBy?.DisplayName
+	<nav class="navbar navbar-light bg-dark mb-3">
+		<div class="container-fluid justify-content-start">
+			<a href="species/update/@(ID)" class="btn btn-primary btn-sm me-2">Update</a>
+			<a href="species/index" class="btn btn-secondary btn-sm">Index</a>
 		</div>
-		<div class="col-6">
-			<i class="bi bi-calendar"></i> Updated On: @Model.UpdatedOn.ToString()
-		</div>
-	</div>
-	<div class="row mb-3">
-		<div class="col-md-12">
-			<p>
-				@GetFormattedDescription()
-			</p>
+	</nav>
+	<div class="card mb-3">
+		<div class="card-body">
+			<div class="row">
+				<div class="col-6">
+					<i class="bi bi-file-earmark-person"></i> Edited By: @Model.UpdatedBy?.DisplayName
+				</div>
+				<div class="col-6">
+					<i class="bi bi-calendar"></i> Updated On: @Model.UpdatedOn.ToString()
+				</div>
+			</div>
 		</div>
 	</div>
-	<div class="row mb-3">
-		<div class="col-md-12">
-			<a href="species/update/@(ID)" class="btn btn-light">Update</a>
-			<a href="species/index" class="btn btn-light">Cancel</a>
+	<div class="card">
+		<div class="card-header">Expanded Holonet Details</div>
+		<div class="card-body">
+			<div class="row mb-3">
+				<div class="col-12">
+					<a href="@Model.Shard" target="_blank" class="text-decoration-none">
+						<i class="bi bi-link"></i>
+						@Model.Shard
+					</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<p>
+						@GetFormattedDescription()
+					</p>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

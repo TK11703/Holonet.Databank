@@ -5,76 +5,80 @@
 <h1><i class="bi bi-database"></i> @(@Model.Name)</h1>
 <hr />
 <div class="container">
-	<div class="row mb-3">
-		<p>
-			<a href="@Model.Shard" target="_blank" class="text-decoration-none">
-				<i class="bi bi-link"></i>
-				@Model.Shard
-			</a>
-		</p>
-		<div class="col-6">
-			<i class="bi bi-file-earmark-person"></i> Edited By: @Model.UpdatedBy?.DisplayName
+	<nav class="navbar navbar-light bg-dark mb-3">
+		<div class="container-fluid justify-content-start">
+			<a href="historicalevents/update/@(ID)" class="btn btn-primary btn-sm me-2">Update</a>
+			<a href="historicalevents/index" class="btn btn-secondary btn-sm">Index</a>
 		</div>
-		<div class="col-6">
-			<i class="bi bi-calendar"></i> Updated On: @Model.UpdatedOn.ToString()
-		</div>
-	</div>
-	<div class="row mb-3">
-		<div class="col-md-12">
-			<p>
-				@if (Model.DatePeriod != null)
-				{
-					<span class="badge bg-light text-dark">@Model.DatePeriod</span>
-				}
-				else
-				{
-					<span class="badge bg-light text-dark">Unknown</span>
-				}
-			</p>
-		</div>
-	</div>
-	<div class="row mb-3">
-		<table class="table">
-			<thead>
-				<tr>
-					<th scope="col">Characters</th>
-					<th scope="col">Planets</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>
-						<ul>
-							@foreach (var character in Model.Characters)
-							{
-								<li>@character.GivenName @character.FamilyName</li>
-							}
-						</ul>
-					</td>
-					<td>
-						<ul>
-							@foreach (var planet in Model.Planets)
-							{
-								<li>@planet.Name</li>
-							}
-						</ul>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-
-	<div class="row mb-3">
-		<div class="col-md-12">
-			<p>
-				@GetFormattedDescription()
-			</p>
+	</nav>
+	<div class="card mb-3">
+		<div class="card-header">Basic Holonet Information</div>
+		<div class="card-body">
+			<div class="row">
+				<div class="col-6">
+					<ol class="list-group list-group">
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">Date Period</div>
+								@if (Model.DatePeriod != null)
+								{
+									<span class="badge bg-light text-dark">@Model.DatePeriod</span>
+								}
+								else
+								{
+									<span class="badge bg-light text-dark">Unknown</span>
+								}
+							</div>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">Characters</div>
+								@foreach (var character in Model.Characters)
+								{
+									<span class="badge bg-light text-dark me-1">@character.GivenName @character.FamilyName</span>
+								}
+							</div>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">Planets</div>
+								@foreach (var planet in Model.Planets)
+								{
+									<span class="badge bg-light text-dark">@planet.Name</span>
+								}
+							</div>
+						</li>
+					</ol>
+				</div>
+				<div class="col-6">
+					<dl>
+						<dt><i class="bi bi-file-earmark-person"></i> Edited By:</dt>
+						<dd>@Model.UpdatedBy?.DisplayName</dd>
+						<dt><i class="bi bi-calendar"></i> Updated On:</dt>
+						<dd>@Model.UpdatedOn.ToString()</dd>
+					</dl>
+				</div>
+			</div>
 		</div>
 	</div>
-	<div class="row mb-3">
-		<div class="col-md-12">
-			<a href="historicalevents/update/@(ID)" class="btn btn-light">Update</a>
-			<a href="historicalevents/index" class="btn btn-light">Cancel</a>
+	<div class="card">
+		<div class="card-header">Expanded Holonet Details</div>
+		<div class="card-body">
+			<div class="row mb-3">
+				<div class="col-12">
+					<a href="@Model.Shard" target="_blank" class="text-decoration-none">
+						<i class="bi bi-link"></i>
+						@Model.Shard
+					</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<p>
+						@GetFormattedDescription()
+					</p>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
