@@ -19,7 +19,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+      
+      - name: Install Visual Studio Build Tools
+        run: choco install visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.MSBuildTools"
+      
       - name: Setup .NET 8 SDK
         uses: actions/setup-dotnet@v2
         with:
