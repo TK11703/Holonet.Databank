@@ -24,6 +24,9 @@ jobs:
 
       - name: Install Visual Studio Build Tools
         run: choco install visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.Component.MsBuild" 
+      
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
         
       - name: Setup .NET 8 SDK
         uses: actions/setup-dotnet@v2
