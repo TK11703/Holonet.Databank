@@ -26,12 +26,14 @@
 								<span class="input-group-text">From</span>
 								<InputNumber id="YearStarted" class="form-control" @bind-Value="Model.YearStarted" />
 								<InputSelect id="YearStartedDatingSystem" class="form-select" aria-label="Select a period." @bind-Value="Model.YearStartedDateSystem">
+									<option value="">Choose...</option>
 									<option value="BBY">BBY</option>
 									<option value="ABY">ABY</option>
 								</InputSelect>
 								<span class="input-group-text">To</span>
 								<InputNumber id="YearEnded" class="form-control" @bind-Value="Model.YearEnded" />
 								<InputSelect id="YearEndedDatingSystem" class="form-select" aria-label="Select a period." @bind-Value="Model.YearEndedDateSystem">
+									<option value="">Choose...</option>
 									<option value="BBY">BBY</option>
 									<option value="ABY">ABY</option>
 								</InputSelect>
