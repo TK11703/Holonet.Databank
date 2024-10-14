@@ -14,15 +14,19 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     env:
       APP_SOLUTION: 'Holonet.Databank.App.sln'
+      SQL_SOLUTION: 'Holonet.Databank.DB.sln'
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+
+      - name: Install Visual Studio Build Tools
+        run: choco install visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.Component.MsBuild" 
+        
       - name: Setup .NET 8 SDK
         uses: actions/setup-dotnet@v2
         with:
@@ -30,9 +34,19 @@ jobs:
 
       - name: Restore dependencies for Blazor Web App
         run: dotnet restore ${{ env.APP_SOLUTION }}
+        
+      - name: Restore dependencies
+        run: msbuild /restore ${{ env.SQL_PROJECT }}
 
       - name: Build Blazor Web App
         run: dotnet build ${{ env.APP_SOLUTION }} --configuration Release --no-restore
-        
-#      - name: Test Blazor Web App
-#       run: dotnet test ${{ env.APP_SOLUTION }} --no-restore --verbosity normal
+      
+      - name: Build SQL Project
+        run: msbuild ${{ env.SQL_PROJECT }} /p:Configuration=Release
+
+      #- name: Deploy SQL Changes
+      #  uses: Azure/sql-action@v2.3
+      #  with:
+      #    connection-string: 'your-connection-string'
+      #    action: 'Publish'
+      #    dacpac-file: 'path/to/your/output.dacpac'
