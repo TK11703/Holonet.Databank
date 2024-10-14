@@ -37,13 +37,13 @@ jobs:
         run: dotnet restore ${{ env.APP_SOLUTION }}
         
       - name: Restore dependencies
-        run: msbuild /restore ${{ env.SQL_PROJECT }}
+        run: msbuild /restore ${{ env.SQL_SOLUTION }}
 
       - name: Build Blazor Web App
         run: dotnet build ${{ env.APP_SOLUTION }} --configuration Release --no-restore
       
       - name: Build SQL Project
-        run: msbuild ${{ env.SQL_PROJECT }} /p:Configuration=Release
+        run: msbuild ${{ env.SQL_SOLUTION }} /p:Configuration=Release
 
       #- name: Deploy SQL Changes
       #  uses: Azure/sql-action@v2.3
