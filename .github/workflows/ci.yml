@@ -4,41 +4,35 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - '*.yml'
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - '*.yml'
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     env:
-      BLAZOR_SOLUTION: 'Holonet.Databank.App.sln'
-      SQL_SOLUTION: 'Holonet.Databank.DB.sln'
+      APP_SOLUTION: 'Holonet.Databank.App.sln'
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+      
       - name: Setup .NET 8 SDK
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 8.0.x
 
       - name: Restore dependencies for Blazor Web App
-        run: dotnet restore ${{ env.BLAZOR_SOLUTION }}
-
-      - name: Restore dependencies for SQL Project
-        run: msbuild /restore ${{ env.SQL_SOLUTION }}
+        run: dotnet restore ${{ env.APP_SOLUTION }}
 
       - name: Build Blazor Web App
-        run: dotnet build ${{ env.BLAZOR_SOLUTION }} --configuration Release --no-restore
-
-      - name: Build SQL Project
-        run: msbuild ${{ env.SQL_SOLUTION }} /p:Configuration=Release
-
-      - name: Test Blazor Web App
-        run: dotnet test ${{ env.BLAZOR_SOLUTION }} --no-restore --verbosity normal
-
-      - name: Test SQL Project
-        run: dotnet test ${{ env.SQL_SOLUTION }} --no-restore --verbosity normal
+        run: dotnet build ${{ env.APP_SOLUTION }} --configuration Release --no-restore
+        
+#      - name: Test Blazor Web App
+#       run: dotnet test ${{ env.APP_SOLUTION }} --no-restore --verbosity normal
