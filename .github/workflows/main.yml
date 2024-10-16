@@ -33,10 +33,10 @@ jobs:
         run: dotnet build ${{ env.APP_SOLUTION }} --configuration Release --no-restore
 
       - name: Publish Blazor app
-        run: dotnet publish ./Holonet.Databank.Web.csproj --configuration Release --output ./publish_blazor
+        run: dotnet publish ./Holonet.Databank.Web/Holonet.Databank.Web.csproj --configuration Release --output ./publish_blazor
 
       - name: Publish API
-        run: dotnet publish ./Holonet.Databank.Api.csproj --configuration Release --output ./publish_api
+        run: dotnet publish ./Holonet.Databank.Api/Holonet.Databank.Api.csproj --configuration Release --output ./publish_api
 
       - name: Upload Blazor artifact
         uses: actions/upload-artifact@v4
