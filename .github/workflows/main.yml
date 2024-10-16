@@ -45,7 +45,7 @@ jobs:
           path: ./publish_blazor
 
       - name: Upload API artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: api_app
           path: ./publish_api
