@@ -25,13 +25,13 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish -c Release --no-build -o ${{env.DOTNET_ROOT}}/Holonet.Databank.Web.csproj
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          name: Holonet.Databank.Web
+          path: ${{env.DOTNET_ROOT}}/Holonet.Databank.Web.csproj
 
   deploy:
     runs-on: windows-latest
@@ -46,7 +46,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: .net-app
+          name: Holonet.Databank.Web
       
       - name: Login to Azure
         uses: azure/login@v2
