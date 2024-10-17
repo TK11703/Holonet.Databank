@@ -46,9 +46,9 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
           
-      - name: Azure SQL Deploy
+      - name: Deploy DACPAC to Azure SQL
         uses: azure/sql-action@v2.2
         with:
           connection-string: '${{ secrets.AZURE_SQL_CONNECTION }}'
-          dacpac-package: 'SQLDB.dacpac'
+          path: SQLDB.dacpac
           action: 'publish'
