@@ -1,0 +1,59 @@
+name: SQL Project Pipeline
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/workflows/**'
+  pull_request:
+    branches:
+      - main
+jobs:
+  Build:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+        
+      - name: Build SQL Project
+        run: msbuild.exe ./Holonet.Databank.DB/Holonet.Databank.DB.sqlproj /p:Configuration=Release
+
+      - name: Publish SQL Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SQLDB
+          path: ${{ github.workspace }}/bin/release/
+
+  DeploySQLDB:
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifact Containing DACPAC
+        uses: actions/download-artifact@v4
+        with:
+          name: SQLDB
+          
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Get Keyvault DB Conn String secret
+        uses: Azure/get-keyvault-secrets@v1
+        with:
+          keyvault: '${{ secrets.AZURE_KEYVAULT }}'
+          secrets: 'SQLServer, SQLDB-Connection-String'
+        id: myKeyVaultSecrets
+
+      - name: Azure SQL Deploy
+        uses: Azure/sql-action@v1.3
+        with:
+          server-name: '${{ steps.myKeyVaultSecrets.outputs.SQLServer }}'
+          connection-string: '${{ steps.myKeyVaultSecrets.outputs.SQLDB-Connection-String }}'
+          dacpac-package: 'SQLDB.dacpac'
