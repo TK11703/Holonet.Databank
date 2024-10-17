@@ -45,31 +45,10 @@ jobs:
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Get GitHub Runner IP
-        id: get_ip
-        run: |
-          echo "::set-output name=ip::$(curl -s https://api.github.com/meta | jq -r '.actions[]')"
-      
-      - name: Add GitHub Runner IP to Key Vault Firewall
-        run: |
-          az keyvault network-rule add --name ${{ secrets.AZURE_KEYVAULT }} --ip-address ${{ steps.get_ip.outputs.ip }}
           
-      - name: Get Keyvault DB Conn String secret
-        uses: Azure/get-keyvault-secrets@v1
-        with:
-          keyvault: '${{ secrets.AZURE_KEYVAULT }}'
-          secrets: 'SQLServer, SQLDB-Connection-String'
-        id: myKeyVaultSecrets
-
-      - name: Remove GitHub Runner IP from Key Vault Firewall
-        run: |
-          az keyvault network-rule remove --name ${{ secrets.AZURE_KEYVAULT }} --ip-address ${{ steps.get_ip.outputs.ip }}        
-
       - name: Azure SQL Deploy
         uses: azure/sql-action@v2.2
         with:
-          server-name: '${{ steps.myKeyVaultSecrets.outputs.SQLServer }}'
-          connection-string: '${{ steps.myKeyVaultSecrets.outputs.SQLDB-Connection-String }}'
+          connection-string: '${{ secrets.AZURE_SQL_CONNECTION }}'
           dacpac-package: 'SQLDB.dacpac'
           action: 'publish'
