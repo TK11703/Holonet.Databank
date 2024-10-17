@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Web and API CI/CD
 
 on:
   workflow_dispatch:
@@ -16,7 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       APP_SOLUTION: 'Holonet.Databank.App.sln'
-      SQL_SOLUTION: 'Holonet.Databank.DB.sln'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -73,13 +72,6 @@ jobs:
           slot-name: 'Production'
           package: ./publish
 
-#      - name: Deploy to Azure Web App
-#        uses: azure/webapps-deploy@v2
-#        with:
-#          app-name: 'YOUR_BLAZOR_APP_SERVICE_NAME'
-#          publish-profile: ${{ secrets.BLAZOR_APP_PUBLISH_PROFILE }}
-#          package: ./publish
-
   deploy_api:
     runs-on: ubuntu-latest
     needs: build
@@ -102,10 +94,3 @@ jobs:
           app-name: 'databank-8808-api'
           slot-name: 'Production'
           package: ./publish
-
-#      - name: Deploy to Azure Web App
-#        uses: azure/webapps-deploy@v2
-#        with:
-#          app-name: 'YOUR_API_APP_SERVICE_NAME'
-#          publish-profile: ${{ secrets.API_APP_PUBLISH_PROFILE }}
-#          package: ./publish
