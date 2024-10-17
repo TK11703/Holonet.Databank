@@ -1,4 +1,4 @@
-name: SQL Project Pipeline
+name: SQL Project CI/CD
 
 on:
   workflow_dispatch:
