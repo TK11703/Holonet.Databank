@@ -40,6 +40,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: SQLDB
+          path: ./dacpac
           
       - name: Login to Azure
         uses: azure/login@v2
@@ -50,5 +51,5 @@ jobs:
         uses: azure/sql-action@v2.2
         with:
           connection-string: '${{ secrets.AZURE_SQL_CONNECTION }}'
-          path: SQLDB.dacpac
+          path: 'dacpac/Holonet.Databank.DB.dacpac'
           action: 'publish'
