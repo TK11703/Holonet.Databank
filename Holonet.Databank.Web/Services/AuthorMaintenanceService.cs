@@ -86,7 +86,7 @@ public class AuthorMaintenanceService
             }
             else
             {
-                _logger.LogError("Author update ignored, since no changes were detected.");
+                _logger.LogInformation("Author update skipped, since no changes were detected.");
             }
         }
     }

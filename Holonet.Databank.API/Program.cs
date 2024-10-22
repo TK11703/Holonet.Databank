@@ -39,6 +39,15 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 //Registers the endpoints that implement the IEndpoint interface
 builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
+builder.Services.AddCors(options =>
+{
+	options.AddDefaultPolicy(builder =>
+	{
+		builder.AllowAnyOrigin()
+			.AllowAnyHeader()
+			.AllowAnyMethod();
+	});
+});
 
 var app = builder.Build();
 
@@ -76,6 +85,11 @@ app.UseExceptionHandler(appError =>
 		}
 	});
 });
+
+app.UseCors(policy =>
+		policy.AllowAnyOrigin()
+			  .AllowAnyMethod()
+			  .AllowAnyHeader());
 
 app.UseAuthentication();
 

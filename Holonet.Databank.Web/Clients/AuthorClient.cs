@@ -27,7 +27,7 @@ public sealed class AuthorClient
 		var section = configuration.GetSection("DatabankApi:Scopes");
 		if (section.Exists())
 		{
-			return section.Get<IEnumerable<string>>() ?? Array.Empty<string>();
+			return section.Get<string>()?.Split(' ') ?? Array.Empty<string>();
 		}
 		else
 		{
@@ -48,7 +48,7 @@ public sealed class AuthorClient
 	{
 		if (_httpClient.BaseAddress == null)
 		{
-			_logger.LogError("BaseAddress of CharacterClient cannot be null.");
+			_logger.LogError("BaseAddress of AuthorClient cannot be null.");
 		}
 	}
 

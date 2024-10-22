@@ -30,7 +30,7 @@ public sealed class CharacterClient
 		var section = configuration.GetSection("DatabankApi:Scopes");
 		if (section.Exists())
 		{
-			return section.Get<IEnumerable<string>>() ?? Array.Empty<string>();
+			return section.Get<string>()?.Split(' ') ?? Array.Empty<string>();
 		}
 		else
 		{

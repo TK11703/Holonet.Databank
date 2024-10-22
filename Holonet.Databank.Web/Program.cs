@@ -20,7 +20,7 @@ if (graphScopes == null || graphScopes.Length == 0)
 {
 	graphScopes = ["user.read"];
 }
-var tokenAcquisitionScopes = builder.Configuration.GetValue<string[]>("TokenAquisitionScopes");
+string[]? tokenAcquisitionScopes = builder.Configuration.GetValue<string>("TokenAquisitionScopes")?.Split(' ');
 var allowedHosts = builder.Configuration.GetValue<string>("AllowedHosts")?.Split(';');
 
 JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
