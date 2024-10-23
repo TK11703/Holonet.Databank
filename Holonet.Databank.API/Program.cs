@@ -5,6 +5,8 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,25 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	.AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+
+builder.Services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
+{
+	options.TokenValidationParameters = new TokenValidationParameters
+	{
+		ValidateIssuer = true,
+		ValidateAudience = true,
+		ValidateLifetime = true,
+		ValidateIssuerSigningKey = true,
+		ValidIssuer = builder.Configuration["AzureAd:Issuer"],
+		ValidAudience = builder.Configuration["AzureAd:ClientId"],
+		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("AzureAd:ClientSecret") ?? string.Empty))
+	};
+	options.Events = new JwtBearerEvents();
+	options.Events.OnAuthenticationFailed = async context =>
+	{
+		await Task.CompletedTask;
+	};
+});
 
 var scopes = builder.Configuration.GetValue<string>("AzureAd:Scopes")?.Split(' ');
 if (scopes == null || scopes.Length == 0)

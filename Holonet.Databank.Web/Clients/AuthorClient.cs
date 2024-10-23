@@ -2,7 +2,6 @@
 using Holonet.Databank.Web.Models;
 using Microsoft.Identity.Web;
 using System.Net.Http.Headers;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace Holonet.Databank.Web.Clients;
 
