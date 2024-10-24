@@ -17,11 +17,11 @@ public class UserClaimsBase : ComponentBase
     [Inject]
     private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
 
-    protected string _authMessage;
-    protected IEnumerable<Claim> _claims = Enumerable.Empty<Claim>();
+    protected string? _authMessage;
+    protected IEnumerable<Claim> _claims = [];
 
     // Defines list of claim types that will be displayed after successfull sign-in.
-    private string[] printClaims = { "name", "preferred_username", "tid", "oid", "email" };
+    private readonly string[] printClaims = { "name", "preferred_username", "tid", "oid", "email" };
 
     protected override async Task OnInitializedAsync()
     {
@@ -40,7 +40,7 @@ public class UserClaimsBase : ComponentBase
         var user = authState.User;
 
         // Checks if the user has been authenticated.
-        if (user.Identity.IsAuthenticated)
+        if (user.Identity != null && user.Identity.IsAuthenticated)
         {
             _authMessage = $"{user.Identity.Name} is authenticated.";
 

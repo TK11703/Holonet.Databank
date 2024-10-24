@@ -80,10 +80,8 @@ public sealed class PlanetClient
 		await AcquireBearerTokenForClient();
 
 		var pageRequestDto = pagedRequest.ToPageRequestDto();
-		var request = new HttpRequestMessage()
+		var request = new HttpRequestMessage(HttpMethod.Get, "PagedRequest")
 		{
-			Method = HttpMethod.Get,
-			RequestUri = new Uri(Path.Combine(_httpClient.BaseAddress.AbsoluteUri, "PagedRequest")),
 			Content = new StringContent(JsonSerializer.Serialize(pageRequestDto), Encoding.UTF8, MediaTypeNames.Application.Json)
 		};
 		using HttpResponseMessage response = await _httpClient.SendAsync(request);

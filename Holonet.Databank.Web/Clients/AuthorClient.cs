@@ -58,7 +58,8 @@ public sealed class AuthorClient
 		using HttpResponseMessage response = await _httpClient.GetAsync($"{azureId}");
 		if (!response.IsSuccessStatusCode)
 		{
-			_logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
+			var content = await response.Content.ReadAsStringAsync();
+			_logger.LogError("Http Status:{StatusCode}\nHttp Message: {Content}", response.StatusCode, content);
 		}
 		else
 		{

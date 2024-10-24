@@ -14,7 +14,7 @@ internal static class ClientConfigs
     {
         services.AddScoped<GraphApiClient>();
 
-        string? baseApiAddress = config.GetValue<string>("Clients:BaseUri");
+        string? baseApiAddress = config.GetValue<string>("DatabankApi:DeployedUrl");
 
         if (!string.IsNullOrEmpty(baseApiAddress))
         {

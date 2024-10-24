@@ -29,4 +29,9 @@
     <ProjectReference Include="..\Holonet.Databank.Core\Holonet.Databank.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="Properties\ServiceDependencies\" />
+  </ItemGroup>
+
 </Project>

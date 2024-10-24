@@ -19,29 +19,29 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	.AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
-builder.Services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
-{
-	options.TokenValidationParameters = new TokenValidationParameters
-	{
-		ValidateIssuer = true,
-		ValidateAudience = true,
-		ValidateLifetime = true,
-		ValidateIssuerSigningKey = true,
-		ValidIssuer = builder.Configuration["AzureAd:Issuer"],
-		ValidAudience = builder.Configuration["AzureAd:ClientId"],
-		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("AzureAd:ClientSecret") ?? string.Empty))
-	};
-	options.Events = new JwtBearerEvents();
-	options.Events.OnAuthenticationFailed = async context =>
-	{
-		await Task.CompletedTask;
-	};
-});
+//builder.Services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
+//{
+//	options.TokenValidationParameters = new TokenValidationParameters
+//	{
+//		ValidateIssuer = true,
+//		ValidateAudience = true,
+//		ValidateLifetime = true,
+//		ValidateIssuerSigningKey = true,
+//		ValidIssuer = builder.Configuration["AzureAd:Issuer"],
+//		ValidAudience = builder.Configuration["AzureAd:ClientId"],
+//		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("AzureAd:ClientSecret") ?? string.Empty))
+//	};
+//	options.Events = new JwtBearerEvents();
+//	options.Events.OnAuthenticationFailed = async context =>
+//	{
+//		await Task.CompletedTask;
+//	};
+//});
 
 var scopes = builder.Configuration.GetValue<string>("AzureAd:Scopes")?.Split(' ');
 if (scopes == null || scopes.Length == 0)
 {
-	scopes = ["access_as_user"];
+	scopes = ["Contributor"];
 }
 // Add services to the container.
 builder.Services.AddAuthorization(options =>

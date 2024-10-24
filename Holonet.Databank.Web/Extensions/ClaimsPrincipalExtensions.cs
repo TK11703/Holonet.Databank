@@ -102,18 +102,25 @@ public static class ClaimsPrincipalExtensions
 		if (identity == null) throw new ArgumentNullException(nameof(claimsPrincipal), "Unable to add Graph information to user identity, because the claims principal user identity was invalid.");
 		if (user == null) throw new ArgumentNullException(nameof(user), "Unable to add Graph information to user identity, because the Graph user was invalid.");
 
-		if (!identity.HasClaim(c => c.Type == GraphClaimTypes.Id))
+		if (!identity.HasClaim(c => c.Type == GraphClaimTypes.Id) && !string.IsNullOrEmpty(user.Id))
 		{
 			identity.AddClaim(new Claim(GraphClaimTypes.Id, user.Id));
 		}
-		if (!identity.HasClaim(c => c.Type == GraphClaimTypes.DisplayName))
+		if (!identity.HasClaim(c => c.Type == GraphClaimTypes.DisplayName) && !string.IsNullOrEmpty(user.DisplayName))
 		{
 			identity.AddClaim(new Claim(GraphClaimTypes.DisplayName, user.DisplayName));
 		}
 		if (!identity.HasClaim(c => c.Type == GraphClaimTypes.Email))
 		{
-			identity.AddClaim(new Claim(GraphClaimTypes.Email, user.Mail ?? user.UserPrincipalName));
-		}
+			if (!string.IsNullOrEmpty(user.Mail))
+			{
+				identity.AddClaim(new Claim(GraphClaimTypes.Email, user.Mail));
+			}
+			else if (!string.IsNullOrEmpty(user.UserPrincipalName))
+			{
+				identity.AddClaim(new Claim(GraphClaimTypes.Email, user.UserPrincipalName));
+			}
+		}	
 		if (!identity.HasClaim(c => c.Type == GraphClaimTypes.Mobile) && !string.IsNullOrEmpty(user.MobilePhone))
 		{
 			identity.AddClaim(new Claim(GraphClaimTypes.Mobile, user.MobilePhone));
