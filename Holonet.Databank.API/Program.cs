@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,17 +39,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //	};
 //});
 
-var scopes = builder.Configuration.GetValue<string>("AzureAd:Scopes")?.Split(' ');
-if (scopes == null || scopes.Length == 0)
-{
-	scopes = ["Contributor"];
-}
+//var scopes = builder.Configuration.GetValue<string>("AzureAd:Scopes")?.Split(' ');
+//if (scopes == null || scopes.Length == 0)
+//{
+//	scopes = ["Contributor"];
+//}
 // Add services to the container.
-builder.Services.AddAuthorization(options =>
-{
-	options.AddPolicy("AccessAsUserPolicy", policy =>
-		policy.RequireAuthenticatedUser().RequireClaim("scp", scopes));
-});
+builder.Services.AddAuthorization();
+//builder.Services.AddAuthorization(options =>
+//{
+//	options.AddPolicy("AccessAsUserPolicy", policy =>
+//		policy.RequireAuthenticatedUser().RequireClaim("scp", scopes));
+//});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
