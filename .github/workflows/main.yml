@@ -68,7 +68,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'databank-8808'
+          app-name: 'databank-8108'
           slot-name: 'Production'
           package: ./publish
 
@@ -91,6 +91,6 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'databank-8808-api'
+          app-name: 'databank-8108-api'
           slot-name: 'Production'
           package: ./publish
