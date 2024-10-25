@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Holonet.Databank.API;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -25,11 +26,17 @@ builder.Services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationSch
 	{
 		ValidIssuer = config["JwtSettings:Issuer"],
 		ValidAudience = config["JwtSettings:Audience"],
-		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.GetValue<string>("JwtSettings:Secret") ?? string.Empty)),
+		//IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.GetValue<string>("JwtSettings:Secret") ?? string.Empty)),
 		ValidateIssuer = true,
 		ValidateAudience = true,
 		ValidateLifetime = true,
-		ValidateIssuerSigningKey = true
+		ValidateIssuerSigningKey = true,
+		IssuerSigningKeyResolver = (token, securityToken, kid, validationParameters) =>
+		{
+			// Logic to retrieve and resolve signing keys
+			var discoveryDocument = OpenIdConfigurationHelper.GetDiscoveryDocument(config["JwtSettings:Authority"] ?? string.Empty);
+			return discoveryDocument.SigningKeys.Where(key => key.KeyId == kid);
+		}
 	};
 	options.Events = new JwtBearerEvents
 	{
