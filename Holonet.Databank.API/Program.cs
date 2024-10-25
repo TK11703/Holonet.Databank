@@ -2,42 +2,61 @@ using System.Reflection;
 using Microsoft.AspNetCore.Diagnostics;
 using Holonet.Databank.API.Extensions;
 using FluentValidation;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var config = builder.Configuration;
 // Add Logging
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
+builder.Services.AddLogging();
 
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-	.AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+	.AddMicrosoftIdentityWebApi(config.GetSection("AzureAd"));
 
-//builder.Services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
-//{
-//	options.TokenValidationParameters = new TokenValidationParameters
-//	{
-//		ValidateIssuer = true,
-//		ValidateAudience = true,
-//		ValidateLifetime = true,
-//		ValidateIssuerSigningKey = true,
-//		ValidIssuer = builder.Configuration["AzureAd:Issuer"],
-//		ValidAudience = builder.Configuration["AzureAd:ClientId"],
-//		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("AzureAd:ClientSecret") ?? string.Empty))
-//	};
-//	options.Events = new JwtBearerEvents();
-//	options.Events.OnAuthenticationFailed = async context =>
-//	{
-//		await Task.CompletedTask;
-//	};
-//});
+builder.Services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
+{
+	options.Authority = config["JwtSettings:Authority"];
+	options.Audience = config["JwtSettings:ClientId"];
+	options.TokenValidationParameters = new TokenValidationParameters
+	{
+		ValidIssuer = config["JwtSettings:Issuer"],
+		ValidAudience = config["JwtSettings:Audience"],
+		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.GetValue<string>("JwtSettings:Secret") ?? string.Empty)),
+		ValidateIssuer = true,
+		ValidateAudience = true,
+		ValidateLifetime = true,
+		ValidateIssuerSigningKey = true
+	};
+	options.Events = new JwtBearerEvents
+	{
+		OnAuthenticationFailed = context =>
+		{
+			context.Response.OnStarting(async state =>
+			{
+				var httpContext = (HttpContext)state;
+				var logger = httpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+				logger.LogError(context.Exception, "Authentication failed");
+
+				httpContext.Response.StatusCode = 401;
+				httpContext.Response.ContentType = "application/json";
+
+				var responseMessage = new
+				{
+					Error = "Authentication failed",
+					Details = context.Exception.Message
+				};
+
+				await httpContext.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(responseMessage));
+			}, context.HttpContext);
+
+			return Task.CompletedTask;
+		}
+	};
+});
 
 //var scopes = builder.Configuration.GetValue<string>("AzureAd:Scopes")?.Split(' ');
 //if (scopes == null || scopes.Length == 0)
