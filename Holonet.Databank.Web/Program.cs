@@ -12,17 +12,10 @@ using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var graphScopes = builder.Configuration.GetValue<string>("MicrosoftGraph:Scopes")?.Split(' ');
-if (graphScopes == null || graphScopes.Length == 0)
-{
-	graphScopes = ["user.read"];
-}
-var allowedHosts = builder.Configuration.GetValue<string>("AllowedHosts")?.Split(';');
-
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-	.AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"))
-	.EnableTokenAcquisitionToCallDownstreamApi(options => { builder.Configuration.Bind("AzureAd", options); })
-	.AddInMemoryTokenCaches();
+	.AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
+	//.EnableTokenAcquisitionToCallDownstreamApi(options => { builder.Configuration.Bind("AzureAd", options); })
+	//.AddInMemoryTokenCaches();
 
 builder.Services.AddAuthorization(options =>
 {
@@ -54,6 +47,14 @@ builder.Services.AddControllersWithViews(options =>
 }).AddMicrosoftIdentityUI();
 
 builder.Services.AddScoped<AuthorMaintenanceService>();
+
+var graphScopes = builder.Configuration.GetValue<string>("MicrosoftGraph:Scopes")?.Split(' ');
+if (graphScopes == null || graphScopes.Length == 0)
+{
+	graphScopes = ["user.read"];
+}
+var allowedHosts = builder.Configuration.GetValue<string>("AllowedHosts")?.Split(';');
+
 
 builder.Services.AddGraphClient(builder.Configuration.GetValue<string>("MicrosoftGraph:GraphApiUrl"), graphScopes, allowedHosts);
 
