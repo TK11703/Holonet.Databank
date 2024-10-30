@@ -15,8 +15,6 @@ public class GetAllPlanets : IEndpoint
 			.WithTags(Tags.Planets);
 	}
 
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<IEnumerable<PlanetDto>>, ProblemHttpResult, NotFound>> HandleAsync(IPlanetService planetService)
 	{
 		try

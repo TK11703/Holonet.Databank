@@ -17,9 +17,6 @@ public class GetPlanetsResultsPage : IEndpoint
 			.AddEndpointFilter<ValidatorFilter<PageRequestDto>>()
 			.WithTags(Tags.Planets);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<PageResultDto<PlanetDto>>, ProblemHttpResult>> HandleAsync([FromBody] PageRequestDto pageRequest, IPlanetService planetService)
 	{
 		try

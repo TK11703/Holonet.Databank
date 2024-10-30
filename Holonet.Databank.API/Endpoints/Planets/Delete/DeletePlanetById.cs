@@ -14,9 +14,6 @@ public class DeletePlanetById : IEndpoint
 		app.MapDelete($"/Planets/{{id}}", HandleAsync)
 			.WithTags(Tags.Planets);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> HandleAsync(int id, IPlanetService planetService)
 	{
 		try

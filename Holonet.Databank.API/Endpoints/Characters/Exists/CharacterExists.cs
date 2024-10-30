@@ -16,9 +16,6 @@ public class CharacterExists : IEndpoint
 			.AddEndpointFilter<ValidatorFilter<GetCharacterDto>>()
 			.WithTags(Tags.Characters);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> HandleAsync(GetCharacterDto itemModel, ICharacterService characterService)
 	{
 		try

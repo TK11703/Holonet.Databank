@@ -17,9 +17,6 @@ public class GetHistoricalEventsResultsPage : IEndpoint
 			.AddEndpointFilter<ValidatorFilter<PageRequestDto>>()
 			.WithTags(Tags.HistoricalEvents);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<PageResultDto<HistoricalEventDto>>, ProblemHttpResult>> HandleAsync([FromBody] PageRequestDto pageRequest, IHistoricalEventService historicalEventService)
 	{
 		try

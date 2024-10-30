@@ -11,9 +11,6 @@ public class HealthCheck1 : IEndpoint
 		app.MapGet($"/Tests/A", Handle)
 			.WithTags(Tags.Tests);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual Results<Ok<string>, ProblemHttpResult, NotFound> Handle()
 	{
 		try

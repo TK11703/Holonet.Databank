@@ -16,8 +16,6 @@ public class UpdatePlanet : IEndpoint
 			.WithTags(Tags.Planets);
 	}
 
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> Handle(int id, UpdatePlanetDto itemModel, IPlanetService planetService, IAuthorService authorService, IUserService userService)
 	{
 		try

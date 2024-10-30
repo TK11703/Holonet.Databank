@@ -1,4 +1,5 @@
 ﻿@page "/profile"
+@using Holonet.Databank.Core
 @using Holonet.Databank.Web.Clients
 @using Holonet.Databank.Web.Services
 @using Holonet.Databank.Web.Models
@@ -66,9 +67,17 @@
 </table>
 
 <UserClaims />
+<AuthorizeView Roles="@ApplicationRole.Administrator">
+	<Authorized>						
+		<h3>User Bearer Token</h3>
+		<p class="small">An administrator will be able to see their bearer token for diagnostics.</p>
+		<textarea class="form-control" rows="5" readonly="readonly">@bearerToken</textarea>
+	</Authorized>
+</AuthorizeView>
 
 @code {
 	private User? user { get; set; }
+	private string? bearerToken { get; set; }
 	protected async override Task OnInitializedAsync()
 	{
 		try
@@ -83,6 +92,15 @@
 		catch (Exception ex)
 		{
 			msalHandler.HandleException(ex);
+		}
+
+		try
+		{
+			bearerToken = await authorMaintenanceService.GetBearerTokenForDiagnostic();
+		}
+		catch (Exception ex)
+		{
+			throw new Exception("Unable to output the bearertoken for diagnostic", ex);
 		}
 	}
 }

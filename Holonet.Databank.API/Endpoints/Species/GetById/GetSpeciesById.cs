@@ -14,9 +14,6 @@ public class GetSpeciesById : IEndpoint
 		app.MapGet($"/Species/{{id}}", HandleAsync)
 			.WithTags(Tags.Species);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<SpeciesDto>, ProblemHttpResult, NotFound>> HandleAsync(int id, ISpeciesService speciesService)
 	{
 		try

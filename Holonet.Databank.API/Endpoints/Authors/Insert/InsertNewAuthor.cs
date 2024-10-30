@@ -16,9 +16,6 @@ public class InsertNewAuthor : IEndpoint
 			.AddEndpointFilter<ValidatorFilter<CreateAuthorDto>>()
 			.WithTags(Tags.Authors);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<int>, ProblemHttpResult>> HandleAsync(CreateAuthorDto itemModel, IAuthorService authorService, IUserService userService)
 	{
 		try

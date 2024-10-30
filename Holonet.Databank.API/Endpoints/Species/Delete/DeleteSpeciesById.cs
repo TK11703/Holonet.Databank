@@ -12,9 +12,6 @@ public class DeleteSpeciesById : IEndpoint
 		app.MapDelete($"/Species/{{id}}", HandleAsync)
 			.WithTags(Tags.Species);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> HandleAsync(int id, ISpeciesService speciesService)
 	{
 		try

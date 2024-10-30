@@ -49,6 +49,11 @@ public class AuthorMaintenanceService
 		}
 	}
 
+    public async Task<string> GetBearerTokenForDiagnostic()
+    {
+        return await _authorClient.GetBearerToken();
+	}
+
 	private async Task Handle(Guid azureId, string? displayName, string? email)
 	{
 		var author = await _authorClient.Get(azureId);

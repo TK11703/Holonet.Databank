@@ -16,8 +16,6 @@ public class UpdateHistoricalEvent : IEndpoint
 			.WithTags(Tags.HistoricalEvents);
 	}
 
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> Handle(int id, UpdateHistoricalEventDto itemModel, IHistoricalEventService historicalEventService, IAuthorService authorService, IUserService userService)
 	{
 		try

@@ -14,9 +14,6 @@ public class GetAllCharacters : IEndpoint
 		app.MapGet($"/Characters", HandleAsync)
 			.WithTags(Tags.Characters);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<IEnumerable<CharacterDto>>, ProblemHttpResult, NotFound>> HandleAsync(ICharacterService characterService)
 	{
 		try

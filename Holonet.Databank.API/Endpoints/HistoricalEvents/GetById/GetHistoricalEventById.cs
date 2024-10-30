@@ -14,9 +14,6 @@ public class GetHistoricalEventById : IEndpoint
 		app.MapGet($"/HistoricalEvents/{{id}}", HandleAsync)
 			.WithTags(Tags.HistoricalEvents);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<HistoricalEventDto>, ProblemHttpResult, NotFound>> HandleAsync(int id, IHistoricalEventService historicalEventService)
 	{
 		try

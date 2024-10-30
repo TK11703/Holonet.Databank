@@ -15,9 +15,6 @@ public class SpeciesExists : IEndpoint
 			.AddEndpointFilter<ValidatorFilter<GetSpeciesDto>>()
 			.WithTags(Tags.Species);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> HandleAsync(GetSpeciesDto itemModel, ISpeciesService speciesService)
 	{
 		try

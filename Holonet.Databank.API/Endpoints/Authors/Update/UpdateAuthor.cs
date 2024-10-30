@@ -16,9 +16,6 @@ public class UpdateAuthor : IEndpoint
 			.AddEndpointFilter<ValidatorFilter<UpdateAuthorDto>>()
 			.WithTags(Tags.Authors);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual Results<Ok<bool>, ProblemHttpResult> Handle(int id, UpdateAuthorDto itemModel, IAuthorService authorService, IUserService userService)
 	{
 		try

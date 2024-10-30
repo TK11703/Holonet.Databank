@@ -15,8 +15,6 @@ public class GetAuthorByAzureId : IEndpoint
 			.WithTags(Tags.Authors);
 	}
 
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<AuthorDto>, ProblemHttpResult, NotFound>> HandleAsync(Guid id, IAuthorService authorService)
 	{
 		try

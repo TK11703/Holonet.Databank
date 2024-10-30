@@ -17,8 +17,6 @@ public class InsertNewCharacter : IEndpoint
 			.WithTags(Tags.Characters);
 	}
 
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<int>, ProblemHttpResult>> HandleAsync(CreateCharacterDto itemModel, ICharacterService characterService, IAuthorService authorService, IUserService userService)
 	{
 		try

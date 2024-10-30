@@ -16,9 +16,6 @@ public class InsertNewSpecies : IEndpoint
 			.AddEndpointFilter<ValidatorFilter<CreateSpeciesDto>>()
 			.WithTags(Tags.Species);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<int>, ProblemHttpResult>> HandleAsync(CreateSpeciesDto itemModel, ISpeciesService speciesService, IAuthorService authorService, IUserService userService)
 	{
 		try

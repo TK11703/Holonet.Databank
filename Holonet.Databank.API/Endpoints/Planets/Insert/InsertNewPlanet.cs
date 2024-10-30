@@ -16,9 +16,6 @@ public class InsertNewPlanet : IEndpoint
 			.AddEndpointFilter<ValidatorFilter<CreatePlanetDto>>()
 			.WithTags(Tags.Planets);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<int>, ProblemHttpResult>> HandleAsync(CreatePlanetDto itemModel, IPlanetService planetService, IAuthorService authorService, IUserService userService)
 	{
 		try

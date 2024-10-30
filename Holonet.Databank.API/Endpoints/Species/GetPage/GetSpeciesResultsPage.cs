@@ -17,9 +17,6 @@ public class GetSpeciesResultsPage : IEndpoint
 			.AddEndpointFilter<ValidatorFilter<PageRequestDto>>()
 			.WithTags(Tags.Species);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<PageResultDto<SpeciesDto>>, ProblemHttpResult>> HandleAsync([FromBody] PageRequestDto pageRequest, ISpeciesService speciesService)
 	{
 		try

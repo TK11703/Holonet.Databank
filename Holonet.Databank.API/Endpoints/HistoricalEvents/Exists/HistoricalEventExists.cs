@@ -15,9 +15,6 @@ public class HistoricalEventExists : IEndpoint
 			.AddEndpointFilter<ValidatorFilter<GetHistoricalEventDto>>()
 			.WithTags(Tags.HistoricalEvents);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> HandleAsync(GetHistoricalEventDto itemModel, IHistoricalEventService historicalEventService)
 	{
 		try

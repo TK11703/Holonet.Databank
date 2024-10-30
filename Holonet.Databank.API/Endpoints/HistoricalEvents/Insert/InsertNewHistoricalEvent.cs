@@ -16,9 +16,6 @@ public class InsertNewHistoricalEvent : IEndpoint
 			.AddEndpointFilter<ValidatorFilter<CreateHistoricalEventDto>>()
 			.WithTags(Tags.HistoricalEvents);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<int>, ProblemHttpResult>> HandleAsync(CreateHistoricalEventDto itemModel, IHistoricalEventService historicalEventService, IAuthorService authorService, IUserService userService)
 	{
 		try

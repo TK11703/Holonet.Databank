@@ -17,9 +17,6 @@ public class GetCharacterResultsPage : IEndpoint
 			.AddEndpointFilter<ValidatorFilter<PageRequestDto>>()
 			.WithTags(Tags.Characters);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<PageResultDto<CharacterDto>>, ProblemHttpResult>> HandleAsync([FromBody] PageRequestDto pageRequest, ICharacterService characterService)
 	{
 		try

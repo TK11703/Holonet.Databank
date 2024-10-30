@@ -3,10 +3,12 @@ using Holonet.Databank.Core;
 using Holonet.Databank.Web.Components;
 using Holonet.Databank.Web.Extensions;
 using Holonet.Databank.Web.Services;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,27 @@ if (graphScopes == null || graphScopes.Length == 0)
 	graphScopes = ["user.read"];
 }
 var allowedHosts = builder.Configuration.GetValue<string>("AllowedHosts")?.Split(';');
+
+builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+	.AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"))
+	.EnableTokenAcquisitionToCallDownstreamApi(options => { builder.Configuration.Bind("AzureAd", options); })
+	.AddInMemoryTokenCaches();
+
+builder.Services.AddAuthorization(options =>
+{
+	options.FallbackPolicy = options.DefaultPolicy;
+});
+
+builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
+{
+	options.TokenValidationParameters.RoleClaimType = ClaimTypes.Role;
+	options.TokenValidationParameters.NameClaimType = ClaimTypes.Name;
+});
+builder.Services.AddAuthorization(options =>
+{
+	options.AddPolicy(AuthorizationPolicies.AssignmentToAdminRoleRequired, policy => policy.RequireClaim(ClaimTypes.Role, ApplicationRole.Administrator));
+});
+
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -31,7 +54,6 @@ builder.Services.AddControllersWithViews(options =>
 }).AddMicrosoftIdentityUI();
 
 builder.Services.AddScoped<AuthorMaintenanceService>();
-
 
 builder.Services.AddGraphClient(builder.Configuration.GetValue<string>("MicrosoftGraph:GraphApiUrl"), graphScopes, allowedHosts);
 
@@ -53,6 +75,9 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();

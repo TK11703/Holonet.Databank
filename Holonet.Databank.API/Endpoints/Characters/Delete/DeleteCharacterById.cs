@@ -13,8 +13,6 @@ public class DeleteCharacterById : IEndpoint
 			.WithTags(Tags.Characters);
 	}
 
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> HandleAsync(int id, ICharacterService characterService)
 	{
 		try

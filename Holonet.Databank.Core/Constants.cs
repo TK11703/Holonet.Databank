@@ -30,5 +30,6 @@ public static class AuthorizationPolicies
 /// </summary>
 public static class ApplicationRole
 {
-	public const string Administrator = "app-role-admin";
+	public const string Administrator = "databank-admin";
+	public const string User = "databank-user";
 }

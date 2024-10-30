@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Identity.Web;
 using System.Security.Claims;
 
 namespace Holonet.Databank.Web.Components.Shared;
@@ -18,7 +19,7 @@ public class UserClaimsBase : ComponentBase
     protected IEnumerable<Claim> _claims = [];
 
     // Defines list of claim types that will be displayed after successfull sign-in.
-    private readonly string[] printClaims = { "name", "preferred_username", "tid", "oid", "email" };
+    private readonly string[] printClaims = { "name", "preferred_username", "tid", "oid", "email" , ClaimConstants.ObjectId, ClaimTypes.Email};
 
     protected override async Task OnInitializedAsync()
     {
@@ -44,7 +45,7 @@ public class UserClaimsBase : ComponentBase
             // Sets the claims value in _claims variable.
             // The claims mentioned in printClaims variable are selected only.
             _claims = user.Claims.Where(x => printClaims.Contains(x.Type));
-        }
+		}
         else
         {
             _authMessage = "The user is NOT authenticated.";

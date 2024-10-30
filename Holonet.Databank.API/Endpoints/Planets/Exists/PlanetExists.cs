@@ -16,8 +16,6 @@ public class PlanetExists : IEndpoint
 			.WithTags(Tags.Planets);
 	}
 
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> HandleAsync(GetPlanetDto itemModel, IPlanetService planetService)
 	{
 		try

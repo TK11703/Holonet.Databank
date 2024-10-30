@@ -51,6 +51,16 @@ public sealed class AuthorClient
 		}
 	}
 
+	public async Task<string> GetBearerToken()
+	{
+		var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
+		if (!string.IsNullOrEmpty(accessToken))
+		{
+			return accessToken;
+		}
+		return string.Empty;
+	}
+
 	public async Task<AuthorModel?> Get(Guid azureId)
 	{
 		await AcquireBearerTokenForClient();

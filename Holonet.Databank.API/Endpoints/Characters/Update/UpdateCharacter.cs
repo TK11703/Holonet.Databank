@@ -15,9 +15,6 @@ public class UpdateCharacter : IEndpoint
 			.AddEndpointFilter<ValidatorFilter<UpdateCharacterDto>>()
 			.WithTags(Tags.Characters);
 	}
-
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> Handle(int id, UpdateCharacterDto itemModel, ICharacterService characterService, IAuthorService authorService, IUserService userService)
 	{
 		try

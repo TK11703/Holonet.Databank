@@ -13,8 +13,6 @@ public class DeleteHistoricalEventById : IEndpoint
 			.WithTags(Tags.HistoricalEvents);
 	}
 
-	[Authorize]
-	[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> HandleAsync(int id, IHistoricalEventService historicalEventService)
 	{
 		try
