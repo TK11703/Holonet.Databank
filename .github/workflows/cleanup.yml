@@ -1,0 +1,32 @@
+name: Cleanup Old Workflow Runs
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs every day at midnight
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    env:
+      REPO: TK11703/Holonet.Databank
+      DAYS: 30
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Delete Old Workflow Runs
+        run: |
+          echo "Repository: ${{ env.REPO }}"
+          echo "Days Old: ${{ env.DAYS }}"
+          
+          # Calculate the date
+          DATE=$(date -d "-${{ env.DAYS }} days" --utc +%Y-%m-%dT%H:%M:%SZ)
+          
+          # List workflow runs and delete runs older than the calculated date
+          runs=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ env.REPO }}/actions/runs?per_page=100" | jq -r ".workflow_runs[] | select(.created_at < \"${DATE}\") | .id")
+          
+          for run_id in $runs; do
+            curl -X DELETE -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ env.REPO }}/actions/runs/$run_id"
+          done
