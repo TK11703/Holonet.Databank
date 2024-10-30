@@ -68,7 +68,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'databank-8108'
+          app-name: 'Holonet-App-Databank-8108'
           slot-name: 'Production'
           package: ./publish
 
@@ -91,6 +91,6 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'databank-8108-api'
+          app-name: 'Holonet-Api-Databank-8108'
           slot-name: 'Production'
           package: ./publish
