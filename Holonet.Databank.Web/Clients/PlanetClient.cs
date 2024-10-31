@@ -1,50 +1,22 @@
 ﻿using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Core.Models;
 using Holonet.Databank.Web.Models;
-using Microsoft.Graph.Models.ExternalConnectors;
 using Microsoft.Identity.Web;
-using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 namespace Holonet.Databank.Web.Clients;
 
-public sealed class PlanetClient
+public sealed class PlanetClient : ClientBase
 {
 	private readonly HttpClient _httpClient;
 	private readonly ILogger<PlanetClient> _logger;
-	private readonly ITokenAcquisition _tokenAcquisition;
-	private readonly IEnumerable<string> _scopes;
 
-	public PlanetClient(HttpClient httpClient, ILogger<PlanetClient> logger, ITokenAcquisition tokenAcquisition, IConfiguration configuration)
+	public PlanetClient(HttpClient httpClient, ILogger<PlanetClient> logger, ITokenAcquisition tokenAcquisition, IConfiguration configuration) : base(tokenAcquisition, configuration)
 	{
 		_httpClient = httpClient;
 		_logger = logger;
-		_tokenAcquisition = tokenAcquisition;
-		_scopes = GetScopesFromConfiguration(configuration);
 		PerformClientChecks();
-	}
-
-	private static IEnumerable<string> GetScopesFromConfiguration(IConfiguration configuration)
-	{
-		var section = configuration.GetSection("DatabankApi:Scopes");
-		if (section.Exists())
-		{
-			return section.Get<string>()?.Split(' ') ?? Array.Empty<string>();
-		}
-		else
-		{
-			return Array.Empty<string>();
-		}
-	}
-
-	private async Task AcquireBearerTokenForClient()
-	{
-		var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
-		if (!string.IsNullOrEmpty(accessToken))
-		{
-			_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-		}
 	}
 
 	private void PerformClientChecks()
@@ -57,7 +29,10 @@ public sealed class PlanetClient
 
 	public async Task<IEnumerable<PlanetModel>?> GetAll()
 	{
-		await AcquireBearerTokenForClient();
+		if (base.RequiresBearToken())
+		{
+			await AcquireBearerTokenForClient(_httpClient);
+		}
 
 		using HttpResponseMessage response = await _httpClient.GetAsync("");
 		if (!response.IsSuccessStatusCode)
@@ -77,7 +52,10 @@ public sealed class PlanetClient
 
 	public async Task<PageResult<PlanetModel>> GetAll(PageRequest pagedRequest)
 	{
-		await AcquireBearerTokenForClient();
+		if (base.RequiresBearToken())
+		{
+			await AcquireBearerTokenForClient(_httpClient);
+		}
 
 		var pageRequestDto = pagedRequest.ToPageRequestDto();
 		var request = new HttpRequestMessage(HttpMethod.Get, "PagedRequest")
@@ -111,7 +89,10 @@ public sealed class PlanetClient
 
 	public async Task<PlanetModel?> Get(int id)
 	{
-		await AcquireBearerTokenForClient();
+		if (base.RequiresBearToken())
+		{
+			await AcquireBearerTokenForClient(_httpClient);
+		}
 
 		using HttpResponseMessage response = await _httpClient.GetAsync($"{id}");
 		if (!response.IsSuccessStatusCode)
@@ -131,7 +112,10 @@ public sealed class PlanetClient
 
 	public async Task<bool> Exists(int id, string name)
 	{
-		await AcquireBearerTokenForClient();
+		if (base.RequiresBearToken())
+		{
+			await AcquireBearerTokenForClient(_httpClient);
+		}
 
 		var getPlanetDto = new GetPlanetDto(id, name);
 		using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"Exists", getPlanetDto);
@@ -145,7 +129,10 @@ public sealed class PlanetClient
 
 	public async Task<int> Create(PlanetModel item)
 	{
-		await AcquireBearerTokenForClient();
+		if (base.RequiresBearToken())
+		{
+			await AcquireBearerTokenForClient(_httpClient);
+		}
 
 		var createPlanetDto = item.ToCreatePlanetDto();
 		using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"", createPlanetDto);
@@ -159,7 +146,10 @@ public sealed class PlanetClient
 
 	public async Task<bool> Update(PlanetModel item, int id)
 	{
-		await AcquireBearerTokenForClient();
+		if (base.RequiresBearToken())
+		{
+			await AcquireBearerTokenForClient(_httpClient);
+		}
 
 		var updatePlanetDto = item.ToUpdatePlanetDto();
 		using HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"{id}", updatePlanetDto);
@@ -173,7 +163,10 @@ public sealed class PlanetClient
 
 	public async Task<bool> Delete(int id)
 	{
-		await AcquireBearerTokenForClient();
+		if (base.RequiresBearToken())
+		{
+			await AcquireBearerTokenForClient(_httpClient);
+		}
 
 		using HttpResponseMessage response = await _httpClient.DeleteAsync($"{id}");
 		if (response.IsSuccessStatusCode)

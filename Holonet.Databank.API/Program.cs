@@ -27,15 +27,13 @@ var app = builder.Build();
 
 var logger = app.Services.GetService<ILogger<Program>>();
 
+var showSwagger = builder.Configuration.GetValue<bool>("ShowSwagger");
 // Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//	app.UseSwagger();
-//	app.UseSwaggerUI();
-//}
-
-app.UseSwagger();
-app.UseSwaggerUI();
+if (app.Environment.IsDevelopment() || showSwagger)
+{
+	app.UseSwagger();
+	app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
 

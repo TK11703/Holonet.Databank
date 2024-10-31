@@ -1,6 +1,7 @@
 ﻿using Blazored.Toast.Services;
 using Holonet.Databank.Web.Clients;
 using Holonet.Databank.Web.Models;
+using Holonet.Databank.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Diagnostics.CodeAnalysis;
@@ -24,6 +25,9 @@ public partial class CreateHistoricalEvent
 
 	[Inject]
 	private HistoricalEventClient HistoricalEventClient { get; set; } = default!;
+
+	[Inject]
+	private UserService UserService { get; set; } = default!;
 
 	[Inject]
 	private PlanetClient PlanetClient { get; set; } = default!;
@@ -52,6 +56,10 @@ public partial class CreateHistoricalEvent
 		}
 		else
 		{
+			if (UserService.IsUserAuthenticated())
+			{
+				Model.UpdatedBy = new AuthorModel() { AzureId = UserService.GetAzureId() };
+			}
 			var result = await HistoricalEventClient.Create(Model);
 			if (result > 0)
 			{

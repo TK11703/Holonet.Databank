@@ -11,5 +11,6 @@ public record CreateCharacterDto(
 	[StringLength(200)] string? BirthDate,
 	int? PlanetId,
     IEnumerable<int> SpeciesIds,
-	IEnumerable<string> Aliases
+	IEnumerable<string> Aliases,
+	Guid AzureId
 );

@@ -8,9 +8,7 @@ public static class ScopedServicesExtension
 {
 	public static IServiceCollection AddScopedServices(this IServiceCollection services)
 	{
-		services.AddScoped<ISqlDataAccess, SqlDataAccess>();
-
-		services.AddScoped<IUserService, UserService>();
+		services.AddScoped<ISqlDataAccess, SqlDataAccess>();		
 
 		services.AddScoped<IAuthorService, AuthorService>();
 		services.AddScoped<IAuthorRepository, AuthorRepository>();

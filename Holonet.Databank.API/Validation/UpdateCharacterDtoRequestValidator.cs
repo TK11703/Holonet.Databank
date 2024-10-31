@@ -25,5 +25,8 @@ public class UpdateCharacterDtoRequestValidator : AbstractValidator<UpdateCharac
 		RuleForEach(x => x.Aliases)
 			.Must(item => item.Length <= 150)
 			.WithMessage("Each alias must be no more than 150 characters in length.");
+
+		RuleFor(x => x.AzureId)
+			.NotEmpty().WithMessage("AzureId is required.");
 	}
 }

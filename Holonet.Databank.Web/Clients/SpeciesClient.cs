@@ -1,53 +1,24 @@
 ﻿using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Core.Models;
 using Holonet.Databank.Web.Models;
-using Microsoft.Graph.Models.ExternalConnectors;
 using Microsoft.Identity.Web;
-using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 
 namespace Holonet.Databank.Web.Clients;
 
-public sealed class SpeciesClient
+public sealed class SpeciesClient : ClientBase
 {
 	private readonly HttpClient _httpClient;
 	private readonly ILogger<SpeciesClient> _logger;
-	private readonly ITokenAcquisition _tokenAcquisition;
-	private readonly IEnumerable<string> _scopes;
 
-	public SpeciesClient(HttpClient httpClient, ILogger<SpeciesClient> logger, ITokenAcquisition tokenAcquisition, IConfiguration configuration)
+	public SpeciesClient(HttpClient httpClient, ILogger<SpeciesClient> logger, ITokenAcquisition tokenAcquisition, IConfiguration configuration) : base(tokenAcquisition, configuration)
 	{
 		_httpClient = httpClient;
 		_logger = logger;
-		_tokenAcquisition = tokenAcquisition;
-		_scopes = GetScopesFromConfiguration(configuration);
 		PerformClientChecks();
 	}
-
-	private static IEnumerable<string> GetScopesFromConfiguration(IConfiguration configuration)
-	{
-		var section = configuration.GetSection("DatabankApi:Scopes");
-		if (section.Exists())
-		{
-			return section.Get<string>()?.Split(' ') ?? Array.Empty<string>();
-		}
-		else
-		{
-			return Array.Empty<string>();
-		}
-	}
-
-	private async Task AcquireBearerTokenForClient()
-	{
-		var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
-		if (!string.IsNullOrEmpty(accessToken))
-		{
-			_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-		}
-	}
-
 	private void PerformClientChecks()
 	{
 		if (_httpClient.BaseAddress == null)
@@ -58,7 +29,10 @@ public sealed class SpeciesClient
 
 	public async Task<IEnumerable<SpeciesModel>?> GetAll()
 	{
-		await AcquireBearerTokenForClient();
+		if (base.RequiresBearToken())
+		{
+			await AcquireBearerTokenForClient(_httpClient);
+		}
 
 		using HttpResponseMessage response = await _httpClient.GetAsync("");
 		if (!response.IsSuccessStatusCode)
@@ -78,7 +52,10 @@ public sealed class SpeciesClient
 
 	public async Task<PageResult<SpeciesModel>> GetAll(PageRequest pagedRequest)
 	{
-		await AcquireBearerTokenForClient();
+		if (base.RequiresBearToken())
+		{
+			await AcquireBearerTokenForClient(_httpClient);
+		}
 
 		var pageRequestDto = pagedRequest.ToPageRequestDto();
 		var request = new HttpRequestMessage(HttpMethod.Get, "PagedRequest")
@@ -113,7 +90,10 @@ public sealed class SpeciesClient
 
 	public async Task<bool> Exists(int id, string name)
 	{
-		await AcquireBearerTokenForClient();
+		if (base.RequiresBearToken())
+		{
+			await AcquireBearerTokenForClient(_httpClient);
+		}
 
 		var getSpeciesDto = new GetSpeciesDto(id, name);
 		using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"/exists", getSpeciesDto);
@@ -127,7 +107,10 @@ public sealed class SpeciesClient
 
 	public async Task<SpeciesModel?> Get(int id)
 	{
-		await AcquireBearerTokenForClient();
+		if (base.RequiresBearToken())
+		{
+			await AcquireBearerTokenForClient(_httpClient);
+		}
 
 		using HttpResponseMessage response = await _httpClient.GetAsync($"{id}");
 		if (!response.IsSuccessStatusCode)
@@ -147,7 +130,10 @@ public sealed class SpeciesClient
 
 	public async Task<int> Create(SpeciesModel item)
 	{
-		await AcquireBearerTokenForClient();
+		if (base.RequiresBearToken())
+		{
+			await AcquireBearerTokenForClient(_httpClient);
+		}
 
 		var createSpeciesDto = item.ToCreateSpeciesDto();
 		using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"", createSpeciesDto);
@@ -161,7 +147,10 @@ public sealed class SpeciesClient
 
 	public async Task<bool> Update(SpeciesModel item, int id)
 	{
-		await AcquireBearerTokenForClient();
+		if (base.RequiresBearToken())
+		{
+			await AcquireBearerTokenForClient(_httpClient);
+		}
 
 		var updateSpeciesDto = item.ToUpdateSpeciesDto();
 		using HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"{id}", updateSpeciesDto);
@@ -175,7 +164,10 @@ public sealed class SpeciesClient
 
 	public async Task<bool> Delete(int id)
 	{
-		await AcquireBearerTokenForClient();
+		if (base.RequiresBearToken())
+		{
+			await AcquireBearerTokenForClient(_httpClient);
+		}
 
 		using HttpResponseMessage response = await _httpClient.DeleteAsync($"{id}");
 		if (response.IsSuccessStatusCode)

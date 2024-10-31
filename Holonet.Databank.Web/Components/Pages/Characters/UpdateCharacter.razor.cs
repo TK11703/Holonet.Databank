@@ -2,6 +2,7 @@
 using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Web.Clients;
 using Holonet.Databank.Web.Models;
+using Holonet.Databank.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Diagnostics.CodeAnalysis;
@@ -25,6 +26,9 @@ public partial class UpdateCharacter
 
 	[Inject]
 	private CharacterClient CharacterClient { get; set; } = default!;
+
+	[Inject]
+	private UserService UserService { get; set; } = default!;
 
 	[Inject]
 	private PlanetClient PlanetClient { get; set; } = default!;
@@ -69,6 +73,10 @@ public partial class UpdateCharacter
 		}
 		else
 		{
+			if (UserService.IsUserAuthenticated())
+			{
+				Model.UpdatedBy = new AuthorModel() { AzureId = UserService.GetAzureId() };
+			}
 			var result = await CharacterClient.Update(Model, ID);
 			if (result)
 			{

@@ -16,16 +16,11 @@ public class InsertNewHistoricalEvent : IEndpoint
 			.AddEndpointFilter<ValidatorFilter<CreateHistoricalEventDto>>()
 			.WithTags(Tags.HistoricalEvents);
 	}
-	protected virtual async Task<Results<Ok<int>, ProblemHttpResult>> HandleAsync(CreateHistoricalEventDto itemModel, IHistoricalEventService historicalEventService, IAuthorService authorService, IUserService userService)
+	protected virtual async Task<Results<Ok<int>, ProblemHttpResult>> HandleAsync(CreateHistoricalEventDto itemModel, IHistoricalEventService historicalEventService, IAuthorService authorService)
 	{
 		try
 		{
-			var azureId = userService.GetAzureId();
-			if (azureId == null)
-			{
-				return TypedResults.Problem("User not found");
-			}
-			var author = await authorService.GetAuthorByAzureId(azureId.Value);
+			var author = await authorService.GetAuthorByAzureId(itemModel.AzureId);
 			if (author == null)
 			{
 				return TypedResults.Problem("Author not found");

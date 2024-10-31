@@ -9,5 +9,6 @@ public record CreateHistoricalEventDto(
 	[Url][StringLength(500)] string? Shard,
 	IEnumerable<int> CharacterIds,
 	IEnumerable<int> PlanetIds,
-	IEnumerable<string> Aliases
+	IEnumerable<string> Aliases,
+	Guid AzureId
 );

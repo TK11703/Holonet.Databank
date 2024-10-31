@@ -1,6 +1,7 @@
 ﻿using Blazored.Toast.Services;
 using Holonet.Databank.Web.Clients;
 using Holonet.Databank.Web.Models;
+using Holonet.Databank.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Diagnostics.CodeAnalysis;
@@ -17,6 +18,9 @@ public partial class CreateSpecies
 
 	[Inject]
 	private SpeciesClient SpeciesClient { get; set; } = default!;
+
+	[Inject]
+	private UserService UserService { get; set; } = default!;
 
 	[Inject]
 	private IToastService ToastService { get; set; } = default!;
@@ -40,6 +44,10 @@ public partial class CreateSpecies
 		}
 		else
 		{
+			if (UserService.IsUserAuthenticated())
+			{
+				Model.UpdatedBy = new AuthorModel() { AzureId = UserService.GetAzureId() };
+			}
 			var result = await SpeciesClient.Create(Model);
 			if (result > 0)
 			{

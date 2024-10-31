@@ -13,9 +13,9 @@ using System.Security.Claims;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-	.AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
-	//.EnableTokenAcquisitionToCallDownstreamApi(options => { builder.Configuration.Bind("AzureAd", options); })
-	//.AddInMemoryTokenCaches();
+	.AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"))
+	.EnableTokenAcquisitionToCallDownstreamApi(options => { builder.Configuration.Bind("AzureAd", options); })
+	.AddInMemoryTokenCaches();
 
 builder.Services.AddAuthorization(options =>
 {
@@ -32,7 +32,6 @@ builder.Services.AddAuthorization(options =>
 	options.AddPolicy(AuthorizationPolicies.AssignmentToAdminRoleRequired, policy => policy.RequireClaim(ClaimTypes.Role, ApplicationRole.Administrator));
 });
 
-
 // Add services to the container.
 builder.Services.AddRazorComponents()
 	.AddInteractiveServerComponents()
@@ -42,11 +41,11 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllersWithViews(options =>
 {
-    var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-    options.Filters.Add(new AuthorizeFilter(policy));
+	var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+	options.Filters.Add(new AuthorizeFilter(policy));
 }).AddMicrosoftIdentityUI();
 
-builder.Services.AddScoped<AuthorMaintenanceService>();
+builder.Services.AddScopedServices();
 
 var graphScopes = builder.Configuration.GetValue<string>("MicrosoftGraph:Scopes")?.Split(' ');
 if (graphScopes == null || graphScopes.Length == 0)

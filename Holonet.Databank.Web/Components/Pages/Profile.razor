@@ -6,8 +6,9 @@
 @using Microsoft.Graph.Models
 @using Microsoft.Identity.Web
 @inject GraphApiClient graphClient
+@inject MicrosoftIdentityConsentAndConditionalAccessHandler ConsentHandler
 @inject AuthorMaintenanceService authorMaintenanceService
-@inject MicrosoftIdentityConsentAndConditionalAccessHandler msalHandler
+@inject IToastService ToastService
 @attribute [Authorize]
 
 <PageTitle>User Profile</PageTitle>
@@ -83,15 +84,16 @@
 		try
 		{
 			user = await graphClient.GetGraphApiUser();
-
-			if (user != null)
-			{
-				await authorMaintenanceService.AddOrUpdateAuthenticatedUser(user.DisplayName ?? string.Empty, user.Mail ?? string.Empty);
-			}
 		}
 		catch (Exception ex)
 		{
-			msalHandler.HandleException(ex);
+			ConsentHandler.HandleException(ex);
+		}
+
+		if (user != null)
+		{
+			await authorMaintenanceService.AddOrUpdateAuthenticatedUser(user.DisplayName ?? string.Empty, user.Mail ?? string.Empty);
+			ToastService.ShowSuccess("Your profile information was automatically saved/updated.");
 		}
 
 		try

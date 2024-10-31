@@ -56,8 +56,9 @@ public static class ModelExtensions
 			character.Shard,
 			character.BirthDate,
 			character.PlanetId,
-            character.SpeciesIds,
-			character.Aliases.Select(alias => alias.Name)
+			character.SpeciesIds,
+			character.Aliases.Select(alias => alias.Name),
+			AzureId: character.UpdatedBy?.AzureId ?? Guid.Empty
 		);
 	}
 
@@ -73,7 +74,8 @@ public static class ModelExtensions
 			character.BirthDate,
 			character.PlanetId,
             character.SpeciesIds,
-			character.Aliases.Select(alias => alias.Name)
+			character.Aliases.Select(alias => alias.Name),
+			AzureId: character.UpdatedBy?.AzureId ?? Guid.Empty
 		);
 	}
 
@@ -104,7 +106,8 @@ public static class ModelExtensions
 			planet.Name,
 			planet.Description,
 			planet.Shard,
-			planet.Aliases.Select(alias => alias.Name)
+			planet.Aliases.Select(alias => alias.Name),
+			AzureId: planet.UpdatedBy?.AzureId ?? Guid.Empty
 		);
 	}
 
@@ -116,7 +119,8 @@ public static class ModelExtensions
 			planet.Name,
 			planet.Description,
 			planet.Shard,
-			planet.Aliases.Select(alias => alias.Name)
+			planet.Aliases.Select(alias => alias.Name),
+			AzureId: planet.UpdatedBy?.AzureId ?? Guid.Empty
 		);
 	}
 
@@ -141,7 +145,8 @@ public static class ModelExtensions
             species.Name,
             species.Description,
             species.Shard,
-			species.Aliases.Select(alias => alias.Name)
+			species.Aliases.Select(alias => alias.Name),
+			AzureId: species.UpdatedBy?.AzureId ?? Guid.Empty
 		);
     }
 
@@ -153,7 +158,8 @@ public static class ModelExtensions
             species.Name,
             species.Description,
             species.Shard,
-			species.Aliases.Select(alias => alias.Name)
+			species.Aliases.Select(alias => alias.Name),
+			AzureId: species.UpdatedBy?.AzureId ?? Guid.Empty
 		);
     }
 
@@ -181,7 +187,8 @@ public static class ModelExtensions
 			DatePeriod: historicalEvent.DatePeriod,
 			PlanetIds: historicalEvent.PlanetIds,
 			CharacterIds: historicalEvent.CharacterIds,
-			Aliases: historicalEvent.Aliases.Select(alias => alias.Name)
+			Aliases: historicalEvent.Aliases.Select(alias => alias.Name),
+			AzureId: historicalEvent.UpdatedBy?.AzureId ?? Guid.Empty
 		);
 	}
 
@@ -196,7 +203,8 @@ public static class ModelExtensions
 			DatePeriod: historicalEvent.DatePeriod,
 			PlanetIds: historicalEvent.PlanetIds,
 			CharacterIds: historicalEvent.CharacterIds,
-			Aliases: historicalEvent.Aliases.Select(alias => alias.Name)
+			Aliases: historicalEvent.Aliases.Select(alias => alias.Name),
+			AzureId: historicalEvent.UpdatedBy?.AzureId ?? Guid.Empty
 		);
 	}
 

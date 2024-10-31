@@ -2,9 +2,7 @@
 using Holonet.Databank.Application.Services;
 using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Core.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.Identity.Web.Resource;
 namespace Holonet.Databank.API.Endpoints.Species.Update;
 
 public class UpdateSpecies : IEndpoint
@@ -15,16 +13,11 @@ public class UpdateSpecies : IEndpoint
 			.AddEndpointFilter<ValidatorFilter<UpdateSpeciesDto>>()
 			.WithTags(Tags.Species);
 	}
-	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> Handle(int id, UpdateSpeciesDto itemModel, ISpeciesService speciesService, IAuthorService authorService, IUserService userService)
+	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> Handle(int id, UpdateSpeciesDto itemModel, ISpeciesService speciesService, IAuthorService authorService)
 	{
 		try
 		{
-			var azureId = userService.GetAzureId();
-			if (azureId == null)
-			{
-				return TypedResults.Problem("User not found");
-			}
-			var author = await authorService.GetAuthorByAzureId(azureId.Value);
+			var author = await authorService.GetAuthorByAzureId(itemModel.AzureId);
 			if (author == null)
 			{
 				return TypedResults.Problem("Author not found");
