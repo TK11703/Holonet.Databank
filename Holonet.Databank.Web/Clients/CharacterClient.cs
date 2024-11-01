@@ -143,6 +143,23 @@ public sealed class CharacterClient : ClientBase
 		return 0;
 	}
 
+	public async Task<bool> CreateDataRecord(int id, DataRecordModel item)
+	{
+		if (base.RequiresBearToken())
+		{
+			await AcquireBearerTokenForClient(_httpClient);
+		}
+
+		var createdataRecordDto = item.ToCreateRecordDto();
+		using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"{id}/AddRecord", createdataRecordDto);
+		if (response.IsSuccessStatusCode)
+		{
+			return await response.Content.ReadFromJsonAsync<bool>();
+		}
+		_logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
+		return false;
+	}
+
 	public async Task<bool> Update(CharacterModel item, int id)
 	{
 		if (base.RequiresBearToken())
@@ -168,6 +185,22 @@ public sealed class CharacterClient : ClientBase
 		}
 
 		using HttpResponseMessage response = await _httpClient.DeleteAsync($"{id}");
+		if (response.IsSuccessStatusCode)
+		{
+			return await response.Content.ReadFromJsonAsync<bool>();
+		}
+		_logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
+		return false;
+	}
+
+	public async Task<bool> DeleteRecord(int id, int recordId)
+	{
+		if (base.RequiresBearToken())
+		{
+			await AcquireBearerTokenForClient(_httpClient);
+		}
+
+		using HttpResponseMessage response = await _httpClient.DeleteAsync($"{id}/Record/{recordId}");
 		if (response.IsSuccessStatusCode)
 		{
 			return await response.Content.ReadFromJsonAsync<bool>();

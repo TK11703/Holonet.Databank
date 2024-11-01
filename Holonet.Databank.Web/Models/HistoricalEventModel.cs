@@ -10,8 +10,6 @@ public class HistoricalEventModel
 	[StringLength(150)]
 	public string Name { get; set; } = string.Empty;
 
-	public string? Description { get; set; }
-
 	[Url]
 	[StringLength(500)]
 	public string? Shard { get; set; }
@@ -93,6 +91,9 @@ public class HistoricalEventModel
 	public IEnumerable<CharacterModel> Characters { get; set; } = [];
 	public List<int> PlanetIds { get; set; } = [];
 	public IEnumerable<PlanetModel> Planets { get; set; } = [];
+
+	public List<int> DataRecordIds { get; set; } = [];
+	public IEnumerable<DataRecordModel> DataRecords { get; set; } = [];
 
 	public List<AliasModel> Aliases { get; set; } = new();
 

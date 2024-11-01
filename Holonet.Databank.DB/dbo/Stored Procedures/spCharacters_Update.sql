@@ -3,7 +3,6 @@
 	@PlanetId int,
 	@GivenName nvarchar(150),
 	@FamilyName nvarchar(150) = null,
-	@Description nvarchar(max),
 	@Shard nvarchar(500),
 	@BirthDate nvarchar(200),
 	@AzureAuthorId uniqueidentifier
@@ -20,7 +19,7 @@ BEGIN
 	ELSE
 	BEGIN
 		UPDATE dbo.Characters
-			SET [PlanetId]=@PlanetId, [GivenName]=@GivenName, [FamilyName]=@FamilyName, [Description]=@Description, [Shard]=@Shard, 
+			SET [PlanetId]=@PlanetId, [GivenName]=@GivenName, [FamilyName]=@FamilyName, [Shard]=@Shard, 
 				[BirthDate]=@BirthDate, [UpdatedOn]=GETDATE(), [AuthorId]=@AuthorId
 		WHERE [Id]=@Id;
 

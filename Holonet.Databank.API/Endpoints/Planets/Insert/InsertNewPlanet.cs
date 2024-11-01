@@ -28,7 +28,6 @@ public class InsertNewPlanet : IEndpoint
 			var newPlanet = new Planet
 			{
 				Name = itemModel.Name,
-				Description = itemModel.Description,
 				Shard = itemModel.Shard,
 				Aliases = itemModel.Aliases.Select(alias => new Alias { Name = alias, UpdatedBy = author }),
 				UpdatedBy = author

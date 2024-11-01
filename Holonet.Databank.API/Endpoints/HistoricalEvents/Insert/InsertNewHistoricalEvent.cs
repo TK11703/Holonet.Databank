@@ -28,7 +28,6 @@ public class InsertNewHistoricalEvent : IEndpoint
 			var newHistoricalEvent = new HistoricalEvent
 			{
 				Name = itemModel.Name,
-				Description = itemModel.Description,
 				DatePeriod = itemModel.DatePeriod,
 				CharacterIds = itemModel.CharacterIds,
 				PlanetIds = itemModel.PlanetIds,

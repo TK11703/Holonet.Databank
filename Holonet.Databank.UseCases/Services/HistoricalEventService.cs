@@ -5,13 +5,14 @@ using System.Data;
 using System.Numerics;
 
 namespace Holonet.Databank.Application.Services;
-public class HistoricalEventService(IHistoricalEventRepository historicalEventRepository, IHistoricalEventCharacterRepository historicalEventCharacterRepository, IHistoricalEventPlanetRepository historicalEventPlanetRepository, IAuthorService authorService, IAliasRepository aliasRepository) : IHistoricalEventService
+public class HistoricalEventService(IHistoricalEventRepository historicalEventRepository, IHistoricalEventCharacterRepository historicalEventCharacterRepository, IHistoricalEventPlanetRepository historicalEventPlanetRepository, IAuthorService authorService, IAliasRepository aliasRepository, IDataRecordService dataRecordService) : IHistoricalEventService
 {
 	private readonly IHistoricalEventRepository _historicalEventRepository = historicalEventRepository;
 	private readonly IHistoricalEventCharacterRepository _historicalEventCharacterRepository = historicalEventCharacterRepository;
 	private readonly IHistoricalEventPlanetRepository _historicalEventPlanetRepository = historicalEventPlanetRepository;
 	private readonly IAuthorService _authorService = authorService;
 	private readonly IAliasRepository _aliasRepository = aliasRepository;
+	private readonly IDataRecordService _dataRecordService = dataRecordService;
 
 	public async Task<HistoricalEvent?> GetHistoricalEventById(int id)
 	{
@@ -40,6 +41,11 @@ public class HistoricalEventService(IHistoricalEventRepository historicalEventRe
 			if (item.Aliases.Any())
 			{
 				item.AliasIds = item.Aliases.Select(c => c.Id);
+			}
+			item.DataRecords = await _dataRecordService.GetDataRecordsById(historicalEventId: item.Id);
+			if (item.DataRecords.Any())
+			{
+				item.DataRecordIds = item.DataRecords.Select(c => c.Id);
 			}
 		}
 		return item;

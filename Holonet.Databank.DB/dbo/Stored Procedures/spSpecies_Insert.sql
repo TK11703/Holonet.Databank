@@ -1,6 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[spSpecies_Insert]
 	@Name nvarchar(150),
-	@Description nvarchar(max),
 	@Shard nvarchar(500),
 	@AzureAuthorId uniqueidentifier,
 	@Id int output
@@ -17,9 +16,9 @@ BEGIN
 	ELSE
 	BEGIN
 		INSERT INTO dbo.Species
-			([Name], [Description], [Shard], [UpdatedOn], [AuthorId], [Active])
+			([Name], [Shard], [UpdatedOn], [AuthorId], [Active])
 		Values	
-			(@Name, @Description, @Shard, GETDATE(), @AuthorId, 1);
+			(@Name, @Shard, GETDATE(), @AuthorId, 1);
 
 		SET @Id = SCOPE_IDENTITY();
 

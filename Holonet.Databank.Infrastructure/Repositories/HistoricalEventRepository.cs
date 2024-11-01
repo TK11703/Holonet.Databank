@@ -57,7 +57,6 @@ public class HistoricalEventRepository(ISqlDataAccess dataAccess) : IHistoricalE
 	{
 		var p = new DynamicParameters();
 		p.Add(name: "@Name", itemModel.Name);
-		p.Add(name: "@Description", itemModel.Description);
 		p.Add(name: "@Shard", itemModel.Shard);
 		p.Add(name: "@DatePeriod", itemModel.DatePeriod);
 		p.Add(name: "@AzureAuthorId", itemModel.UpdatedBy.AzureId);
@@ -74,7 +73,6 @@ public class HistoricalEventRepository(ISqlDataAccess dataAccess) : IHistoricalE
 		var p = new DynamicParameters();
 		p.Add(name: "@Id", itemModel.Id);
 		p.Add(name: "@Name", itemModel.Name);
-		p.Add(name: "@Description", itemModel.Description);
 		p.Add(name: "@Shard", itemModel.Shard);
 		p.Add(name: "@DatePeriod", itemModel.DatePeriod);
 		p.Add(name: "@AzureAuthorId", itemModel.UpdatedBy.AzureId);

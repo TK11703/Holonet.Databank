@@ -15,4 +15,6 @@ public class Alias : EntityBase
 
 	public int? SpeciesId { get; set; }
 
+	public int? HistoricalEventId { get; set; }
+
 }

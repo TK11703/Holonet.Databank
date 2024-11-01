@@ -30,7 +30,6 @@ public class InsertNewCharacter : IEndpoint
 			{
 				GivenName = itemModel.GivenName,
 				FamilyName = itemModel.FamilyName,
-				Description = itemModel.Description,
 				Shard = itemModel.Shard,
 				BirthDate = itemModel.BirthDate,
 				PlanetId = itemModel.PlanetId,

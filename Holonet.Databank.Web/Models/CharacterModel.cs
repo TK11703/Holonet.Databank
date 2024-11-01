@@ -13,8 +13,6 @@ public class CharacterModel
 	[StringLength(150, ErrorMessage = "Family name can only be {1} characters in length.")]
 	public string? FamilyName { get; set; } = string.Empty;
 
-	public string? Description { get; set; }
-
 	[Url]
 	[StringLength(500, ErrorMessage = "Shard can only be {1} characters in length.")]
 	public string? Shard { get; set; }
@@ -56,6 +54,9 @@ public class CharacterModel
 
     public List<int> SpeciesIds { get; set; } = [];
     public IEnumerable<SpeciesModel> Species { get; set; } = [];
+
+	public List<int> DataRecordIds { get; set; } = [];
+	public IEnumerable<DataRecordModel> DataRecords { get; set; } = [];
 
 	public List<AliasModel> Aliases { get; set; } = new();
 

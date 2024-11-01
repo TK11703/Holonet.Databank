@@ -7,6 +7,7 @@ public record AliasDto(
 	int? CharacterId,
 	int? PlanetId,
 	int? SpeciesId,
+	int? HistoricalEventId,
 	AuthorDto? UpdatedBy,
 	DateTime? UpdatedOn
 );

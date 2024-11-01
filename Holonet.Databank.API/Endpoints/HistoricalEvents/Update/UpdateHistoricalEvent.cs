@@ -29,7 +29,6 @@ public class UpdateHistoricalEvent : IEndpoint
 			{
 				Id = itemModel.Id,
 				Name = itemModel.Name,
-				Description = itemModel.Description,
 				DatePeriod = itemModel.DatePeriod,
 				Shard = itemModel.Shard,
 				CharacterIds = itemModel.CharacterIds,

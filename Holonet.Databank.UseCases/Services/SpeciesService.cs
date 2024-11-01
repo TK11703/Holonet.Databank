@@ -6,11 +6,12 @@ using System.Data;
 using System.Numerics;
 
 namespace Holonet.Databank.Application.Services;
-public class SpeciesService(ISpeciesRepository speciesRepository, IAuthorService authorService, IAliasRepository aliasRepository) : ISpeciesService
+public class SpeciesService(ISpeciesRepository speciesRepository, IAuthorService authorService, IAliasRepository aliasRepository, IDataRecordService dataRecordService) : ISpeciesService
 {
 	private readonly ISpeciesRepository _speciesRepository = speciesRepository;
 	private readonly IAuthorService _authorService = authorService;
 	private readonly IAliasRepository _aliasRepository = aliasRepository;
+	private readonly IDataRecordService _dataRecordService = dataRecordService;
 
 	public async Task<Species?> GetSpeciesById(int id)
 	{
@@ -26,6 +27,11 @@ public class SpeciesService(ISpeciesRepository speciesRepository, IAuthorService
 			if (species.Aliases.Any())
 			{
 				species.AliasIds = species.Aliases.Select(c => c.Id);
+			}
+			species.DataRecords = await _dataRecordService.GetDataRecordsById(speciesId: species.Id);
+			if (species.DataRecords.Any())
+			{
+				species.DataRecordIds = species.DataRecords.Select(c => c.Id);
 			}
 		}
 		return species;

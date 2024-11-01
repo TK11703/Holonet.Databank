@@ -5,11 +5,13 @@ using Holonet.Databank.Infrastructure.Repositories;
 using System.Data;
 
 namespace Holonet.Databank.Application.Services;
-public class PlanetService(IPlanetRepository planetRepository, IAuthorService authorService, IAliasRepository aliasRepository) : IPlanetService
+public class PlanetService(IPlanetRepository planetRepository, IAuthorService authorService, IAliasRepository aliasRepository, IDataRecordService dataRecordService) : IPlanetService
 {
 	private readonly IPlanetRepository _planetRepository = planetRepository;
 	private readonly IAuthorService _authorService = authorService;
 	private readonly IAliasRepository _aliasRepository = aliasRepository;
+	private readonly IDataRecordService _dataRecordService = dataRecordService;
+
 
 	public async Task<Planet?> GetPlanetById(int id)
 	{
@@ -26,6 +28,12 @@ public class PlanetService(IPlanetRepository planetRepository, IAuthorService au
 			if (planet.Aliases.Any())
 			{
 				planet.AliasIds = planet.Aliases.Select(c => c.Id);
+			}
+
+			planet.DataRecords = await _dataRecordService.GetDataRecordsById(planetId: planet.Id);
+			if (planet.DataRecords.Any())
+			{
+				planet.DataRecordIds = planet.DataRecords.Select(c => c.Id);
 			}
 		}
 		return planet;

@@ -10,10 +10,7 @@ public class Character : EntityBase
 	public required string GivenName { get; set; }
 	
 	[StringLength(150)]
-	public string? FamilyName { get; set; }
-
-	[StringLength(150)]
-	public string? Description { get; set; }
+	public string? FamilyName { get; set; }	
 
 	[Url]
 	[StringLength(500)]
@@ -31,5 +28,8 @@ public class Character : EntityBase
 
 	public IEnumerable<int> AliasIds { get; set; } = [];
 	public IEnumerable<Alias> Aliases { get; set; } = [];
+
+	public IEnumerable<int> DataRecordIds { get; set; } = [];
+	public IEnumerable<DataRecord> DataRecords { get; set; } = [];
 }
 

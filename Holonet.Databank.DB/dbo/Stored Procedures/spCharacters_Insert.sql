@@ -2,7 +2,6 @@
 	@PlanetId int,
 	@GivenName nvarchar(150),
 	@FamilyName nvarchar(150) = null,
-	@Description nvarchar(max),
 	@Shard nvarchar(500),
 	@BirthDate nvarchar(200),
 	@AzureAuthorId uniqueidentifier,
@@ -20,9 +19,9 @@ BEGIN
 	ELSE
 	BEGIN
 		INSERT INTO dbo.Characters
-			([PlanetId], [GivenName], [FamilyName], [Description], [Shard], [BirthDate], [UpdatedOn], [AuthorId], [Active])
+			([PlanetId], [GivenName], [FamilyName], [Shard], [BirthDate], [UpdatedOn], [AuthorId], [Active])
 		Values	
-			(@PlanetId, @GivenName, @FamilyName, @Description, @Shard, @BirthDate, GETDATE(), @AuthorId, 1);
+			(@PlanetId, @GivenName, @FamilyName, @Shard, @BirthDate, GETDATE(), @AuthorId, 1);
 
 		SET @Id = SCOPE_IDENTITY();
 

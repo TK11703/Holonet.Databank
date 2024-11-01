@@ -1,7 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[spHistoricalEvents_Update]
 	@Id int,
 	@Name nvarchar(150),
-	@Description nvarchar(max),
 	@DatePeriod nvarchar(200),
 	@Shard nvarchar(500),
 	@AzureAuthorId uniqueidentifier
@@ -18,7 +17,7 @@ BEGIN
 	ELSE
 	BEGIN
 		UPDATE dbo.HistoricalEvents
-			SET [Name]=@Name, [Description]=@Description, [DatePeriod]=@DatePeriod, [Shard]=@Shard, [UpdatedOn]=GETDATE(), [AuthorId]=@AuthorId
+			SET [Name]=@Name, [DatePeriod]=@DatePeriod, [Shard]=@Shard, [UpdatedOn]=GETDATE(), [AuthorId]=@AuthorId
 		WHERE [Id]=@Id;
 
 		IF (@@ROWCOUNT > 0)

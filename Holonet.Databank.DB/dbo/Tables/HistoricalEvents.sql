@@ -2,7 +2,6 @@
 (
 	[Id] INT NOT NULL PRIMARY KEY identity,
 	[Name] NVARCHAR(150) NOT NULL,
-	[Description] NVARCHAR(MAX) NULL,
 	[DatePeriod] NVARCHAR(200) NULL,
 	[Shard] NVARCHAR(500) NULL,
 	[UpdatedOn] DATETIME NOT NULL, 

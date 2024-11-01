@@ -4,7 +4,6 @@
 	[PlanetId] INT NULL, 
 	[GivenName] NVARCHAR(150) NOT NULL,
 	[FamilyName] NVARCHAR(150) NULL,
-	[Description] NVARCHAR(max) NULL,
 	[Shard] NVARCHAR(500) NULL,
 	[BirthDate] NVARCHAR(200) NULL,
 	[UpdatedOn] DATETIME NOT NULL, 

@@ -58,7 +58,6 @@ public class CharacterRepository(ISqlDataAccess dataAccess) : ICharacterReposito
 		var p = new DynamicParameters();
 		p.Add(name: "@GivenName", itemModel.GivenName);
 		p.Add(name: "@FamilyName", itemModel.FamilyName);
-		p.Add(name: "@Description", itemModel.Description);
 		p.Add(name: "@BirthDate", itemModel.BirthDate);
 		p.Add(name: "@Shard", itemModel.Shard);
 		p.Add(name: "@PlanetId", itemModel.PlanetId);
@@ -77,7 +76,6 @@ public class CharacterRepository(ISqlDataAccess dataAccess) : ICharacterReposito
 		p.Add(name: "@Id", itemModel.Id);
 		p.Add(name: "@GivenName", itemModel.GivenName);
 		p.Add(name: "@FamilyName", itemModel.FamilyName);
-		p.Add(name: "@Description", itemModel.Description);
 		p.Add(name: "@BirthDate", itemModel.BirthDate);
 		p.Add(name: "@Shard", itemModel.Shard);
 		p.Add(name: "@PlanetId", itemModel.PlanetId);

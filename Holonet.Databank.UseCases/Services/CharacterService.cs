@@ -5,13 +5,14 @@ using Holonet.Databank.Infrastructure.Repositories;
 using System.Data;
 
 namespace Holonet.Databank.Application.Services;
-public class CharacterService(ICharacterRepository characterRepository, IPlanetRepository planetRepository, ICharacterSpeciesRepository characterSpeciesRepository, IAuthorService authorService, IAliasRepository aliasRepository) : ICharacterService
+public class CharacterService(ICharacterRepository characterRepository, IPlanetRepository planetRepository, ICharacterSpeciesRepository characterSpeciesRepository, IAuthorService authorService, IAliasRepository aliasRepository, IDataRecordService dataRecordService) : ICharacterService
 {
 	private readonly ICharacterRepository _characterRepository = characterRepository;
 	private readonly IPlanetRepository _planetRepository = planetRepository;
 	private readonly ICharacterSpeciesRepository _characterSpeciesRepository = characterSpeciesRepository;
 	private readonly IAuthorService _authorService = authorService;
 	private readonly IAliasRepository _aliasRepository = aliasRepository;
+	private readonly IDataRecordService _dataRecordService = dataRecordService;
 
 	public async Task<Character?> GetCharacterById(int id)
 	{
@@ -40,6 +41,12 @@ public class CharacterService(ICharacterRepository characterRepository, IPlanetR
 			if (character.Aliases.Any())
 			{
 				character.AliasIds = character.Aliases.Select(c => c.Id);
+			}
+
+			character.DataRecords = await _dataRecordService.GetDataRecordsById(characterId: character.Id);
+			if (character.DataRecords.Any())
+			{
+				character.DataRecordIds = character.DataRecords.Select(c => c.Id);
 			}
 		}
 		return character;

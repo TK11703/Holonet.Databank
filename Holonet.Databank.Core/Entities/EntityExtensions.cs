@@ -15,8 +15,24 @@ public static class EntityExtensions
 			alias.CharacterId,
 			alias.PlanetId,
 			alias.SpeciesId,
+			alias.HistoricalEventId,
 			alias.UpdatedBy?.ToDto(),
 			alias.UpdatedOn
+		);
+	}
+
+	public static DataRecordDto ToDto(this DataRecord record)
+	{
+		return new DataRecordDto
+		(
+			record.Id,
+			record.Data,
+			record.CharacterId,
+			record.PlanetId,
+			record.SpeciesId,
+			record.HistoricalEventId,
+			record.UpdatedBy?.ToDto(),
+			record.UpdatedOn
 		);
 	}
 
@@ -37,9 +53,9 @@ public static class EntityExtensions
 		(
 			planet.Id,
 			planet.Name,
-			planet.Description,
 			planet.Shard,
 			planet.Aliases.Select(alias => alias.ToDto()),
+			planet.DataRecords.Select(record => record.ToDto()),
 			planet.UpdatedBy?.ToDto(),
 			planet.UpdatedOn
 		);
@@ -51,9 +67,9 @@ public static class EntityExtensions
 		(
 			species.Id,
 			species.Name,
-			species.Description,
 			species.Shard,
 			species.Aliases.Select(alias => alias.ToDto()),
+			species.DataRecords.Select(record => record.ToDto()),
 			species.UpdatedBy?.ToDto(),
 			species.UpdatedOn
 		);
@@ -65,12 +81,12 @@ public static class EntityExtensions
 		(
 			historicalEvent.Id,
 			historicalEvent.Name,
-			historicalEvent.Description,
 			historicalEvent.DatePeriod,
 			historicalEvent.Shard,
 			historicalEvent.Characters.Select(character => character.ToDto()),
 			historicalEvent.Planets.Select(planet => planet.ToDto()),
 			historicalEvent.Aliases.Select(alias => alias.ToDto()),
+			historicalEvent.DataRecords.Select(record => record.ToDto()),
 			historicalEvent.UpdatedBy?.ToDto(),
 			historicalEvent.UpdatedOn
 		);
@@ -83,12 +99,12 @@ public static class EntityExtensions
 			character.Id,
 			character.GivenName,
 			character.FamilyName,
-			character.Description,
 			character.Shard,
 			character.BirthDate,
 			character.Planet?.ToDto(),
 			character.Species.Select(species => species.ToDto()),
 			character.Aliases.Select(alias => alias.ToDto()),
+			character.DataRecords.Select(record => record.ToDto()),
 			character.UpdatedBy?.ToDto(),
 			character.UpdatedOn
 

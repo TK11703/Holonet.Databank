@@ -1,7 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[spSpecies_Update]
 	@Id int,
 	@Name nvarchar(150),
-	@Description nvarchar(max),
 	@Shard nvarchar(500),
 	@AzureAuthorId uniqueidentifier
 AS
@@ -17,7 +16,7 @@ BEGIN
 	ELSE
 	BEGIN
 		UPDATE dbo.Species
-			SET [Name]=@Name, [Description]=@Description, [Shard]=@Shard, [UpdatedOn]=GETDATE(), [AuthorId]=@AuthorId
+			SET [Name]=@Name, [Shard]=@Shard, [UpdatedOn]=GETDATE(), [AuthorId]=@AuthorId
 		WHERE [Id]=@Id;
 
 		IF (@@ROWCOUNT > 0)
