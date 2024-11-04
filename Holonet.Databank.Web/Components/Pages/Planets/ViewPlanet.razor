@@ -2,7 +2,7 @@
 @rendermode InteractiveServer
 @using Holonet.Databank.Core
 <PageTitle>Planet View</PageTitle>
-
+<CommonIcons />
 <h1><i class="bi bi-database"></i> @(@Model.Name)</h1>
 <hr />
 <div class="container">
@@ -14,61 +14,51 @@
 	</nav>
 	<div class="row">
 		<div class="col-8">
-			<div class="card">
-				<div class="card-header">
-					<div class="d-flex">
-						<div class="flex-grow-1">Holonet Data Records</div>
-						<div>
-							<AuthorizeView Roles="@ApplicationRole.Administrator">
-								<Authorized>
-									<button type="button" class="btn btn-sm btn-secondary" title="Click to create a new data record." @onclick="()=> { AddRecordModal.Open();}">
-										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-											<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"></path>
-											<path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"></path>
-										</svg>
-									</button>
-								</Authorized>
-							</AuthorizeView>
-						</div>
+			<div class="alert alert-secondary" role="alert">
+				<div class="d-flex align-items-center">
+					<h4 class="flex-grow-1 mb-0">Holonet Data Records</h4>
+					<div>
+						<AuthorizeView Roles="@ApplicationRole.Administrator">
+							<Authorized>
+								<button type="button" class="btn btn-sm btn-success" title="Click to create a new data record." @onclick="()=> { AddRecordModal.Open(); AddRecordModal.SetSize(AppModal.ModalSizeOptions.ExtraLarge); }">
+									<svg class="icon"><use xlink:href="#icon-plus-circle"></use></svg>
+								</button>
+							</Authorized>
+						</AuthorizeView>
 					</div>
 				</div>
-				<div class="card-body">
-					<div class="row mb-3">
-						<div class="col-12">
-							<a href="@Model.Shard" target="_blank" class="text-decoration-none">
-								<i class="bi bi-link"></i>
-								@Model.Shard
-							</a>
+			</div>
+			<div class="row mb-2">
+				<div class="col-12">
+					<a href="@Model.Shard" target="_blank" class="text-decoration-none">
+						<i class="bi bi-link"></i>
+						@Model.Shard
+					</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					@foreach (var dataRecord in Model.DataRecords)
+					{
+						string panelId = $"panels{dataRecord.Id}";
+						<div class="card mb-3">
+							<div class="card-body">
+								<h6 class="card-subtitle mb-2 text-muted d-flex">
+									<span class="flex-grow-1">Added: @dataRecord.UpdatedOn.ToString() by @(dataRecord.UpdatedBy?.DisplayName ?? "Unknown Source")</span>
+									<span>
+										<AuthorizeView Roles="@ApplicationRole.Administrator">
+											<Authorized>
+												<button type="button" class="btn btn-sm btn-danger" title="Click to delete this data record." @onclick="()=> { DeleteID = dataRecord.Id; DeleteModal.Open(); }">
+													<svg class="icon"><use xlink:href="#icon-trash"></use></svg>
+												</button>
+											</Authorized>
+										</AuthorizeView>
+									</span>
+								</h6>
+								@GetFormattedDescription(dataRecord.Data)
+							</div>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12">
-							@foreach (var dataRecord in Model.DataRecords)
-							{
-								string panelId = $"panels{dataRecord.Id}";
-								<div class="card mb-3">
-									<div class="card-body">
-										<h6 class="card-subtitle mb-2 text-muted d-flex">
-											<span class="flex-grow-1">Added: @dataRecord.UpdatedOn.ToString() by @(dataRecord.UpdatedBy?.DisplayName ?? "Unknown Source")</span>
-											<span>
-												<AuthorizeView Roles="@ApplicationRole.Administrator">
-													<Authorized>
-														<button type="button" class="btn btn-sm btn-danger" title="Click to delete this data record." @onclick="()=> { DeleteID = dataRecord.Id; DeleteModal.Open(); }">
-															<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-																<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
-																<path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
-															</svg>
-														</button>
-													</Authorized>
-												</AuthorizeView>
-											</span>
-										</h6>
-										@GetFormattedDescription(dataRecord.Data)
-									</div>
-								</div>
-							}
-						</div>
-					</div>
+					}
 				</div>
 			</div>
 		</div>

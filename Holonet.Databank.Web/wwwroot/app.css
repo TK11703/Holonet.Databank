@@ -50,6 +50,11 @@ h1:focus {
     border-color: #929292;
 }
 
+.icon {
+    width: 1em;
+    height: 1em;
+    fill: currentColor; /* Inherits color from the parent element */
+}
 
 .spinner {
     border: 16px solid #f3f3f3;

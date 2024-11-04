@@ -1,5 +1,5 @@
 ﻿<div class="modal @(showModal ? "d-block": "d-none")" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog @(ModalSize)">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">@Title</h5>
@@ -22,6 +22,13 @@
 }
 
 @code {
+    public enum ModalSizeOptions
+	{
+		Small,
+        Medium,
+		Large,
+		ExtraLarge
+	}
     [Parameter]
     public RenderFragment Title { get; set; } = new RenderFragment(x => x.AddContent(0, string.Empty));
     [Parameter]
@@ -30,11 +37,32 @@
     public RenderFragment Specifics { get; set; } = new RenderFragment(x => x.AddContent(0, string.Empty));
     [Parameter]
     public RenderFragment Footer { get; set; } = new RenderFragment(x => x.AddContent(0, string.Empty));
+    
     private bool showModal = false;
+    private string ModalSize = string.Empty;
 
     public void SetSpecifics(RenderFragment specific)
     {
         Specifics = specific;
+    }
+
+    public void SetSize(ModalSizeOptions sizeOption)
+    {
+        switch (sizeOption)
+		{
+			case ModalSizeOptions.Small:
+				ModalSize = "modal-sm";
+				break;
+			case ModalSizeOptions.Medium:
+				ModalSize = string.Empty;
+				break;
+			case ModalSizeOptions.Large:
+				ModalSize = "modal-lg";
+				break;
+			case ModalSizeOptions.ExtraLarge:
+				ModalSize = "modal-xl";
+				break;
+		}
     }
 
     public void Open()

@@ -5,7 +5,7 @@
 @rendermode InteractiveServer
 
 <PageTitle>Planets</PageTitle>
-
+<CommonIcons />
 <h1>Planets</h1>
 <hr />
 
@@ -57,7 +57,6 @@ else
 			<table class="table">
 				<thead>
 					<tr>
-						<th>View</th>
 						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("Name"))">Name</a><i class="@(SortIndicator("Name"))"></i></th>
 						<th>Shard</th>
 						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("UpdatedOn"))">Updated On</a><i class="@(SortIndicator("UpdatedOn"))"></i></th>
@@ -71,9 +70,10 @@ else
 						{
 							<tr class="align-middle">
 								<td>
-									<a class="btn btn-outline-primary btn-sm" href="/planets/item/@(planetModel.Id)" title="Click to view this item."><i class="bi bi-eye"></i></a>
+									<a href="/planets/item/@(planetModel.Id)" title="Click to view this item.">
+										@planetModel.Name
+									</a>
 								</td>
-								<td>@planetModel.Name</td>
 								<td>
 									@if (!string.IsNullOrEmpty(@planetModel.Shard))
 									{
@@ -86,8 +86,12 @@ else
 								<td class="text-end">
 									<AuthorizeView Roles="@ApplicationRole.Administrator">
 										<Authorized>
-											<a class="btn btn-outline-info btn-sm" href="/planets/update/@(planetModel.Id)?referrer=planets/index"><i class="bi bi-pencil"></i> Edit</a>
-											<button class="btn btn-outline-danger btn-sm" @onclick="()=> { DeleteID = planetModel.Id; Modal.Open(); Modal.SetSpecifics(PlanetIdentification(planetModel));}"><i class="bi bi-trash"></i> Delete</button>
+											<a class="btn btn-outline-info btn-sm" href="/planets/update/@(planetModel.Id)?referrer=planets/index">
+												<svg class="icon"><use xlink:href="#icon-pencil"></use></svg>
+											</a>
+											<button class="btn btn-outline-danger btn-sm" @onclick="()=> { DeleteID = planetModel.Id; Modal.Open(); Modal.SetSpecifics(PlanetIdentification(planetModel));}">
+												<svg class="icon"><use xlink:href="#icon-trash"></use></svg>
+											</button>
 										</Authorized>
 									</AuthorizeView>
 								</td>
