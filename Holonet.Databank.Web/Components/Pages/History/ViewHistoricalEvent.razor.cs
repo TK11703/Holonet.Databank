@@ -26,7 +26,7 @@ public partial class ViewHistoricalEvent
 	private HistoricalEventClient HistoricalEventClient { get; set; } = default!;
 
 	[Inject]
-	private NavigationManager NavigationManager { get; set; } = default!;
+	private NavigationManager Navigation { get; set; } = default!;
 	[Inject]
 	private UserService UserService { get; set; } = default!;
 
@@ -39,7 +39,7 @@ public partial class ViewHistoricalEvent
 		var requestedItem = await HistoricalEventClient.Get(ID);
 		if (requestedItem == null)
 		{
-			NavigationManager.NavigateTo("/notfound", true);
+			Navigation.NavigateTo("/notfound", true);
 		}
 		else
 		{

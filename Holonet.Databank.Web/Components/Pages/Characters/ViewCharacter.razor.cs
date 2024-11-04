@@ -28,7 +28,7 @@ public partial class ViewCharacter
 	private CharacterClient CharacterClient { get; set; } = default!;
 
 	[Inject]
-	private NavigationManager NavigationManager { get; set; } = default!;
+	private NavigationManager Navigation { get; set; } = default!;
 	[Inject]
 	private UserService UserService { get; set; } = default!;
 
@@ -41,7 +41,7 @@ public partial class ViewCharacter
 		Model = await CharacterClient.Get(ID) ?? new();
 		if (Model.Id.Equals(0))
 		{
-			NavigationManager.NavigateTo("/notfound", true);
+			Navigation.NavigateTo("/notfound", true);
 		}
 	}
 

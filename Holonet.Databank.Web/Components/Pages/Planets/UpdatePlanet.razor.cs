@@ -14,7 +14,7 @@ public partial class UpdatePlanet
 	[Parameter]
 	public int ID { get; set; }
 
-	private string ReferrerPage { get; set; }
+	private string ReferrerPage { get; set; } = "planets/index";
 
 	public PlanetModel Model { get; set; } = new();
 
@@ -32,7 +32,7 @@ public partial class UpdatePlanet
 	private IToastService ToastService { get; set; } = default!;
 
 	[Inject]
-	private NavigationManager NavigationManager { get; set; } = default!;
+	private NavigationManager Navigation { get; set; } = default!;
 
 	protected override async Task OnParametersSetAsync()
 	{
@@ -40,20 +40,20 @@ public partial class UpdatePlanet
 		Model = await PlanetClient.Get(ID) ?? new();
 		if (Model.Id.Equals(0))
 		{
-			NavigationManager.NavigateTo("/notfound", true);
+			Navigation.NavigateTo("/notfound", true);
 		}
 		else
 		{
 			EditContext = new EditContext(Model);
 			MessageStore = new ValidationMessageStore(EditContext);
-			EditContext.OnFieldChanged += HandleFieldChangedAsync;
+			EditContext.OnFieldChanged += HandleFieldChangedAsync!;
 		}
 	}
 
 	protected override async Task OnInitializedAsync()
 	{
 		await base.OnInitializedAsync();
-		var uri = new Uri(NavigationManager.Uri);
+		var uri = new Uri(Navigation.Uri);
 		var query = QueryHelpers.ParseQuery(uri.Query);
 		if (query.TryGetValue("referrer", out var referrer))
 		{
@@ -77,7 +77,6 @@ public partial class UpdatePlanet
 			if (result)
 			{
 				ToastService.ShowSuccess("Planet updated successfully");
-				//NavigationManager.NavigateTo($"/planets/update/{ID}");
 			}
 			else
 			{
@@ -88,10 +87,10 @@ public partial class UpdatePlanet
 
 	private void Cancel()
 	{
-		NavigationManager.NavigateTo(ReferrerPage);
+		Navigation.NavigateTo(ReferrerPage);
 	}
 
-	private async void HandleFieldChangedAsync([NotNull] object? sender, FieldChangedEventArgs e)
+	private async void HandleFieldChangedAsync(object? sender, FieldChangedEventArgs e)
 	{
 		MessageStore.Clear(e.FieldIdentifier);
 		if (e.FieldIdentifier.FieldName == nameof(Model.Name) && !string.IsNullOrEmpty(Model.Name))

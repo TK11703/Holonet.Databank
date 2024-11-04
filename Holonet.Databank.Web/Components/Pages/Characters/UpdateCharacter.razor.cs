@@ -5,7 +5,6 @@ using Holonet.Databank.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.WebUtilities;
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Holonet.Databank.Web.Components.Pages.Characters;
@@ -15,7 +14,7 @@ public partial class UpdateCharacter
 	[Parameter]
 	public int ID { get; set; }
 
-	private string ReferrerPage { get; set; }
+	private string ReferrerPage { get; set; } = "characters/index";
 
 	public CharacterModel Model { get; set; } = new();
 
@@ -43,7 +42,7 @@ public partial class UpdateCharacter
 	private IToastService ToastService { get; set; } = default!;
 
 	[Inject]
-	private NavigationManager NavigationManager { get; set; } = default!;
+	private NavigationManager Navigation { get; set; } = default!;
 
 	protected override async Task OnParametersSetAsync()
 	{
@@ -51,7 +50,7 @@ public partial class UpdateCharacter
 		Model = await CharacterClient.Get(ID) ?? new();
 		if (Model.Id.Equals(0))
 		{
-			NavigationManager.NavigateTo("/notfound", true);
+			Navigation.NavigateTo("/notfound", true);
 		}
 		else
 		{
@@ -66,7 +65,7 @@ public partial class UpdateCharacter
 		await base.OnInitializedAsync();
 		await LoadPlanets();
 		await LoadSpecies();
-		var uri = new Uri(NavigationManager.Uri);
+		var uri = new Uri(Navigation.Uri);
 		var query = QueryHelpers.ParseQuery(uri.Query);
 		if (query.TryGetValue("referrer", out var referrer))
 		{
@@ -90,7 +89,6 @@ public partial class UpdateCharacter
 			if (result)
 			{
 				ToastService.ShowSuccess("Character updated successfully");
-				//NavigationManager.NavigateTo($"/characters/update/{ID}");
 			}
 			else
 			{
@@ -101,10 +99,10 @@ public partial class UpdateCharacter
 
 	private void Cancel()
 	{
-		NavigationManager.NavigateTo(ReferrerPage);
+		Navigation.NavigateTo(ReferrerPage);
 	}
 
-	private async void HandleFieldChangedAsync([NotNull] object? sender, FieldChangedEventArgs e)
+	private async void HandleFieldChangedAsync(object? sender, FieldChangedEventArgs e)
 	{
 		MessageStore.Clear(e.FieldIdentifier);
 		if (e.FieldIdentifier.FieldName == nameof(Model.GivenName) && !string.IsNullOrEmpty(Model.FamilyName) && Model.PlanetId > 0)

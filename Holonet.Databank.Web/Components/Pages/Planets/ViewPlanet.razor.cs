@@ -26,7 +26,7 @@ public partial class ViewPlanet
 	private PlanetClient PlanetClient { get; set; } = default!;
 
 	[Inject]
-	private NavigationManager NavigationManager { get; set; } = default!;
+	private NavigationManager Navigation { get; set; } = default!;
 	[Inject]
 	private UserService UserService { get; set; } = default!;
 
@@ -39,7 +39,7 @@ public partial class ViewPlanet
 		var requestedItem = await PlanetClient.Get(ID);
 		if (requestedItem == null)
 		{
-			NavigationManager.NavigateTo("/notfound", true);
+			Navigation.NavigateTo("/notfound", true);
 		}
 		else
 		{

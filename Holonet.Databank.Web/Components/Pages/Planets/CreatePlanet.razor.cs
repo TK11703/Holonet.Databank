@@ -26,14 +26,14 @@ public partial class CreatePlanet
 	private IToastService ToastService { get; set; } = default!;
 
 	[Inject]
-	private NavigationManager NavigationManager { get; set; } = default!;
+	private NavigationManager Navigation { get; set; } = default!;
 
 	protected override void OnInitialized()
 	{
 		base.OnInitialized();
 		EditContext = new EditContext(Model);
 		MessageStore = new ValidationMessageStore(EditContext);
-		EditContext.OnFieldChanged += HandleFieldChangedAsync;
+		EditContext.OnFieldChanged += HandleFieldChangedAsync!;
 	}
 
 	private async Task Submit()
@@ -52,7 +52,7 @@ public partial class CreatePlanet
 			if (result > 0)
 			{
 				ToastService.ShowSuccess("Planet created successfully");
-				NavigationManager.NavigateTo("/planets/index");
+				Navigation.NavigateTo("/planets/index");
 			}
 			else
 			{
@@ -61,7 +61,7 @@ public partial class CreatePlanet
 		}
 	}
 
-	private async void HandleFieldChangedAsync([NotNull] object? sender, FieldChangedEventArgs e)
+	private async void HandleFieldChangedAsync(object? sender, FieldChangedEventArgs e)
 	{
 		MessageStore.Clear(e.FieldIdentifier);
 		if (e.FieldIdentifier.FieldName == nameof(Model.Name) && !string.IsNullOrEmpty(Model.Name))

@@ -77,7 +77,7 @@ public partial class IndexSpecies
 
     private string SortIndicator(string sortField)
     {
-        if (sortField.Equals(PageRequest.SortBy))
+        if (sortField.Equals(PageRequest.SortBy) && !string.IsNullOrEmpty(PageRequest.SortDirection))
         {
 			return PageRequest.SortDirection.ToLower().Equals("asc") ? "bi-sort-down-alt" : "bi-sort-down";
 		}

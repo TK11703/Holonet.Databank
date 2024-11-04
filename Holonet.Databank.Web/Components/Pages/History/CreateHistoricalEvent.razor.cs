@@ -36,7 +36,7 @@ public partial class CreateHistoricalEvent
 	private IToastService ToastService { get; set; } = default!;
 
 	[Inject]
-	private NavigationManager NavigationManager { get; set; } = default!;
+	private NavigationManager Navigation { get; set; } = default!;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -64,7 +64,7 @@ public partial class CreateHistoricalEvent
 			if (result > 0)
 			{
 				ToastService.ShowSuccess("Historical event created successfully");
-				NavigationManager.NavigateTo("/historicalevents/index");
+				Navigation.NavigateTo("/historicalevents/index");
 			}
 			else
 			{
@@ -73,7 +73,7 @@ public partial class CreateHistoricalEvent
 		}
 	}
 
-	private async void HandleFieldChangedAsync([NotNull] object? sender, FieldChangedEventArgs e)
+	private async void HandleFieldChangedAsync(object? sender, FieldChangedEventArgs e)
 	{
 		MessageStore.Clear(e.FieldIdentifier);
 		if (e.FieldIdentifier.FieldName == nameof(Model.Name))

@@ -26,14 +26,14 @@ public partial class CreateSpecies
 	private IToastService ToastService { get; set; } = default!;
 
 	[Inject]
-	private NavigationManager NavigationManager { get; set; } = default!;
+	private NavigationManager Navigation { get; set; } = default!;
 
 	protected override void OnInitialized()
 	{
 		base.OnInitialized();
 		EditContext = new EditContext(Model);
 		MessageStore = new ValidationMessageStore(EditContext);
-		EditContext.OnFieldChanged += HandleFieldChangedAsync;
+		EditContext.OnFieldChanged += HandleFieldChangedAsync!;
 	}
 
 	private async Task Submit()
@@ -52,7 +52,7 @@ public partial class CreateSpecies
 			if (result > 0)
 			{
 				ToastService.ShowSuccess("Species created successfully");
-				NavigationManager.NavigateTo("/species/index");
+				Navigation.NavigateTo("/species/index");
 			}
 			else
 			{
@@ -61,7 +61,7 @@ public partial class CreateSpecies
 		}
 	}
 
-	private async void HandleFieldChangedAsync([NotNull] object? sender, FieldChangedEventArgs e)
+	private async void HandleFieldChangedAsync(object? sender, FieldChangedEventArgs e)
 	{
 		MessageStore.Clear(e.FieldIdentifier);
 		if (e.FieldIdentifier.FieldName == nameof(Model.Name) && !string.IsNullOrEmpty(Model.Name))

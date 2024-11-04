@@ -13,7 +13,7 @@ public class UserClaimsBase : ComponentBase
 {
     // AuthenticationStateProvider service provides the current user's ClaimsPrincipal data.
     [Inject]
-    private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+    private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
 
     protected string? _authMessage;
     protected IEnumerable<Claim> _claims = [];

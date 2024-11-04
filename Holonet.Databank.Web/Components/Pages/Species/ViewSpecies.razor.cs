@@ -26,7 +26,7 @@ public partial class ViewSpecies
 	private SpeciesClient SpeciesClient { get; set; } = default!;
 
 	[Inject]
-	private NavigationManager NavigationManager { get; set; } = default!;
+	private NavigationManager Navigation { get; set; } = default!;
 	[Inject]
 	private UserService UserService { get; set; } = default!;
 
@@ -39,7 +39,7 @@ public partial class ViewSpecies
 		var requestedItem = await SpeciesClient.Get(ID);
 		if (requestedItem == null)
 		{
-			NavigationManager.NavigateTo("/notfound", true);
+			Navigation.NavigateTo("/notfound", true);
 		}
 		else
 		{

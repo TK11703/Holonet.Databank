@@ -37,7 +37,7 @@ public partial class CreateCharacter
     private IToastService ToastService { get; set; } = default!;
 
 	[Inject]
-    private NavigationManager NavigationManager { get; set; } = default!;
+    private NavigationManager Navigation { get; set; } = default!;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -65,7 +65,7 @@ public partial class CreateCharacter
 			if (result > 0)
 			{
 				ToastService.ShowSuccess("Character created successfully");
-				NavigationManager.NavigateTo("/characters/index");
+				Navigation.NavigateTo("/characters/index");
 			}
             else
             {
@@ -74,7 +74,7 @@ public partial class CreateCharacter
 		}
     }
 
-	private async void HandleFieldChangedAsync([NotNull] object? sender, FieldChangedEventArgs e)
+	private async void HandleFieldChangedAsync(object? sender, FieldChangedEventArgs e)
 	{
 		MessageStore.Clear(e.FieldIdentifier);
 		if (e.FieldIdentifier.FieldName == nameof(Model.GivenName) || e.FieldIdentifier.FieldName == nameof(Model.FamilyName) || e.FieldIdentifier.FieldName == nameof(Model.PlanetId))
