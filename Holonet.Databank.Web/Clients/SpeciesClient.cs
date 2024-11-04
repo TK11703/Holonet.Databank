@@ -128,6 +128,29 @@ public sealed class SpeciesClient : ClientBase
 		return default;
 	}
 
+	public async Task<IEnumerable<DataRecordModel>?> GetDataRecords(int id)
+	{
+		if (base.RequiresBearToken())
+		{
+			await AcquireBearerTokenForClient(_httpClient);
+		}
+
+		using HttpResponseMessage response = await _httpClient.GetAsync($"{id}/GetRecords");
+		if (!response.IsSuccessStatusCode)
+		{
+			_logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
+		}
+		else
+		{
+			var dataRecordDtos = await response.Content.ReadFromJsonAsync<IEnumerable<DataRecordDto>>();
+			if (dataRecordDtos != null)
+			{
+				return dataRecordDtos.Select(dataRecordDto => dataRecordDto.ToDataRecordModel());
+			}
+		}
+		return default;
+	}
+
 	public async Task<int> Create(SpeciesModel item)
 	{
 		if (base.RequiresBearToken())

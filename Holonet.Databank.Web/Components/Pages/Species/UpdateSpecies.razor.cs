@@ -4,6 +4,7 @@ using Holonet.Databank.Web.Models;
 using Holonet.Databank.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.WebUtilities;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Holonet.Databank.Web.Components.Pages.Species;
@@ -12,6 +13,8 @@ public partial class UpdateSpecies
 {
 	[Parameter]
 	public int ID { get; set; }
+
+	private string ReferrerPage { get; set; }
 
 	public SpeciesModel Model { get; set; } = new();
 
@@ -50,6 +53,12 @@ public partial class UpdateSpecies
 	protected override async Task OnInitializedAsync()
 	{
 		await base.OnInitializedAsync();
+		var uri = new Uri(NavigationManager.Uri);
+		var query = QueryHelpers.ParseQuery(uri.Query);
+		if (query.TryGetValue("referrer", out var referrer))
+		{
+			ReferrerPage = referrer.FirstOrDefault() ?? "species/index";
+		}
 	}	
 
 	private async Task Submit()
@@ -75,6 +84,11 @@ public partial class UpdateSpecies
 				ToastService.ShowError("An error occurred and the species was not updated.");
 			}
 		}
+	}
+
+	private void Cancel()
+	{
+		NavigationManager.NavigateTo(ReferrerPage);
 	}
 
 	private async void HandleFieldChangedAsync([NotNull] object? sender, FieldChangedEventArgs e)

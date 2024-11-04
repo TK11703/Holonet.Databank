@@ -69,6 +69,7 @@ public partial class ViewHistoricalEvent
 		var completed = await HistoricalEventClient.CreateDataRecord(ID, RecordModel);
 		if (completed)
 		{
+			Model.DataRecords = await HistoricalEventClient.GetDataRecords(ID) ?? Enumerable.Empty<DataRecordModel>();
 			ToastService.ShowSuccess("New data record added successfully");
 			AddRecordModal.Close();
 			StateHasChanged();
@@ -80,6 +81,7 @@ public partial class ViewHistoricalEvent
 		var completed = await HistoricalEventClient.DeleteRecord(ID, DeleteID);
 		if (completed)
 		{
+			Model.DataRecords = Model.DataRecords.Where(x => !x.Id.Equals(DeleteID));
 			ToastService.ShowSuccess("Deleted data record successfully");
 			DeleteModal.Close();
 			StateHasChanged();

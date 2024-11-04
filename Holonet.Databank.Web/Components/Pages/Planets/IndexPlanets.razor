@@ -86,7 +86,7 @@ else
 								<td class="text-end">
 									<AuthorizeView Roles="@ApplicationRole.Administrator">
 										<Authorized>
-											<a class="btn btn-outline-info btn-sm" href="/planets/update/@(planetModel.Id)"><i class="bi bi-pencil"></i> Edit</a>
+											<a class="btn btn-outline-info btn-sm" href="/planets/update/@(planetModel.Id)?referrer=planets/index"><i class="bi bi-pencil"></i> Edit</a>
 											<button class="btn btn-outline-danger btn-sm" @onclick="()=> { DeleteID = planetModel.Id; Modal.Open(); Modal.SetSpecifics(PlanetIdentification(planetModel));}"><i class="bi bi-trash"></i> Delete</button>
 										</Authorized>
 									</AuthorizeView>

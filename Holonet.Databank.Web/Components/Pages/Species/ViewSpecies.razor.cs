@@ -68,6 +68,7 @@ public partial class ViewSpecies
 		var completed = await SpeciesClient.CreateDataRecord(ID, RecordModel);
 		if (completed)
 		{
+			Model.DataRecords = await SpeciesClient.GetDataRecords(ID) ?? Enumerable.Empty<DataRecordModel>();
 			ToastService.ShowSuccess("New data record added successfully");
 			AddRecordModal.Close();
 			StateHasChanged();
@@ -79,6 +80,7 @@ public partial class ViewSpecies
 		var completed = await SpeciesClient.DeleteRecord(ID, DeleteID);
 		if (completed)
 		{
+			Model.DataRecords = Model.DataRecords.Where(x => !x.Id.Equals(DeleteID));
 			ToastService.ShowSuccess("Deleted data record successfully");
 			DeleteModal.Close();
 			StateHasChanged();

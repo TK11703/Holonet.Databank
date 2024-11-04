@@ -116,7 +116,7 @@ else
 								<td class="text-end">
 									<AuthorizeView Roles="@ApplicationRole.Administrator">
 										<Authorized>
-											<a class="btn btn-outline-info btn-sm" href="/historicalevents/update/@(historicalEventModel.Id)"><i class="bi bi-pencil"></i> Edit</a>
+											<a class="btn btn-outline-info btn-sm" href="/historicalevents/update/@(historicalEventModel.Id)?referrer=historicalevents/index"><i class="bi bi-pencil"></i> Edit</a>
 											<button class="btn btn-outline-danger btn-sm" @onclick="()=> { DeleteID = historicalEventModel.Id; Modal.Open(); Modal.SetSpecifics(HistoricalEventIdentification(historicalEventModel));}"><i class="bi bi-trash"></i> Delete</button>
 										</Authorized>
 									</AuthorizeView>

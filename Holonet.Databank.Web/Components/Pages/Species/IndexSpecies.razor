@@ -86,7 +86,7 @@ else
 								<td class="text-end">
 									<AuthorizeView Roles="@ApplicationRole.Administrator">
 										<Authorized>
-											<a class="btn btn-outline-info btn-sm" href="/species/update/@(speciesModel.Id)"><i class="bi bi-pencil"></i> Edit</a>
+											<a class="btn btn-outline-info btn-sm" href="/species/update/@(speciesModel.Id)?referrer=species/index"><i class="bi bi-pencil"></i> Edit</a>
 											<button class="btn btn-outline-danger btn-sm" @onclick="()=> { DeleteID = speciesModel.Id; Modal.Open(); Modal.SetSpecifics(SpeciesIdentification(speciesModel));}"><i class="bi bi-trash"></i> Delete</button>
 										</Authorized>
 									</AuthorizeView>

@@ -1,10 +1,11 @@
 ﻿using Blazored.Toast.Services;
-using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Web.Clients;
 using Holonet.Databank.Web.Models;
 using Holonet.Databank.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.WebUtilities;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Holonet.Databank.Web.Components.Pages.Characters;
@@ -13,6 +14,8 @@ public partial class UpdateCharacter
 {
 	[Parameter]
 	public int ID { get; set; }
+
+	private string ReferrerPage { get; set; }
 
 	public CharacterModel Model { get; set; } = new();
 
@@ -63,6 +66,12 @@ public partial class UpdateCharacter
 		await base.OnInitializedAsync();
 		await LoadPlanets();
 		await LoadSpecies();
+		var uri = new Uri(NavigationManager.Uri);
+		var query = QueryHelpers.ParseQuery(uri.Query);
+		if (query.TryGetValue("referrer", out var referrer))
+		{
+			ReferrerPage = referrer.FirstOrDefault() ?? "characters/index";
+		}
 	}
 
 	private async Task Submit()
@@ -88,6 +97,11 @@ public partial class UpdateCharacter
 				ToastService.ShowError("An error occurred and the character was not updated.");
 			}
 		}
+	}
+
+	private void Cancel()
+	{
+		NavigationManager.NavigateTo(ReferrerPage);
 	}
 
 	private async void HandleFieldChangedAsync([NotNull] object? sender, FieldChangedEventArgs e)

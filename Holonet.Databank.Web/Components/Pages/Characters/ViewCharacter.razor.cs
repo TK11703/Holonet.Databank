@@ -1,4 +1,5 @@
 ﻿using Blazored.Toast.Services;
+using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Web.Clients;
 using Holonet.Databank.Web.Components.Shared;
 using Holonet.Databank.Web.Models;
@@ -66,6 +67,7 @@ public partial class ViewCharacter
 		var completed = await CharacterClient.CreateDataRecord(ID, RecordModel);
 		if(completed)
 		{
+			Model.DataRecords = await CharacterClient.GetDataRecords(ID) ?? Enumerable.Empty<DataRecordModel>();
 			ToastService.ShowSuccess("New data record added successfully");
 			AddRecordModal.Close();
 			StateHasChanged();
@@ -77,6 +79,7 @@ public partial class ViewCharacter
 		var completed = await CharacterClient.DeleteRecord(ID, DeleteID);
 		if (completed)
 		{
+			Model.DataRecords = Model.DataRecords.Where(x => !x.Id.Equals(DeleteID));
 			ToastService.ShowSuccess("Deleted data record successfully");
 			DeleteModal.Close();
 			StateHasChanged();

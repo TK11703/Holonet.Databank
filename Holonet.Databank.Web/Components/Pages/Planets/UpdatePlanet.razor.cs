@@ -4,6 +4,7 @@ using Holonet.Databank.Web.Models;
 using Holonet.Databank.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.WebUtilities;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Holonet.Databank.Web.Components.Pages.Planets;
@@ -12,6 +13,8 @@ public partial class UpdatePlanet
 {
 	[Parameter]
 	public int ID { get; set; }
+
+	private string ReferrerPage { get; set; }
 
 	public PlanetModel Model { get; set; } = new();
 
@@ -49,7 +52,13 @@ public partial class UpdatePlanet
 
 	protected override async Task OnInitializedAsync()
 	{
-		await base.OnInitializedAsync();	
+		await base.OnInitializedAsync();
+		var uri = new Uri(NavigationManager.Uri);
+		var query = QueryHelpers.ParseQuery(uri.Query);
+		if (query.TryGetValue("referrer", out var referrer))
+		{
+			ReferrerPage = referrer.FirstOrDefault() ?? "planets/index";
+		}
 	}
 
 	private async Task Submit()
@@ -75,6 +84,11 @@ public partial class UpdatePlanet
 				ToastService.ShowError("An error occurred and the planet was not updated.");
 			}
 		}
+	}
+
+	private void Cancel()
+	{
+		NavigationManager.NavigateTo(ReferrerPage);
 	}
 
 	private async void HandleFieldChangedAsync([NotNull] object? sender, FieldChangedEventArgs e)

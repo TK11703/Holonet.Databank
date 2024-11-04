@@ -4,6 +4,7 @@ using Holonet.Databank.Web.Models;
 using Holonet.Databank.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.WebUtilities;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Holonet.Databank.Web.Components.Pages.History;
@@ -13,7 +14,9 @@ public partial class UpdateHistoricalEvent
     [Parameter]
     public int ID { get; set; }
 
-    public HistoricalEventModel Model { get; set; } = new();
+	private string ReferrerPage { get; set; }
+
+	public HistoricalEventModel Model { get; set; } = new();
 
 	private EditContext EditContext { get; set; } = default!;
 
@@ -62,6 +65,12 @@ public partial class UpdateHistoricalEvent
 		await base.OnInitializedAsync();
 		await LoadPlanets();
 		await LoadCharacters();
+		var uri = new Uri(NavigationManager.Uri);
+		var query = QueryHelpers.ParseQuery(uri.Query);
+		if (query.TryGetValue("referrer", out var referrer))
+		{
+			ReferrerPage = referrer.FirstOrDefault() ?? "historicalevents/index";
+		}
 	}
 
     private async Task Submit()
@@ -88,6 +97,11 @@ public partial class UpdateHistoricalEvent
             }
         }
     }
+
+	private void Cancel()
+	{
+		NavigationManager.NavigateTo(ReferrerPage);
+	}
 
 	private async void HandleFieldChangedAsync([NotNull] object? sender, FieldChangedEventArgs e)
 	{

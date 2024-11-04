@@ -97,7 +97,7 @@ else
 								<td class="text-end">
 									<AuthorizeView Roles="@ApplicationRole.Administrator">
 										<Authorized>
-											<a class="btn btn-outline-info btn-sm" href="/characters/update/@(characterModel.Id)"><i class="bi bi-pencil"></i> Edit</a>
+											<a class="btn btn-outline-info btn-sm" href="/characters/update/@(characterModel.Id)?referrer=characters/index"><i class="bi bi-pencil"></i> Edit</a>
 											<button class="btn btn-outline-danger btn-sm" @onclick="()=> { DeleteID = characterModel.Id; Modal.Open(); Modal.SetSpecifics(CharacterIdentification(characterModel));}"><i class="bi bi-trash"></i> Delete</button>
 										</Authorized>
 									</AuthorizeView>
