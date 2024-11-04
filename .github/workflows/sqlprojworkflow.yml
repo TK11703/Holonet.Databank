@@ -48,8 +48,9 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
           
       - name: Deploy DACPAC to Azure SQL
-        uses: azure/sql-action@v2.2
+        uses: azure/sql-action@v2.3
         with:
           connection-string: '${{ secrets.AZURE_SQL_CONNECTION }}'
           path: 'dacpac/Holonet.Databank.DB.dacpac'
-          action: 'publish'
+          action: 'publish'          
+          arguments: '/p:BlockOnPossibleDataLoss=false'
