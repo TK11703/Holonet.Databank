@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
 builder.Services.AddLogging();
 builder.Services.AddHttpContextAccessor();
@@ -16,12 +17,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
-builder.Services.AddScopedServices();
+builder.Services.AddScopedServices(configuration);
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 //Registers the endpoints that implement the IEndpoint interface
 builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
+
+builder.Services.AddHostedService<ChatHistoryCleanupService>();
 
 var app = builder.Build();
 

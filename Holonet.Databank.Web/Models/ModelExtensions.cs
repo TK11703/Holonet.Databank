@@ -5,6 +5,10 @@ namespace Holonet.Databank.Web.Models;
 
 public static class ModelExtensions
 {
+	public static ChatRequestDto ToChatRequestDto(this ChatRequestModel model)
+	{
+		return new ChatRequestDto(model.Prompt, model.AzureId);
+	}
 	public static CreateAuthorDto ToCreateAuthorDto(this AuthorModel author)
 	{
 		return new CreateAuthorDto

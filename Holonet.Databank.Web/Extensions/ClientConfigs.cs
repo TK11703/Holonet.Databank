@@ -82,6 +82,19 @@ internal static class ClientConfigs
                 };
             })
             .SetHandlerLifetime(Timeout.InfiniteTimeSpan);
-        }
+
+			services.AddHttpClient<AgentClient>(client =>
+			{
+				client.BaseAddress = new Uri(new Uri(baseApiAddress), "Agent/");
+			})
+			.ConfigurePrimaryHttpMessageHandler(() =>
+			{
+				return new SocketsHttpHandler
+				{
+					PooledConnectionLifetime = TimeSpan.FromMinutes(5)
+				};
+			})
+			.SetHandlerLifetime(Timeout.InfiniteTimeSpan);
+		}
     }
 }

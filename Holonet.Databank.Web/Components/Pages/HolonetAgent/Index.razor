@@ -1,11 +1,62 @@
 ﻿@page "/holonetagent/index"
+@using Holonet.Databank.Web.Models
 @rendermode InteractiveServer
 
 <PageTitle>Holonet Agent</PageTitle>
+<CommonIcons />
+<SetHeader>
+	<h1>Holonet Agent</h1>
+	<hr />
+</SetHeader>
 
-<h1>Holonet Agent</h1>
-<hr />
-
-@code {
-
+<div class="row mb-2 pb-5">
+	<div class="col-12">
+		@foreach (var chatResponse in ChatResponses)
+		{
+			@if (chatResponse.Type.Equals(ChatResponseType.User))
+			{
+				<div class="row mb-2 d-flex justify-content-end">
+					<div class="alert alert-primary col-10" role="alert">
+						@chatResponse.Result
+					</div>
+				</div>
+			}
+			@if (chatResponse.Type.Equals(ChatResponseType.Agent))
+			{
+				<div class="row mb-2">
+					<div class="alert alert-secondary col-10" role="alert">
+						@chatResponse.Result
+					</div>
+				</div>
+			}
+			if(chatResponse == ChatResponses.Last())
+			{
+				<a href="javascript:void(0);" @ref="lastItemRef"></a>
+			}
+		}
+	</div>
+</div>
+@if (ChatResponses == null || ChatResponses.Count().Equals(0))
+{
+	<div class="d-flex justify-content-center mt-3">
+		<div class="alert alert-info col-6" role="alert">
+			<h5>Connecting you with a Holonet Databank agent...</h5>
+			<p>Please stand by..</p>
+		</div>
+		<a href="javascript:void(0);" @ref="lastItemRef"></a>
+	</div>
 }
+
+<SetFooter>
+	<div class="card ms-1 me-3">
+		<div class="card-body">
+			<div class="input-group">
+				<button class="btn btn-secondary" type="button" id="newChat" @onclick="StartNewChat" disabled="@((IsUserAuthenticated) ? null : "disabled")" title="Click to start a new chat with the agent.">
+					<svg class="icon"><use xlink:href="#icon-plus-circle"></use></svg>
+				</button>
+				<InputText id="HolonetAgent" class="form-control" placeholder="Enter your chat content here" @bind-Value="Model.Prompt" aria-describedby="submitChat" />
+				<button class="btn btn-primary" type="button" id="submitChat" @onclick="SendUserPrompt" disabled="@((IsUserAuthenticated) ? null : "disabled")" title="Click to submit your comments to the chat agent">Submit</button>
+			</div>
+		</div>
+	</div>
+</SetFooter>

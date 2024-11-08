@@ -1,6 +1,6 @@
 ﻿namespace Holonet.Databank.API.Endpoints;
 
-public class Tags
+public static class Tags
 {
 	public const string Characters = "Characters";
 	public const string Planets = "Planets";
@@ -8,4 +8,5 @@ public class Tags
     public const string Species = "Species";
 	public const string Authors = "Authors";	
 	public const string Tests = "Tests";
+	public const string Agent = "Agent";
 }
