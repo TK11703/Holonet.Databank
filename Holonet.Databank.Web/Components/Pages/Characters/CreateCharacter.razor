@@ -3,15 +3,17 @@
 @attribute [Authorize]
 <PageTitle>Create Character</PageTitle>
 
+<SetHeader>
 <h1><i class="bi bi-database-add"></i> Create Character</h1>
-<hr />
+<hr />	
+</SetHeader>
 
 @if (EditContext != null)
 {
 	<EditForm FormName="CreateCharacter" OnValidSubmit="Submit" EditContext="@EditContext">
 		<DataAnnotationsValidator />
 		<ValidationSummary />
-		<div class="container">
+		<div class="container-fluid">
 			<div class="card mb-3">
 				<div class="card-header">Enter the basic character data</div>
 				<div class="card-body">

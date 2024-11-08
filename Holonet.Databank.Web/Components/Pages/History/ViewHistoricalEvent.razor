@@ -3,9 +3,12 @@
 @using Holonet.Databank.Core
 <PageTitle>Historical Event View</PageTitle>
 <CommonIcons />
-<h1><i class="bi bi-database"></i> @(@Model.Name)</h1>
-<hr />
-<div class="container">
+<SetHeader>
+	<h1><i class="bi bi-database"></i> @(@Model.Name)</h1>
+	<hr />
+</SetHeader>
+
+<div class="container-fluid">
 	<nav class="navbar navbar-light bg-dark mb-3">
 		<div class="container-fluid justify-content-start">
 			<a href="historicalevents/update/@(ID)?referrer=historicalevents/item/@(ID)" class="btn btn-primary btn-sm me-2">Update</a>

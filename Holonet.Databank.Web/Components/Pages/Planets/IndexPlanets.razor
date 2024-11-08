@@ -6,117 +6,121 @@
 
 <PageTitle>Planets</PageTitle>
 <CommonIcons />
-<h1>Planets</h1>
-<hr />
+<SetHeader>
+	<h1>Planets</h1>
+	<hr />
+</SetHeader>
 
-@if (ResultPage == null)
-{
-	<p><em>Loading...</em></p>
-}
-else
-{
-	<div class="row">
-		<div class="col">
-			<div class="d-flex">
-				<div class="">
-					<div class="card">
-						<div class="card-body">
-							<div class="row">
-								<AuthorizeView>
-									<Authorized>
-										<div class="col-auto">
-											<a href="/planets/create" class="btn btn-primary" title="Create a new item">Create</a>
+<div class="container-fluid">
+	@if (ResultPage == null)
+	{
+		<p><em>Loading...</em></p>
+	}
+	else
+	{
+		<div class="row">
+			<div class="col">
+				<div class="d-flex">
+					<div class="">
+						<div class="card">
+							<div class="card-body">
+								<div class="row">
+									<AuthorizeView>
+										<Authorized>
+											<div class="col-auto">
+												<a href="/planets/create" class="btn btn-primary" title="Create a new item">Create</a>
+											</div>
+										</Authorized>
+									</AuthorizeView>
+									<div class="col-auto">
+										<div class="input-group">
+											<input type="text" class="form-control" id="filterInput" placeholder="Filter by name" @bind-value="PageRequest.Filter">
+											<button class="btn btn-outline-secondary" type="button" id="button-addon2" title="Click to find." @onclick="FilterResults"><i class="bi bi-search"></i></button>
 										</div>
-									</Authorized>
-								</AuthorizeView>
-								<div class="col-auto">
-									<div class="input-group">
-										<input type="text" class="form-control" id="filterInput" placeholder="Filter by name" @bind-value="PageRequest.Filter">
-										<button class="btn btn-outline-secondary" type="button" id="button-addon2" title="Click to find." @onclick="FilterResults"><i class="bi bi-search"></i></button>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="ms-auto d-flex align-items-center pe-5">
-					@if (ResultPage == null)
-					{
-						<h4 class="mb-0"> Total Planets <span class="badge bg-secondary">0</span></h4>
-					}
-					else
-					{
-						<h4 class="mb-0"> Total Planets <span class="badge bg-secondary">@ResultPage.ItemCount</span></h4>
-					}
+					<div class="ms-auto d-flex align-items-center pe-5">
+						@if (ResultPage == null)
+						{
+							<h4 class="mb-0"> Total Planets <span class="badge bg-secondary">0</span></h4>
+						}
+						else
+						{
+							<h4 class="mb-0"> Total Planets <span class="badge bg-secondary">@ResultPage.ItemCount</span></h4>
+						}
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col">
-			<table class="table">
-				<thead>
-					<tr>
-						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("Name"))">Name</a><i class="@(SortIndicator("Name"))"></i></th>
-						<th>Shard</th>
-						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("UpdatedOn"))">Updated On</a><i class="@(SortIndicator("UpdatedOn"))"></i></th>
-						<th class="text-end">Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					@if (ResultPage != null && ResultPage.Collection != null)
-					{
-						@foreach (var planetModel in ResultPage.Collection)
+		<div class="row">
+			<div class="col">
+				<table class="table">
+					<thead>
+						<tr>
+							<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("Name"))">Name</a><i class="@(SortIndicator("Name"))"></i></th>
+							<th>Shard</th>
+							<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("UpdatedOn"))">Updated On</a><i class="@(SortIndicator("UpdatedOn"))"></i></th>
+							<th class="text-end">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						@if (ResultPage != null && ResultPage.Collection != null)
 						{
-							<tr class="align-middle">
-								<td>
-									<a href="/planets/item/@(planetModel.Id)" title="Click to view this item.">
-										@planetModel.Name
-									</a>
-								</td>
-								<td>
-									@if (!string.IsNullOrEmpty(@planetModel.Shard))
-									{
-										<a class="btn btn-link btn-sm" href="@planetModel.Shard" target="_blank" title="Click to view the source details.">
-											<i class="bi bi-link"></i> @planetModel.Shard
+							@foreach (var planetModel in ResultPage.Collection)
+							{
+								<tr class="align-middle">
+									<td>
+										<a href="/planets/item/@(planetModel.Id)" title="Click to view this item.">
+											@planetModel.Name
 										</a>
-									}
-								</td>
-								<td>@planetModel.UpdatedOn</td>
-								<td class="text-end">
-									<AuthorizeView Roles="@ApplicationRole.Administrator">
-										<Authorized>
-											<a class="btn btn-outline-info btn-sm" href="/planets/update/@(planetModel.Id)?referrer=planets/index">
-												<svg class="icon"><use xlink:href="#icon-pencil"></use></svg>
+									</td>
+									<td>
+										@if (!string.IsNullOrEmpty(@planetModel.Shard))
+										{
+											<a class="btn btn-link btn-sm" href="@planetModel.Shard" target="_blank" title="Click to view the source details.">
+												<i class="bi bi-link"></i> @planetModel.Shard
 											</a>
-											<button class="btn btn-outline-danger btn-sm" @onclick="()=> { DeleteID = planetModel.Id; Modal.Open(); Modal.SetSpecifics(PlanetIdentification(planetModel));}">
-												<svg class="icon"><use xlink:href="#icon-trash"></use></svg>
-											</button>
-										</Authorized>
-									</AuthorizeView>
-								</td>
+										}
+									</td>
+									<td>@planetModel.UpdatedOn</td>
+									<td class="text-end">
+										<AuthorizeView Roles="@ApplicationRole.Administrator">
+											<Authorized>
+												<a class="btn btn-outline-info btn-sm" href="/planets/update/@(planetModel.Id)?referrer=planets/index">
+													<svg class="icon"><use xlink:href="#icon-pencil"></use></svg>
+												</a>
+												<button class="btn btn-outline-danger btn-sm" @onclick="()=> { DeleteID = planetModel.Id; Modal.Open(); Modal.SetSpecifics(PlanetIdentification(planetModel));}">
+													<svg class="icon"><use xlink:href="#icon-trash"></use></svg>
+												</button>
+											</Authorized>
+										</AuthorizeView>
+									</td>
+								</tr>
+							}
+						}
+						else
+						{
+							<tr>
+								<td colspan="2">No data found.</td>
 							</tr>
 						}
-					}
-					else
-					{
-						<tr>
-							<td colspan="2">No data found.</td>
-						</tr>
-					}
-				</tbody>
-			</table>
+					</tbody>
+				</table>
+			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col">
-			@if (ResultPage != null)
-			{
-				<Pager PageIndex=@ResultPage.CurrentPage TotalPages=@ResultPage.TotalPages OnClick="PageIndexChanged" IsLastPage=@ResultPage.IsLastPage IsFirstPage=@ResultPage.IsFirstPage></Pager>
-			}
+		<div class="row">
+			<div class="col">
+				@if (ResultPage != null)
+				{
+					<Pager PageIndex=@ResultPage.CurrentPage TotalPages=@ResultPage.TotalPages OnClick="PageIndexChanged" IsLastPage=@ResultPage.IsLastPage IsFirstPage=@ResultPage.IsFirstPage></Pager>
+				}
+			</div>
 		</div>
-	</div>
-}
+	}
+</div>
 
 <AppModal @ref="Modal">
 	<Title>Confirmation</Title>

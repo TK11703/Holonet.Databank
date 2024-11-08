@@ -12,8 +12,11 @@
 @attribute [Authorize]
 
 <PageTitle>User Profile</PageTitle>
-
-<h3>User Data</h3>
+<SetHeader>
+	<h1>User Profile</h1>
+	<hr />
+</SetHeader>
+<h4>Microsoft Graph Properties</h4>
 <p class="small">User data was retrieved from Entra using the Graph API.</p>
 <table class="table">
 	<thead>
@@ -70,7 +73,7 @@
 <UserClaims />
 <AuthorizeView Roles="@ApplicationRole.Administrator">
 	<Authorized>						
-		<h3>User Bearer Token</h3>
+		<h4>User Bearer Token</h4>
 		<p class="small">An administrator will be able to see their bearer token for diagnostics.</p>
 		<textarea class="form-control" rows="5" readonly="readonly">@bearerToken</textarea>
 	</Authorized>

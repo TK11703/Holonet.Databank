@@ -9,6 +9,7 @@ public static class ScopedServicesExtension
 	{
 		services.AddScoped<AuthorMaintenanceService>();
 		services.AddScoped<UserService>();
-		return services;
+        services.AddScoped<ILayoutService, LayoutService>();
+        return services;
 	}
 }

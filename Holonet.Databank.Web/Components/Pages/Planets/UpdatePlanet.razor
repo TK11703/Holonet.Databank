@@ -2,15 +2,17 @@
 @rendermode InteractiveServer
 @attribute [Authorize]
 <PageTitle>Update Planet</PageTitle>
+<SetHeader>
+	<h1><i class="bi bi-database-add"></i> Update Planet</h1>
+	<hr />
+</SetHeader>
 
-<h1><i class="bi bi-database-add"></i> Update Planet</h1>
-<hr />
 @if (EditContext != null)
 {
 	<EditForm FormName="UpdatePlanet" EditContext="EditContext" OnValidSubmit="Submit">
 		<DataAnnotationsValidator />
 		<ValidationSummary />
-		<div class="container">
+		<div class="container-fluid">
 			<div class="card mb-3">
 				<div class="card-header">Enter the basic planet details</div>
 				<div class="card-body">

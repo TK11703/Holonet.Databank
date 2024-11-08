@@ -6,128 +6,132 @@
 
 <PageTitle>Characters</PageTitle>
 <CommonIcons />
-<h1>Characters</h1>
-<hr />
+<SetHeader>
+	<h1>Characters</h1>
+	<hr />
+</SetHeader>
 
-@if (ResultPage == null)
-{
-	<p><em>Loading...</em></p>
-}
-else
-{
-	<div class="row">
-		<div class="col">
-			<div class="d-flex">
-				<div class="">
-					<div class="card">
-						<div class="card-body">
-							<div class="row">
-								<AuthorizeView>
-									<Authorized>
-										<div class="col-auto">
-											<a href="/characters/create" class="btn btn-primary" title="Create a new item">Create</a>
+<div class="container-fluid">
+	@if (ResultPage == null)
+	{
+		<p><em>Loading...</em></p>
+	}
+	else
+	{
+		<div class="row">
+			<div class="col">
+				<div class="d-flex">
+					<div class="">
+						<div class="card">
+							<div class="card-body">
+								<div class="row">
+									<AuthorizeView>
+										<Authorized>
+											<div class="col-auto">
+												<a href="/characters/create" class="btn btn-primary" title="Create a new item">Create</a>
+											</div>
+										</Authorized>
+									</AuthorizeView>
+									<div class="col-auto">
+										<div class="input-group">
+											<input type="text" class="form-control" id="filterInput" placeholder="Filter by name" @bind-value=PageRequest.Filter>
+											<button class="btn btn-outline-secondary" type="button" id="button-addon2" title="Click to find." @onclick="FilterResults"><i class="bi bi-search"></i></button>
 										</div>
-									</Authorized>
-								</AuthorizeView>
-								<div class="col-auto">
-									<div class="input-group">
-										<input type="text" class="form-control" id="filterInput" placeholder="Filter by name" @bind-value=PageRequest.Filter>
-										<button class="btn btn-outline-secondary" type="button" id="button-addon2" title="Click to find." @onclick="FilterResults"><i class="bi bi-search"></i></button>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="ms-auto d-flex align-items-center pe-5">
-					@if (ResultPage == null)
-					{
-						<h4 class="mb-0"> Total Characters <span class="badge bg-secondary">0</span></h4>
-					}
-					else
-					{
-						<h4 class="mb-0"> Total Characters <span class="badge bg-secondary">@ResultPage.ItemCount</span></h4>
-					}
+					<div class="ms-auto d-flex align-items-center pe-5">
+						@if (ResultPage == null)
+						{
+							<h4 class="mb-0"> Total Characters <span class="badge bg-secondary">0</span></h4>
+						}
+						else
+						{
+							<h4 class="mb-0"> Total Characters <span class="badge bg-secondary">@ResultPage.ItemCount</span></h4>
+						}
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col">
-			<table class="table">
-				<thead>
-					<tr>
-						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("GivenName"))">Given Name</a><i class="@(SortIndicator("GivenName"))"></i></th>
-						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("FamilyName"))">Family Name</a><i class="@(SortIndicator("FamilyName"))"></i></th>
-						<th>Shard</th>
-						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("Planet"))">Planet</a><i class="@(SortIndicator("Planet"))"></i></th>
-						<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("UpdatedOn"))">Updated On</a><i class="@(SortIndicator("UpdatedOn"))"></i></th>
-						<th class="text-end">Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					@if (ResultPage != null && ResultPage.Collection != null)
-					{
-						@foreach (var characterModel in ResultPage.Collection)
+		<div class="row">
+			<div class="col">
+				<table class="table">
+					<thead>
+						<tr>
+							<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("GivenName"))">Given Name</a><i class="@(SortIndicator("GivenName"))"></i></th>
+							<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("FamilyName"))">Family Name</a><i class="@(SortIndicator("FamilyName"))"></i></th>
+							<th>Shard</th>
+							<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("Planet"))">Planet</a><i class="@(SortIndicator("Planet"))"></i></th>
+							<th><a href="javascript:void(0);" class="me-1" @onclick="@(() => Sort("UpdatedOn"))">Updated On</a><i class="@(SortIndicator("UpdatedOn"))"></i></th>
+							<th class="text-end">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						@if (ResultPage != null && ResultPage.Collection != null)
 						{
-							<tr class="align-middle">								
-								<td>
-									<a href="/characters/item/@(characterModel.Id)" title="Click to view this item.">
-										@characterModel.GivenName
-									</a>
-								</td>
-								<td>@characterModel.FamilyName</td>
-								<td>
-									@if (!string.IsNullOrEmpty(@characterModel.Shard))
-									{
-										<a class="btn btn-link btn-sm" href="@characterModel.Shard" target="_blank" title="Click to view the source details.">
-											<i class="bi bi-link"></i> @characterModel.Shard
+							@foreach (var characterModel in ResultPage.Collection)
+							{
+								<tr class="align-middle">
+									<td>
+										<a href="/characters/item/@(characterModel.Id)" title="Click to view this item.">
+											@characterModel.GivenName
 										</a>
-									}
-								</td>
-								@if (characterModel.Planet != null)
-								{
-									<td>@characterModel.Planet.Name</td>
-								}
-								else
-								{
-									<td>Unknown</td>
-								}
-								<td>@characterModel.UpdatedOn</td>
-								<td class="text-end">
-									<AuthorizeView Roles="@ApplicationRole.Administrator">
-										<Authorized>
-											<a class="btn btn-outline-info btn-sm" href="/characters/update/@(characterModel.Id)?referrer=characters/index">
-												<svg class="icon"><use xlink:href="#icon-pencil"></use></svg>
+									</td>
+									<td>@characterModel.FamilyName</td>
+									<td>
+										@if (!string.IsNullOrEmpty(@characterModel.Shard))
+										{
+											<a class="btn btn-link btn-sm" href="@characterModel.Shard" target="_blank" title="Click to view the source details.">
+												<i class="bi bi-link"></i> @characterModel.Shard
 											</a>
-											<button class="btn btn-outline-danger btn-sm" @onclick="()=> { DeleteID = characterModel.Id; Modal.Open(); Modal.SetSpecifics(CharacterIdentification(characterModel));}">
-												<svg class="icon"><use xlink:href="#icon-trash"></use></svg>
-											</button>
-										</Authorized>
-									</AuthorizeView>
-								</td>
+										}
+									</td>
+									@if (characterModel.Planet != null)
+									{
+										<td>@characterModel.Planet.Name</td>
+									}
+									else
+									{
+										<td>Unknown</td>
+									}
+									<td>@characterModel.UpdatedOn</td>
+									<td class="text-end">
+										<AuthorizeView Roles="@ApplicationRole.Administrator">
+											<Authorized>
+												<a class="btn btn-outline-info btn-sm" href="/characters/update/@(characterModel.Id)?referrer=characters/index">
+													<svg class="icon"><use xlink:href="#icon-pencil"></use></svg>
+												</a>
+												<button class="btn btn-outline-danger btn-sm" @onclick="()=> { DeleteID = characterModel.Id; Modal.Open(); Modal.SetSpecifics(CharacterIdentification(characterModel));}">
+													<svg class="icon"><use xlink:href="#icon-trash"></use></svg>
+												</button>
+											</Authorized>
+										</AuthorizeView>
+									</td>
+								</tr>
+							}
+						}
+						else
+						{
+							<tr>
+								<td colspan="5">No data found.</td>
 							</tr>
 						}
-					}
-					else
-					{
-						<tr>
-							<td colspan="5">No data found.</td>
-						</tr>
-					}
-				</tbody>
-			</table>
+					</tbody>
+				</table>
+			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col">
-			@if (ResultPage != null)
-			{
-				<Pager PageIndex=@ResultPage.CurrentPage TotalPages=@ResultPage.TotalPages OnClick="PageIndexChanged" IsLastPage=@ResultPage.IsLastPage IsFirstPage=@ResultPage.IsFirstPage></Pager>
-			}
+		<div class="row">
+			<div class="col">
+				@if (ResultPage != null)
+				{
+					<Pager PageIndex=@ResultPage.CurrentPage TotalPages=@ResultPage.TotalPages OnClick="PageIndexChanged" IsLastPage=@ResultPage.IsLastPage IsFirstPage=@ResultPage.IsFirstPage></Pager>
+				}
+			</div>
 		</div>
-	</div>
-}
+	}
+</div>
 
 <AppModal @ref="Modal">
 	<Title>Confirmation</Title>

@@ -2,15 +2,17 @@
 @rendermode InteractiveServer
 @attribute [Authorize]
 <PageTitle>Create Species</PageTitle>
+<SetHeader>
+	<h1><i class="bi bi-database-add"></i> Create Species</h1>
+	<hr />
+</SetHeader>
 
-<h1><i class="bi bi-database-add"></i> Create Species</h1>
-<hr />
 @if (EditContext != null)
 {
 	<EditForm FormName="CreateSpecies" OnValidSubmit="Submit" EditContext="@EditContext">
 		<DataAnnotationsValidator />
 		<ValidationSummary />
-		<div class="container">
+		<div class="container-fluid">
 			<div class="card mb-3">
 				<div class="card-header">Enter the basic species details</div>
 				<div class="card-body">
