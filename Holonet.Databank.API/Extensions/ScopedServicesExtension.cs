@@ -4,6 +4,9 @@ using Holonet.Databank.Infrastructure.Repositories;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel;
 using Holonet.Databank.Application.AICapabilities;
+using Holonet.Databank.Application.AICapabilities.Plugins;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 namespace Holonet.Databank.API.Extensions;
 
@@ -38,7 +41,9 @@ public static class ScopedServicesExtension
 		services.AddScoped<IHistoricalEventCharacterRepository, HistoricalEventCharacterRepository>();
 		services.AddScoped<IHistoricalEventPlanetRepository, HistoricalEventPlanetRepository>();
 
-		services.AddTransient<Kernel>(s =>
+		services.AddHttpClient();
+
+		services.AddTransient<Kernel>(sp =>
 		{
 			var builder = Kernel.CreateBuilder();
 			builder.AddAzureOpenAIChatCompletion(
@@ -46,6 +51,9 @@ public static class ScopedServicesExtension
 				endpoint: configuration.GetValue<string>("AzureOpenAi:Endpoint"),
 				apiKey: configuration.GetValue<string>("AzureOpenAi:ApiKey"));
 
+			builder.Plugins.AddFromType<UtcPlugin>("UTCTime");
+			builder.Plugins.AddFromObject(new GeocodingPlugin(sp.GetRequiredService<IHttpClientFactory>(), configuration), "GeocodingPlugin");
+			builder.Plugins.AddFromObject(new WeatherPlugin(sp.GetRequiredService<IHttpClientFactory>(), configuration), "WeatherPlugin");
 			return builder.Build();
 		});
 
