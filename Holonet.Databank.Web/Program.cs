@@ -30,7 +30,12 @@ builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.Authentic
 });
 builder.Services.AddAuthorization(options =>
 {
-	options.AddPolicy(AuthorizationPolicies.AssignmentToAdminRoleRequired, policy => policy.RequireClaim(ClaimTypes.Role, ApplicationRole.Administrator));
+	AuthorizationPolicy defaultPolicy = new AuthorizationPolicyBuilder("Bearer")
+        .RequireAuthenticatedUser()
+		.RequireRole(ApplicationRole.User)
+        .Build();
+	options.DefaultPolicy = defaultPolicy;
+    options.AddPolicy(AuthorizationPolicies.AssignmentToAdminRoleRequired, policy => policy.RequireClaim(ClaimTypes.Role, ApplicationRole.Administrator));
 });
 
 // Add services to the container.
