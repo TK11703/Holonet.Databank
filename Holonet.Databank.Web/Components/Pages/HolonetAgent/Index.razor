@@ -46,6 +46,10 @@
 		<a href="javascript:void(0);" @ref="lastItemRef"></a>
 	</div>
 }
+@if(isLoading)
+{
+	<WaitingIndicator HorizontalAlignment="WaitingIndicator.Alignment.Left" />
+}
 
 <SetFooter>
 	<div class="card ms-1 me-3">

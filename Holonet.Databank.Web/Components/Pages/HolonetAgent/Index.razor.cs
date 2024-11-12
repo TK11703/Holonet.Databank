@@ -14,6 +14,8 @@ public partial class Index
 	private ElementReference lastItemRef { get; set; } = default!;
 	private bool shouldScroll { get; set; } = false;
 
+	private bool isLoading { get; set; } = false;
+
 	public ChatRequestModel Model { get; set; } = new();
 
 	protected List<ChatResponseModel> ChatResponses { get; set; } = new();
@@ -76,6 +78,7 @@ public partial class Index
 		}
 		else
 		{
+			isLoading = true;
 			if (UserService.IsUserAuthenticated())
 			{
 				Model.AzureId = UserService.GetAzureId();
@@ -89,12 +92,13 @@ public partial class Index
 			{
 				ChatResponses.Add(new ChatResponseModel() { Result = result, Type = ChatResponseType.Agent });
 				shouldScroll = true;
-				StateHasChanged();
 			}
 			else
-			{
+			{	
 				ToastService.ShowInfo("A response was not returned from the agent.");
 			}
+			isLoading = false;
+			StateHasChanged();
 		}
 	}
 }

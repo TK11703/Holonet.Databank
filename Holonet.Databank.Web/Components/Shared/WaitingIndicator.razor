@@ -1,0 +1,25 @@
+﻿<div class="waiting-indicator @GetAlignmentClass()">
+    <div class="dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+</div>
+@code {
+    public enum Alignment { Left, Center, Right}
+
+	[Parameter]
+    public Alignment HorizontalAlignment { get; set; } = Alignment.Center;
+
+    private string GetAlignmentClass() 
+    { 
+        return 
+        HorizontalAlignment switch 
+        { 
+            Alignment.Left => "left", 
+            Alignment.Center => "center", 
+            Alignment.Right => "right", 
+            _ => "center" 
+        }; 
+    }
+}
