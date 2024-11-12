@@ -2,6 +2,7 @@
 using System.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
+using System.Data.Common;
 
 namespace Holonet.Databank.Infrastructure.Data;
 public class SqlDataAccess : ISqlDataAccess
@@ -13,7 +14,21 @@ public class SqlDataAccess : ISqlDataAccess
 		_configuration = configuration;
 	}
 
-	public async Task<IEnumerable<T>> LoadDataAsync<T, U>(string storedProcedure, U parameters, string connectionId = "DefaultConnection")
+    public async Task<bool> ExecuteHealthCheckAsync(string connectionId = "DefaultConnection")
+    {
+        try
+        {
+            using IDbConnection connection = new SqlConnection(_configuration.GetConnectionString(connectionId));
+            await connection.ExecuteScalarAsync("SELECT 1");
+            return true;
+        }
+        catch (DbException e)
+        {
+            throw new InvalidOperationException("Execute health check failed.", e);
+        }
+    }
+
+    public async Task<IEnumerable<T>> LoadDataAsync<T, U>(string storedProcedure, U parameters, string connectionId = "DefaultConnection")
 	{
 		using IDbConnection connection = new SqlConnection(_configuration.GetConnectionString(connectionId));
 

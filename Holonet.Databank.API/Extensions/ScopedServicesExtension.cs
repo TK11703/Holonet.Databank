@@ -5,8 +5,10 @@ using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel;
 using Holonet.Databank.Application.AICapabilities;
 using Holonet.Databank.Application.AICapabilities.Plugins;
+using Holonet.Databank.Infrastructure.Health;
 using Azure;
 using Azure.Search.Documents.Indexes;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Holonet.Databank.API.Extensions;
 
@@ -40,6 +42,9 @@ public static class ScopedServicesExtension
 		services.AddScoped<IHistoricalEventRepository, HistoricalEventRepository>();
 		services.AddScoped<IHistoricalEventCharacterRepository, HistoricalEventCharacterRepository>();
 		services.AddScoped<IHistoricalEventPlanetRepository, HistoricalEventPlanetRepository>();
+
+		services.AddHealthChecks()
+			.AddCheck<DatabaseHealthCheck>("database", HealthStatus.Unhealthy);
 
 		services.AddHttpClient();
 

@@ -5,6 +5,7 @@ using FluentValidation;
 using Holonet.Databank.API.Middleware;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -39,6 +40,12 @@ if (app.Environment.IsDevelopment() || showSwagger)
 }
 
 app.UseHttpsRedirection();
+
+app.MapHealthChecks("health", new HealthCheckOptions
+{
+	Predicate = _ => true,
+	ResponseWriter = HealthCheckResponseWriter.WriteResponse
+});
 
 app.UseExceptionHandler(appError =>
 {
