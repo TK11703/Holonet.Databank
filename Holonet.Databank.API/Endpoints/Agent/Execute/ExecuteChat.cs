@@ -42,12 +42,17 @@ public class ExecuteChat : IEndpoint
 
 			//kernel.ImportPluginFromObject(new DBQueryPlugin(_configuration));
 			chatHistory.AddUserMessage(chatRequest.Prompt);
+
 			ChatMessageContent? result = await chat.GetChatMessageContentAsync(chatHistory,
 				  executionSettings: new OpenAIPromptExecutionSettings { Temperature = 0.8, TopP = 0.0, ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions },
 				  kernel: kernel);
 
+            if (result == null || string.IsNullOrEmpty(result.Content))
+            {
+                return TypedResults.Problem("Failed to get chat message content");
+            }
 
-			return TypedResults.Ok(new ChatResponseDto(result.Content));
+            return TypedResults.Ok(new ChatResponseDto(result.Content));
 		}
 		catch (Exception ex)
 		{
