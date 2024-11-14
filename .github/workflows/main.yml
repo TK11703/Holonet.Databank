@@ -37,6 +37,9 @@ jobs:
       - name: Publish API
         run: dotnet publish ./Holonet.Databank.API/Holonet.Databank.API.csproj --configuration Release --output ./publish_api
 
+      - name: Publish Function App
+        run: dotnet publish ./Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj --configuration Release --output ./publish_function
+
       - name: Upload Blazor artifact
         uses: actions/upload-artifact@v4
         with:
@@ -48,6 +51,12 @@ jobs:
         with:
           name: api_app
           path: ./publish_api
+
+      - name: Upload Function App artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: function_app
+          path: ./publish_function
 
   deploy_blazor:
     runs-on: ubuntu-latest
@@ -92,5 +101,28 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'Holonet-Api-Databank-8108'
+          slot-name: 'Production'
+          package: ./publish
+  
+  deploy_function:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download Function artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: function_app
+          path: ./publish
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure Function App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'Holonet-FunctionApp-Databank-8108'
           slot-name: 'Production'
           package: ./publish
