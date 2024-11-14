@@ -1,0 +1,9 @@
+{
+    "profiles": {
+        "Holonet.Databank.AppFunctions": {
+            "commandName": "Project",
+            "commandLineArgs": "--port 7080",
+            "launchBrowser": false
+        }
+    }
+}

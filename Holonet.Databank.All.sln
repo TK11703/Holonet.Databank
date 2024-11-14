@@ -18,6 +18,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.Web", "Hol
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Holonet.Databank.DB", "Holonet.Databank.DB\Holonet.Databank.DB.sqlproj", "{58E93B4F-99C5-478B-A493-E72C28B85ADC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holonet.Databank.AppFunctions", "Holonet.Databank.AppFunctions\Holonet.Databank.AppFunctions.csproj", "{53D2F9DB-5433-47AA-9893-DECB9F630EB4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{58E93B4F-99C5-478B-A493-E72C28B85ADC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58E93B4F-99C5-478B-A493-E72C28B85ADC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{58E93B4F-99C5-478B-A493-E72C28B85ADC}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{53D2F9DB-5433-47AA-9893-DECB9F630EB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53D2F9DB-5433-47AA-9893-DECB9F630EB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53D2F9DB-5433-47AA-9893-DECB9F630EB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53D2F9DB-5433-47AA-9893-DECB9F630EB4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
