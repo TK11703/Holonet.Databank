@@ -14,7 +14,18 @@ public class SpeciesRepository(ISqlDataAccess dataAccess) : ISpeciesRepository
 		return await _dataAccess.LoadDataAsync<Species, dynamic>("dbo.spSpecies_GetAll", new { });
 	}
 
-	public async Task<Species?> GetSpecies(int id)
+    public async Task<IEnumerable<Species>> GetSpecies(long utcTicks)
+    {
+        var p = new DynamicParameters();
+		if (utcTicks > 0)
+		{
+			DateTime requestedUtcDate = new (utcTicks, DateTimeKind.Utc);
+			p.Add(name: "@UTCDate", requestedUtcDate.Date);
+		}
+        return await _dataAccess.LoadDataAsync<Species, dynamic>("dbo.spSpecies_GetAll", p);
+    }
+
+    public async Task<Species?> GetSpecies(int id)
 	{
 		var results = await _dataAccess.LoadDataAsync<Species, dynamic>("dbo.spSpecies_Get", new { Id = id });
 

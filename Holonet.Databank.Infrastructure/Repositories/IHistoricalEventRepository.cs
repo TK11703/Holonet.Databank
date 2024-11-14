@@ -8,7 +8,8 @@ public interface IHistoricalEventRepository
 	Task<bool> DeleteHistoricalEvent(int id);
 	Task<HistoricalEvent?> GetHistoricalEvent(int id);
 	Task<IEnumerable<HistoricalEvent>> GetHistoricalEvents();
-	Task<PageResult<HistoricalEvent>> GetPagedAsync(PageRequest pageRequest);
+    Task<IEnumerable<HistoricalEvent>> GetHistoricalEvents(long utcTicks);
+    Task<PageResult<HistoricalEvent>> GetPagedAsync(PageRequest pageRequest);
 	Task<bool> HistoricalEventExists(int id, string name);
 	bool UpdateHistoricalEvent(HistoricalEvent itemModel);
 }

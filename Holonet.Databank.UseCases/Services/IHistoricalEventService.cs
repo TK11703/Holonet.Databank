@@ -4,11 +4,12 @@ using Holonet.Databank.Core.Models;
 namespace Holonet.Databank.Application.Services;
 public interface IHistoricalEventService
 {
-	Task<int> CreateHistoricalEvent(HistoricalEvent historicalEvent);
-	Task<bool> DeleteHistoricalEvent(int id);
-	Task<HistoricalEvent?> GetHistoricalEventById(int id);
-	Task<bool> HistoricalEventExists(int id, string name);
-	Task<IEnumerable<HistoricalEvent>> GetHistoricalEvents();
-	Task<PageResult<HistoricalEvent>> GetPagedAsync(PageRequest pageRequest);
-	Task<bool> UpdateHistoricalEvent(HistoricalEvent historicalEvent);
+    Task<int> CreateHistoricalEvent(HistoricalEvent historicalEvent);
+    Task<bool> DeleteHistoricalEvent(int id);
+    Task<HistoricalEvent?> GetHistoricalEventById(int id);
+    Task<IEnumerable<HistoricalEvent>> GetHistoricalEvents(bool populate = false, bool populateDataRecords = false);
+    Task<IEnumerable<HistoricalEvent>> GetHistoricalEvents(long utcTicks, bool populate = false, bool populateDataRecords = false);
+    Task<PageResult<HistoricalEvent>> GetPagedAsync(PageRequest pageRequest);
+    Task<bool> HistoricalEventExists(int id, string name);
+    Task<bool> UpdateHistoricalEvent(HistoricalEvent historicalEvent);
 }

@@ -9,6 +9,7 @@ public interface ICharacterRepository
 	Task<bool> DeleteCharacter(int id);
 	Task<Character?> GetCharacter(int id);
 	Task<IEnumerable<Character>> GetCharacters();
-	Task<PageResult<Character>> GetPagedAsync(PageRequest pageRequest);
+    Task<IEnumerable<Character>> GetCharacters(long utcTicks);
+    Task<PageResult<Character>> GetPagedAsync(PageRequest pageRequest);
 	bool UpdateCharacter(Character itemModel);
 }

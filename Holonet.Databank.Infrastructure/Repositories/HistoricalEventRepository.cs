@@ -14,7 +14,18 @@ public class HistoricalEventRepository(ISqlDataAccess dataAccess) : IHistoricalE
 		return await _dataAccess.LoadDataAsync<HistoricalEvent, dynamic>("dbo.spHistoricalEvents_GetAll", new { });
 	}
 
-	public async Task<PageResult<HistoricalEvent>> GetPagedAsync(PageRequest pageRequest)
+    public async Task<IEnumerable<HistoricalEvent>> GetHistoricalEvents(long utcTicks)
+    {
+        var p = new DynamicParameters();
+        if (utcTicks > 0)
+        {
+            DateTime requestedUtcDate = new(utcTicks, DateTimeKind.Utc);
+            p.Add(name: "@UTCDate", requestedUtcDate.Date);
+        }
+        return await _dataAccess.LoadDataAsync<HistoricalEvent, dynamic>("dbo.spHistoricalEvents_GetAll", p);
+    }
+
+    public async Task<PageResult<HistoricalEvent>> GetPagedAsync(PageRequest pageRequest)
 	{
 		PageResult<HistoricalEvent> results = new PageResult<HistoricalEvent>(pageRequest.PageSize, pageRequest.Start);
 		var p = new DynamicParameters();

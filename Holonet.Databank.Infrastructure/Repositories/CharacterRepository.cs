@@ -14,7 +14,18 @@ public class CharacterRepository(ISqlDataAccess dataAccess) : ICharacterReposito
 		return await _dataAccess.LoadDataAsync<Character, dynamic>("dbo.spCharacters_GetAll", new { });
 	}
 
-	public async Task<PageResult<Character>> GetPagedAsync(PageRequest pageRequest)
+    public async Task<IEnumerable<Character>> GetCharacters(long utcTicks)
+    {
+        var p = new DynamicParameters();
+        if (utcTicks > 0)
+        {
+            DateTime requestedUtcDate = new(utcTicks, DateTimeKind.Utc);
+            p.Add(name: "@UTCDate", requestedUtcDate.Date);
+        }
+        return await _dataAccess.LoadDataAsync<Character, dynamic>("dbo.spCharacters_GetAll", p);
+    }
+
+    public async Task<PageResult<Character>> GetPagedAsync(PageRequest pageRequest)
 	{
 		PageResult<Character> results = new PageResult<Character>(pageRequest.PageSize, pageRequest.Start);
 		var p = new DynamicParameters();

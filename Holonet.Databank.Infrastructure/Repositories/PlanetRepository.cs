@@ -14,7 +14,18 @@ public class PlanetRepository(ISqlDataAccess dataAccess) : IPlanetRepository
 		return await _dataAccess.LoadDataAsync<Planet, dynamic>("dbo.spPlanets_GetAll", new { });
 	}
 
-	public async Task<Planet?> GetPlanet(int id)
+    public async Task<IEnumerable<Planet>> GetPlanets(long utcTicks)
+    {
+        var p = new DynamicParameters();
+        if (utcTicks > 0)
+        {
+            DateTime requestedUtcDate = new(utcTicks, DateTimeKind.Utc);
+            p.Add(name: "@UTCDate", requestedUtcDate.Date);
+        }
+        return await _dataAccess.LoadDataAsync<Planet, dynamic>("dbo.spPlanets_GetAll", p);
+    }
+
+    public async Task<Planet?> GetPlanet(int id)
 	{
 		var results = await _dataAccess.LoadDataAsync<Planet, dynamic>("dbo.spPlanets_Get", new { Id = id });
 
