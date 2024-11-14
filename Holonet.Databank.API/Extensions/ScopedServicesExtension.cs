@@ -43,8 +43,8 @@ public static class ScopedServicesExtension
 		services.AddScoped<IHistoricalEventCharacterRepository, HistoricalEventCharacterRepository>();
 		services.AddScoped<IHistoricalEventPlanetRepository, HistoricalEventPlanetRepository>();
 
-		services.AddHealthChecks()
-			.AddCheck<DatabaseHealthCheck>("database", HealthStatus.Unhealthy);
+		services.AddHealthChecks();
+			//.AddCheck<DatabaseHealthCheck>("database", HealthStatus.Unhealthy);
 
 		services.AddHttpClient();
 
