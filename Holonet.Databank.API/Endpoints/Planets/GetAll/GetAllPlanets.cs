@@ -11,18 +11,21 @@ public class GetAllPlanets : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapGet($"/Planets", HandleAsync)
+		app.MapGet($"/Planets", HandleGetAsync)
 			.WithTags(Tags.Planets);
-	}
 
-	protected virtual async Task<Results<Ok<IEnumerable<PlanetDto>>, ProblemHttpResult, NotFound>> HandleAsync(IPlanetService planetService)
+        app.MapPost($"/Planets/GetAll", HandlePostAsync)
+            .WithTags(Tags.Planets);
+    }
+
+	protected virtual async Task<Results<Ok<IEnumerable<PlanetDto>>, ProblemHttpResult, NotFound>> HandleGetAsync(IPlanetService planetService)
 	{
 		try
 		{
-			var results = await planetService.GetPlanets();
+			var results = await planetService.GetPlanets(true, true);
 			if (results != null && results.Any())
 			{
-				return TypedResults.Ok(results.Select(planet => planet.ToDto()));
+				return TypedResults.Ok(results.Select(result => result.ToDto()));
 			}
 			else
 			{
@@ -34,4 +37,24 @@ public class GetAllPlanets : IEndpoint
 			return TypedResults.Problem(ex.Message);
 		}
 	}
+
+    protected virtual async Task<Results<Ok<IEnumerable<PlanetDto>>, ProblemHttpResult, NotFound>> HandlePostAsync(GetEntityCollectionDto postData, IPlanetService planetService)
+    {
+        try
+        {
+            var results = await planetService.GetPlanets(postData.PopulateEntities, postData.PopulateDataRecords);
+            if (results != null && results.Any())
+            {
+                return TypedResults.Ok(results.Select(result => result.ToDto()));
+            }
+            else
+            {
+                return TypedResults.Ok(Enumerable.Empty<PlanetDto>());
+            }
+        }
+        catch (Exception ex)
+        {
+            return TypedResults.Problem(ex.Message);
+        }
+    }
 }

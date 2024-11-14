@@ -11,17 +11,20 @@ public class GetAllSpecies : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapGet($"/Species", HandleAsync)
+		app.MapGet($"/Species", HandleGetAsync)
 			.WithTags(Tags.Species);
-	}
-	protected virtual async Task<Results<Ok<IEnumerable<SpeciesDto>>, ProblemHttpResult, NotFound>> HandleAsync(ISpeciesService speciesService)
+
+        app.MapPost($"/Species/GetAll", HandlePostAsync)
+            .WithTags(Tags.Species);
+    }
+	protected virtual async Task<Results<Ok<IEnumerable<SpeciesDto>>, ProblemHttpResult, NotFound>> HandleGetAsync(ISpeciesService speciesService)
 	{
 		try
 		{
-			var results = await speciesService.GetSpecies();
+			var results = await speciesService.GetSpecies(true, true);
 			if (results != null && results.Any())
 			{
-				return TypedResults.Ok(results.Select(species => species.ToDto()));
+				return TypedResults.Ok(results.Select(result => result.ToDto()));
 			}
 			else
 			{
@@ -33,4 +36,24 @@ public class GetAllSpecies : IEndpoint
 			return TypedResults.Problem(ex.Message);
 		}
 	}
+
+    protected virtual async Task<Results<Ok<IEnumerable<SpeciesDto>>, ProblemHttpResult, NotFound>> HandlePostAsync(GetEntityCollectionDto postData, ISpeciesService speciesService)
+    {
+        try
+        {
+            var results = await speciesService.GetSpecies(postData.PopulateEntities, postData.PopulateDataRecords);
+            if (results != null && results.Any())
+            {
+                return TypedResults.Ok(results.Select(result => result.ToDto()));
+            }
+            else
+            {
+                return TypedResults.Ok(Enumerable.Empty<SpeciesDto>());
+            }
+        }
+        catch (Exception ex)
+        {
+            return TypedResults.Problem(ex.Message);
+        }
+    }
 }
