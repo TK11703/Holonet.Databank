@@ -55,12 +55,12 @@ public class HolonetSearchPlugin
     private sealed class IndexSchema
     {
         [JsonPropertyName("content")]
-        public string Content { get; set; }
+        public string Content { get; set; } = string.Empty;
 
         [JsonPropertyName("title")]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         [JsonPropertyName("url")]
-        public string Url { get; set; }
+        public string Url { get; set; } = string.Empty;
     }
 }
