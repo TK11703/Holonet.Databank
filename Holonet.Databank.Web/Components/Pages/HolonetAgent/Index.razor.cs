@@ -5,6 +5,8 @@ using Holonet.Databank.Web.Services;
 using Markdig;
 using Markdig.Extensions.AutoLinks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 
 namespace Holonet.Databank.Web.Components.Pages.HolonetAgent;
@@ -18,7 +20,9 @@ public partial class Index
 
 	private bool isLoading { get; set; } = false;
 
-	public ChatRequestModel Model { get; set; } = new();
+    private EditContext editContext;
+
+    public ChatRequestModel Model { get; set; } = new();
 
 	protected List<ChatResponseModel> ChatResponses { get; set; } = new();
 
@@ -46,7 +50,8 @@ public partial class Index
 	protected async override Task OnInitializedAsync()
 	{
 		await base.OnInitializedAsync();
-		if(!IsUserAuthenticated)
+        editContext = new EditContext(Model);
+        if (!IsUserAuthenticated)
 		{
 			ToastService.ShowError("You must be authenticated to use this feature.");
 		}
@@ -57,7 +62,7 @@ public partial class Index
 	}
 
 
-	private async Task StartNewChat()
+    private async Task StartNewChat()
 	{
 		var response = await AgentClient.NewChat(UserService.GetAzureId());
 		if (!string.IsNullOrEmpty(response))
