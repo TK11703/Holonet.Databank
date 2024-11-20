@@ -3,9 +3,14 @@ using Microsoft.SemanticKernel;
 using System.ComponentModel;
 
 namespace Holonet.Databank.Application.AICapabilities.Plugins;
-public class WeatherPlugin(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+public class WeatherPlugin
 {
-	private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;	
+	private readonly IHttpClientFactory _httpClientFactory;
+
+	public WeatherPlugin(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+	{
+		_httpClientFactory = httpClientFactory;		
+	}
 
 	[KernelFunction("get_weather_forcast")]
 	[Description("Takes a latitude and longitude pair, representing a location, and returns a forecasted weather for that location for the requested number of days. The number of days is limited from one day in advance to up to sixteen..")]

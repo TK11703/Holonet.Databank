@@ -2,8 +2,6 @@
 using Holonet.Databank.Web.Clients;
 using Holonet.Databank.Web.Models;
 using Holonet.Databank.Web.Services;
-using Markdig;
-using Markdig.Extensions.AutoLinks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -56,7 +54,6 @@ public partial class Index
 		}
 	}
 
-
 	private async Task StartNewChat()
 	{
 		var response = await AgentClient.NewChat(UserService.GetAzureId());
@@ -93,8 +90,7 @@ public partial class Index
 			Model.Prompt = string.Empty;
 			if (!string.IsNullOrEmpty(result))
 			{
-                var pipeline = new MarkdownPipelineBuilder().UseAutoLinks(new AutoLinkOptions { OpenInNewWindow = true }).Build();
-                ChatResponses.Add(new ChatResponseModel() { Result = Markdown.ToHtml(markdown: result, pipeline: pipeline), Type = ChatResponseType.Agent });
+				ChatResponses.Add(new ChatResponseModel() { Result = result, Type = ChatResponseType.Agent });
 				shouldScroll = true;
 			}
 			else

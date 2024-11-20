@@ -1,6 +1,7 @@
 ﻿using Holonet.Databank.Application.AICapabilities;
 using Holonet.Databank.Core.Dtos;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 
@@ -22,9 +23,10 @@ public class NewChat : IEndpoint
 			{
 				return TypedResults.Problem("Failed to clear chat history");
 			}
-
-            var chatHistory = chatHistoryManager.GetOrCreateChatHistory(id.ToString());
-			ChatMessageContent? result = await chat.GetChatMessageContentAsync(chatHistory, kernel: kernel);
+			var chatHistory = chatHistoryManager.GetOrCreateChatHistory(id.ToString());
+			ChatMessageContent? result = await chat.GetChatMessageContentAsync(chatHistory,
+							  executionSettings: new OpenAIPromptExecutionSettings { Temperature = 0.8, TopP = 0.0, ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions },
+							  kernel: kernel);
 
 			if(result == null || string.IsNullOrEmpty(result.Content))
             {
