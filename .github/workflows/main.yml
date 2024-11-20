@@ -97,7 +97,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy to Azure Web App
-        id: deploy-to-webapp
+        id: deploy-to-api
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'Holonet-Api-Databank-8108'
@@ -120,9 +120,9 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy to Azure Function App
-        id: deploy-to-webapp
+        id: deploy-to-function
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'Holonet-FunctionApp-Databank-8108'
+          app-name: 'Holonet-Func-Databank-8108'
           slot-name: 'Production'
           package: ./publish
