@@ -15,17 +15,23 @@
 		{
 			@if (chatResponse.Type.Equals(ChatResponseType.User))
 			{
-				<div class="row mb-2 d-flex justify-content-end">
-					<div class="alert alert-primary col-10" role="alert">
+				<div class="mb-2 d-flex justify-content-end">					
+					<div class="alert alert-primary" role="alert">
 						@chatResponse.Result
+					</div>
+					<div class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 ms-3">
+						<svg class="icon"><use xlink:href="#icon-person"></use></svg>
 					</div>
 				</div>
 			}
 			@if (chatResponse.Type.Equals(ChatResponseType.Agent))
 			{
-				<div class="row mb-2">
-					<div class="alert alert-secondary col-10" role="alert">
-						@chatResponse.Result
+				<div class="mb-2 d-flex justify-content-start align-items-start">
+					<div class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+						<svg class="icon"><use xlink:href="#icon-robot"></use></svg>
+					</div>
+					<div class="alert alert-secondary" role="alert">
+						@((MarkupString)@chatResponse.Result)
 					</div>
 				</div>
 			}
