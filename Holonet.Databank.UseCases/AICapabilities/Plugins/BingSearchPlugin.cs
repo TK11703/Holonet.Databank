@@ -11,7 +11,7 @@ public class BingSearchPlugin(IHttpClientFactory httpClientFactory, IConfigurati
     private readonly string _endpoint = configuration["Bing:Endpoint"] ?? throw new MissingFieldException("Bing:Endpoint");
 
     [KernelFunction("bing_search")]
-    [Description("Executes a search on Bing. This is used when the user needs additional information. It simulates a query or search to another databank.")]
+    [Description("Executes a search on Bing. This is used when the user needs additional information. It simulates a query or search to another databank. The search result and source information is returned.")]
     [return: Description("A formatted response that contains details of the first search response. The details include the title, URL, brief result snippet, and the source of the data.")]
     public async Task<string> SearchSiteAsync(
         [Description("The address of the site that should be the focus of the Bing search.")] string site,

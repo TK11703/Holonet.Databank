@@ -16,7 +16,7 @@ public class HolonetSearchPlugin(ITextEmbeddingGenerationService textEmbeddingGe
     private readonly string _indexName = configuration["AzureAiSearch:Index"] ?? throw new MissingFieldException("AzureAiSearch:Index");
 
     [KernelFunction("holonet_search")]
-    [Description("Queries the Holonet mainframe for details on Star Wars characters, planets, species, and historical events.")]
+    [Description("Queries the Holonet mainframe for details on Star Wars characters, planets, species, historical events and includes the source of the data.")]
     [return: Description("A formatted response that contains details of the first response from the Holonet mainframe. The search result contains the details and the source of the data.")]
     public async Task<string> SearchAsync(string query)
     {
