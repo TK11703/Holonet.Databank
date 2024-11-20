@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Text.Json.Serialization;
-using Azure;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Models;
@@ -9,23 +8,16 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Embeddings;
 
 namespace Holonet.Databank.Application.AICapabilities.Plugins;
-public class HolonetSearchPlugin
+#pragma warning disable SKEXP0001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+public class HolonetSearchPlugin(ITextEmbeddingGenerationService textEmbeddingGenerationService, SearchIndexClient indexClient, IConfiguration configuration)
 {
-#pragma warning disable SKEXP0001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-    private readonly ITextEmbeddingGenerationService _textEmbeddingGenerationService;
-    private readonly SearchIndexClient _indexClient;
-    private readonly string _indexName;
-
-#pragma warning disable SKEXP0001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-    public HolonetSearchPlugin(ITextEmbeddingGenerationService textEmbeddingGenerationService, SearchIndexClient indexClient, IConfiguration configuration)
-    {
-        _textEmbeddingGenerationService = textEmbeddingGenerationService;
-        _indexClient = indexClient;
-        _indexName = configuration["AzureAiSearch:Index"] ?? throw new MissingFieldException("AzureAiSearch:Index");
-    }
+    private readonly ITextEmbeddingGenerationService _textEmbeddingGenerationService = textEmbeddingGenerationService;
+    private readonly SearchIndexClient _indexClient = indexClient;
+    private readonly string _indexName = configuration["AzureAiSearch:Index"] ?? throw new MissingFieldException("AzureAiSearch:Index");
 
     [KernelFunction("holonet_search")]
-    [Description("Search documents similar to the given query.")]
+    [Description("Queries the Holonet mainframe for details on Star Wars characters, planets, species, and historical events.")]
+    [return: Description("A formatted response that contains details of the first response from the Holonet mainframe. The search result contains the details and the source of the data.")]
     public async Task<string> SearchAsync(string query)
     {
         // Convert string query to vector
@@ -36,31 +28,39 @@ public class HolonetSearchPlugin
 
         // Configure request parameters
         VectorizedQuery vectorQuery = new(embedding);
-        vectorQuery.Fields.Add("contentVector");
+        vectorQuery.Fields.Add("text_vector");
 
         SearchOptions searchOptions = new() { VectorSearch = new() { Queries = { vectorQuery } } };
 
         // Perform search request
-        Response<SearchResults<IndexSchema>> response = await searchClient.SearchAsync<IndexSchema>(searchOptions);
+        SearchResults<IndexSchema> results = await searchClient.SearchAsync<IndexSchema>(searchOptions);
 
-        // Collect search results
-        await foreach (SearchResult<IndexSchema> result in response.Value.GetResultsAsync())
+        return await ProcessFirstResultAsync(results);
+    }
+
+    private static async Task<string> ProcessFirstResultAsync(SearchResults<IndexSchema> results)
+    {
+        string resultText = string.Empty;
+        List<SearchResult<IndexSchema>> resultList = new();
+        await foreach (SearchResult<IndexSchema> result in results.GetResultsAsync())
         {
-            return result.Document.Content; // Return text from first result
+            resultList.Add(result);
         }
-
-        return string.Empty;
+        if (resultList.Count > 0)
+        {
+            SearchResult<IndexSchema> result = resultList[0];
+            resultText = $"Details: {result.Document.Chunk}\nSource: Holonet Mainframe";
+        }
+        
+        return resultText;
     }
 
     private sealed class IndexSchema
     {
-        [JsonPropertyName("content")]
-        public string Content { get; set; } = string.Empty;
+        [JsonPropertyName("chunk")]
+        public string Chunk { get; set; } = string.Empty;
 
         [JsonPropertyName("title")]
         public string Title { get; set; } = string.Empty;
-
-        [JsonPropertyName("url")]
-        public string Url { get; set; } = string.Empty;
     }
 }
