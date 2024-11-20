@@ -84,6 +84,7 @@ public static class ScopedServicesExtension
             //kernelBuilder.Plugins.AddFromObject(new HolonetSearchPlugin(sp.GetRequiredService<ITextEmbeddingGenerationService>(), sp.GetRequiredService<SearchIndexClient>(), configuration), "HolonetSearchPlugin");
 
             kernelBuilder.Plugins.AddFromType<HolonetSearchPlugin>("HolonetSearchPlugin");
+            kernelBuilder.Plugins.AddFromObject(new BingSearchPlugin(sp.GetRequiredService<IHttpClientFactory>(), configuration), "BingSearchPlugin");
             return kernelBuilder.Build();
 		});
 
