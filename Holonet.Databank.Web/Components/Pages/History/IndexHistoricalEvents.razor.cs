@@ -5,6 +5,7 @@ using Holonet.Databank.Web.Clients;
 using Holonet.Databank.Web.Components.Shared;
 using Holonet.Databank.Web.Models;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace Holonet.Databank.Web.Components.Pages.History;
 
@@ -13,7 +14,9 @@ public partial class IndexHistoricalEvents
     private PageResult<HistoricalEventModel> ResultPage { get; set; } = default!;
 
     private PageRequest PageRequest { get; set; } = default!;
-	public AppModal Modal { get; set; } = default!;
+
+    private EditContext EditContext { get; set; } = default!;
+    public AppModal Modal { get; set; } = default!;
 	public int DeleteID { get; set; }
 
 	[Inject]
@@ -26,6 +29,7 @@ public partial class IndexHistoricalEvents
     {
 		await base.OnInitializedAsync();
 		PageRequest = GetInitialPageObject();
+        EditContext = new EditContext(PageRequest);
         await GetData();
     }
 
@@ -59,7 +63,13 @@ public partial class IndexHistoricalEvents
 		}
 	}
 
-	private async Task Sort(string sortField)
+    public async Task ClearFilter()
+    {
+        PageRequest.Filter = string.Empty;
+        await GetData();
+    }
+
+    private async Task Sort(string sortField)
     {
         if (PageRequest.SortBy == sortField)
         {

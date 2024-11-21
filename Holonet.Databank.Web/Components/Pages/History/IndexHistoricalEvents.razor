@@ -33,10 +33,13 @@
 										</Authorized>
 									</AuthorizeView>
 									<div class="col-auto">
-										<div class="input-group">
-											<input type="text" class="form-control" id="filterInput" placeholder="Filter by name" @bind-value=PageRequest.Filter>
-											<button class="btn btn-outline-secondary" type="button" id="button-addon2" title="Click to find." @onclick="FilterResults"><i class="bi bi-search"></i></button>
-										</div>
+										<EditForm EditContext="EditContext" OnValidSubmit="FilterResults">
+											<div class="input-group">
+												<input type="text" class="form-control" id="filterInput" placeholder="Filter by name" @bind-value=PageRequest.Filter>
+												<button class="btn btn-outline-secondary" type="submit" id="filterButton" title="Click to find."><svg class="icon"><use xlink:href="#icon-funnel"></use></svg></button>
+												<button class="btn btn-outline-secondary" type="button" id="clearFilterButton" title="Click to clear the filter." @onclick="ClearFilter"><svg class="icon"><use xlink:href="#icon-x-circle"></use></svg></button>
+											</div>
+										</EditForm>
 									</div>
 								</div>
 							</div>

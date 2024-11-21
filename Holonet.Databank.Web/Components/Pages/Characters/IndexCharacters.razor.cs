@@ -5,6 +5,8 @@ using Holonet.Databank.Web.Clients;
 using Holonet.Databank.Web.Components.Shared;
 using Holonet.Databank.Web.Models;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using System.Reflection;
 
 namespace Holonet.Databank.Web.Components.Pages.Characters;
 
@@ -14,7 +16,8 @@ public partial class IndexCharacters
 
 	private PageRequest PageRequest { get; set; } = default!;
 
-	public AppModal Modal { get; set; } = default!;
+    private EditContext EditContext { get; set; } = default!;
+    public AppModal Modal { get; set; } = default!;
 	public int DeleteID { get; set; }
 
 	[Inject]
@@ -26,8 +29,9 @@ public partial class IndexCharacters
 	protected override async Task OnInitializedAsync()
     {
 		await base.OnInitializedAsync();
-		PageRequest = GetInitialPageObject();
-		await GetData();
+        PageRequest = GetInitialPageObject();
+        EditContext = new EditContext(PageRequest);
+        await GetData();
     }
 
     private static PageRequest GetInitialPageObject()
@@ -47,6 +51,7 @@ public partial class IndexCharacters
     private async Task GetData()
     {
         ResultPage = await CharacterClient.GetAll(PageRequest);
+        StateHasChanged();
     }
 
 	protected async Task HandleDelete()
@@ -60,7 +65,14 @@ public partial class IndexCharacters
 		}
 	}
 
-	private async Task Sort(string sortField)
+    public async Task ClearFilter()
+    {
+        PageRequest.Filter = string.Empty;
+        await GetData();
+    }
+
+
+    private async Task Sort(string sortField)
     {
         if (PageRequest.SortBy == sortField)
         {

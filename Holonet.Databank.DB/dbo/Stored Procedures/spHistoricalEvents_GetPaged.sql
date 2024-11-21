@@ -27,7 +27,12 @@ BEGIN
 			From HistoricalEvents
 				WHERE [Active]=1;
 
-	SELECT @Total = Count(Id) FROM #TempResults;
+	SELECT @Total = Count(Id) 
+		FROM #TempResults
+		WHERE 
+		(@Search IS NULL or ([Name] LIKE '%' + @Search +'%' OR [Name] LIKE '%' + @Search +'%'))
+		AND 
+		((@Begin IS NULL AND @End IS NULL) or [UpdatedOn] BETWEEN @Begin AND @End);
 
 	SELECT Id, [Name], [DatePeriod], [Shard], [UpdatedOn]
 		FROM #TempResults 

@@ -29,7 +29,12 @@ BEGIN
 			From Characters as c inner join Planets as p on c.PlanetId = p.Id
 				WHERE c.[Active]=1;
 
-	SELECT @Total = Count(Id) FROM #TempResults;
+	SELECT @Total = Count(Id) 
+		FROM #TempResults
+		WHERE 
+		(@Search IS NULL or ([GivenName] LIKE '%' + @Search +'%' OR [FamilyName] LIKE '%' + @Search +'%' OR [PlanetName] LIKE '%' + @Search +'%'))
+		AND 
+		((@Begin IS NULL AND @End IS NULL) or [UpdatedOn] BETWEEN @Begin AND @End);
 
 	SELECT Id, [GivenName], [FamilyName], [PlanetId], [PlanetName], [Shard], [UpdatedOn]
 		FROM #TempResults 
