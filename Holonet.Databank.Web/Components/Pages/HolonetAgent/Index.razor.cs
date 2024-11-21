@@ -20,7 +20,7 @@ public partial class Index
 
 	private bool isLoading { get; set; } = false;
 
-    private EditContext editContext;
+    private EditContext EditContext { get; set; } = default!;
 
     public ChatRequestModel Model { get; set; } = new();
 
@@ -50,7 +50,7 @@ public partial class Index
 	protected async override Task OnInitializedAsync()
 	{
 		await base.OnInitializedAsync();
-        editContext = new EditContext(Model);
+        EditContext = new EditContext(Model);
         if (!IsUserAuthenticated)
 		{
 			ToastService.ShowError("You must be authenticated to use this feature.");

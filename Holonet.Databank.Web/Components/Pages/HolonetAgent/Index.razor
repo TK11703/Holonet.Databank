@@ -2,10 +2,10 @@
 @using Holonet.Databank.Web.Models
 @rendermode InteractiveServer
 
-<PageTitle>Holonet Agent</PageTitle>
+<PageTitle>HoloNet Agent</PageTitle>
 <CommonIcons />
 <SetHeader>
-	<h1>Holonet Agent</h1>
+	<h1>HoloNet Agent</h1>
 	<hr />
 </SetHeader>
 
@@ -45,9 +45,10 @@
 @if (ChatResponses == null || ChatResponses.Count().Equals(0))
 {
 	<div class="d-flex justify-content-center mt-3">
-		<div class="alert alert-info col-6" role="alert">
-			<h5>Connecting you with a Holonet Databank agent...</h5>
+		<div class="alert alert-secondary col-6 text-center" role="alert">
+			<h5>Connecting you with a HoloNet Databank agent...</h5>
 			<p>Please stand by..</p>
+			<WaitingIndicator HorizontalAlignment="WaitingIndicator.Alignment.Center" />
 		</div>
 		<a href="javascript:void(0);" @ref="lastItemRef"></a>
 	</div>
@@ -60,7 +61,7 @@
 <SetFooter>
 	<div class="card ms-1 me-3">
 		<div class="card-body">
-			<EditForm EditContext="editContext" OnValidSubmit="SendUserPrompt">
+			<EditForm EditContext="EditContext" OnValidSubmit="SendUserPrompt">
 				<DataAnnotationsValidator />
 				<ValidationSummary />
 				<div class="input-group">
