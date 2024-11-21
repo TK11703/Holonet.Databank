@@ -30,7 +30,7 @@ builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.Authentic
 });
 builder.Services.AddAuthorization(options =>
 {
-	AuthorizationPolicy defaultPolicy = new AuthorizationPolicyBuilder("Bearer")
+	AuthorizationPolicy defaultPolicy = new AuthorizationPolicyBuilder(OpenIdConnectDefaults.AuthenticationScheme)
         .RequireAuthenticatedUser()
 		.RequireRole(ApplicationRole.User)
         .Build();
