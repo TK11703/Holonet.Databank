@@ -71,12 +71,18 @@ public partial class ViewPlanet
 		{
 			Model.DataRecords = await PlanetClient.GetDataRecords(ID) ?? Enumerable.Empty<DataRecordModel>();
 			ToastService.ShowSuccess("New data record added successfully");
-			AddRecordModal.Close();
-			StateHasChanged();
-		}
+            ResetModal();
+        }
 	}
 
-	protected async Task HandleDelete()
+    protected void ResetModal()
+    {
+        RecordModel = new();
+        AddRecordModal.Close();
+        StateHasChanged();
+    }
+
+    protected async Task HandleDelete()
 	{
 		var completed = await PlanetClient.DeleteRecord(ID, DeleteID);
 		if (completed)

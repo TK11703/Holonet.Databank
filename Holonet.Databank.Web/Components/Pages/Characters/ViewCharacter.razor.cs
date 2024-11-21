@@ -69,12 +69,18 @@ public partial class ViewCharacter
 		{
 			Model.DataRecords = await CharacterClient.GetDataRecords(ID) ?? Enumerable.Empty<DataRecordModel>();
 			ToastService.ShowSuccess("New data record added successfully");
-			AddRecordModal.Close();
-			StateHasChanged();
-		}
+            ResetModal();
+        }
 	}
 
-	protected async Task HandleDelete()
+    protected void ResetModal()
+    {
+        RecordModel = new();
+        AddRecordModal.Close();
+        StateHasChanged();
+    }
+
+    protected async Task HandleDelete()
 	{
 		var completed = await CharacterClient.DeleteRecord(ID, DeleteID);
 		if (completed)

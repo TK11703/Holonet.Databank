@@ -70,12 +70,17 @@ public partial class ViewSpecies
 		{
 			Model.DataRecords = await SpeciesClient.GetDataRecords(ID) ?? Enumerable.Empty<DataRecordModel>();
 			ToastService.ShowSuccess("New data record added successfully");
-			AddRecordModal.Close();
-			StateHasChanged();
-		}
+			ResetModal();
+        }
 	}
+    protected void ResetModal()
+    {
+        RecordModel = new();
+        AddRecordModal.Close();
+        StateHasChanged();
+    }
 
-	protected async Task HandleDelete()
+    protected async Task HandleDelete()
 	{
 		var completed = await SpeciesClient.DeleteRecord(ID, DeleteID);
 		if (completed)

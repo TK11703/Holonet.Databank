@@ -71,12 +71,18 @@ public partial class ViewHistoricalEvent
 		{
 			Model.DataRecords = await HistoricalEventClient.GetDataRecords(ID) ?? Enumerable.Empty<DataRecordModel>();
 			ToastService.ShowSuccess("New data record added successfully");
-			AddRecordModal.Close();
-			StateHasChanged();
-		}
+            ResetModal();
+        }
 	}
 
-	protected async Task HandleDelete()
+    protected void ResetModal()
+    {
+        RecordModel = new();
+        AddRecordModal.Close();
+        StateHasChanged();
+    }
+
+    protected async Task HandleDelete()
 	{
 		var completed = await HistoricalEventClient.DeleteRecord(ID, DeleteID);
 		if (completed)
