@@ -5,12 +5,16 @@ using System.ComponentModel;
 namespace Holonet.Databank.Application.AICapabilities.Plugins;
 public class UtcPlugin
 {
-	private static readonly string DATETIMMEFORMAT = "MM-dd-yyyy HH:mm:ss";
+	protected UtcPlugin()
+    {
+    }
+
+    private static readonly string DATETIMMEFORMAT = "MM-dd-yyyy HH:mm:ss";
 
 	[KernelFunction("get_current_date_time_local")]
 	[Description("Gets the current date and time in local timezone")]
 	[return: Description("A string representing the current date and time of the local timezone")]
-	public async Task<string> GetCurrentDateTimeAsync()
+	public static string GetCurrentDateTime()
 	{
 		return DateTime.Now.ToString(DATETIMMEFORMAT);
 	}
@@ -18,7 +22,7 @@ public class UtcPlugin
 	[KernelFunction("get_current_date_time_utc")]
 	[Description("Gets the current date and time in UTC")]
 	[return: Description("A string representing the current UTC date and time")]
-	public async Task<string> GetCurrentDateTimeUTCAsync()
+	public static string GetCurrentDateTimeUTC()
 	{
 		return DateTime.UtcNow.ToString(DATETIMMEFORMAT);
 	}
@@ -26,7 +30,7 @@ public class UtcPlugin
 	[KernelFunction("get_year")]
 	[Description("Gets the year for a date parameter.")]
 	[return: Description("An integer value representing the year of the date parameter")]
-	public static async Task<int> GetYearAsync(DateTime? dateObj)
+	public static int GetYear(DateTime? dateObj)
 	{
 		if (dateObj == null)
 		{
@@ -38,7 +42,7 @@ public class UtcPlugin
 	[KernelFunction("get_month")]
 	[Description("Gets the month for a date parameter.")]
 	[return: Description("An integer value representing the month of the date parameter")]
-	public static async Task<int> GetMonthAsync(DateTime? dateObj)
+	public static int GetMonth(DateTime? dateObj)
 	{
 		if (dateObj == null)
 		{
@@ -50,7 +54,7 @@ public class UtcPlugin
 	[KernelFunction("get_day_of_week")]
 	[Description("Gets the day of the week for a date parameter.")]
 	[return: Description("An string value representing the day of the week from the date parameter")]
-	public static async Task<string> GetDayOfWeekAsync(DateTime? dateObj)
+	public static string GetDayOfWeek(DateTime? dateObj)
 	{
 		if (dateObj == null)
 		{

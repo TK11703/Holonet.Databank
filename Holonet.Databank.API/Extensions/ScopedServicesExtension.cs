@@ -79,7 +79,7 @@ public static class ScopedServicesExtension
 #pragma warning restore SKEXP0020 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             kernelBuilder.Plugins.AddFromType<UtcPlugin>("UTCTime");
             kernelBuilder.Plugins.AddFromObject(new GeocodingPlugin(sp.GetRequiredService<IHttpClientFactory>(), configuration), "GeocodingPlugin");
-            kernelBuilder.Plugins.AddFromObject(new WeatherPlugin(sp.GetRequiredService<IHttpClientFactory>(), configuration), "WeatherPlugin");
+            kernelBuilder.Plugins.AddFromObject(new WeatherPlugin(sp.GetRequiredService<IHttpClientFactory>()), "WeatherPlugin");
 #pragma warning restore SKEXP0020 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             //kernelBuilder.Plugins.AddFromObject(new HolonetSearchPlugin(sp.GetRequiredService<ITextEmbeddingGenerationService>(), sp.GetRequiredService<SearchIndexClient>(), configuration), "HolonetSearchPlugin");
 

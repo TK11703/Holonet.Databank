@@ -10,7 +10,6 @@ var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
     .ConfigureAppConfiguration((context, config) =>
     {
-        //config.AddJsonFile("local.settings.json");
         config.AddJsonFile(Path.Combine(context.HostingEnvironment.ContentRootPath, $"local.settings.json"), optional: true, reloadOnChange: false);
         config.AddEnvironmentVariables();
         if (context.HostingEnvironment.IsDevelopment())
