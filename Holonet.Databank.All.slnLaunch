@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Web Projects",
+    "Projects": [
+      {
+        "Path": "Holonet.Databank.API\\Holonet.Databank.API.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Holonet.Databank.Web\\Holonet.Databank.Web.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
