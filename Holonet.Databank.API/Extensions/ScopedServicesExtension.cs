@@ -10,6 +10,7 @@ using Azure;
 using Azure.Search.Documents.Indexes;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.SemanticKernel.Embeddings;
+using Microsoft.Extensions.Azure;
 
 
 namespace Holonet.Databank.API.Extensions;
@@ -71,13 +72,29 @@ public static class ScopedServicesExtension
 
             kernelBuilder.Services.AddSingleton<IConfiguration>(configuration);
 
-            kernelBuilder.AddAzureOpenAIChatCompletion( 
+			kernelBuilder.AddAzureOpenAIChatCompletion(
 				deploymentName: configuration.GetValue<string>("AzureOpenAi:Model")!,
 				endpoint: configuration.GetValue<string>("AzureOpenAi:Endpoint")!,
 				apiKey: configuration.GetValue<string>("AzureOpenAi:ApiKey")!
 				);
 
-            
+			kernelBuilder.Services.AddSingleton<SearchIndexClient>(sp =>
+            {
+                var endpoint = new Uri(configuration.GetValue<string>("AzureAiSearch:Endpoint")!);
+                var credential = new AzureKeyCredential(configuration.GetValue<string>("AzureAiSearch:ApiKey")!);
+                return new SearchIndexClient(endpoint, credential);
+            });
+
+
+#pragma warning disable SKEXP0010 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+            kernelBuilder.AddAzureOpenAITextEmbeddingGeneration(
+                deploymentName: configuration.GetValue<string>("AzureOpenAi:EmbeddingModel")!,
+                endpoint: configuration.GetValue<string>("AzureOpenAi:Endpoint")!,
+                apiKey: configuration.GetValue<string>("AzureOpenAi:ApiKey")!
+                );
+#pragma warning restore SKEXP0010 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+
+
 #pragma warning disable SKEXP0020 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             kernelBuilder.AddAzureAISearchVectorStore();
 #pragma warning disable SKEXP0020 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
