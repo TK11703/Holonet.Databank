@@ -10,7 +10,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.API", "Hol
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.Core", "Holonet.Databank.Core\Holonet.Databank.Core.csproj", "{E06CC285-8C91-45A8-981E-3A806C214F11}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.Application", "Holonet.Databank.UseCases\Holonet.Databank.Application.csproj", "{5908ED69-6B5F-4218-80DB-C537F26A8448}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.Application", "Holonet.Databank.Application\Holonet.Databank.Application.csproj", "{5908ED69-6B5F-4218-80DB-C537F26A8448}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.Infrastructure", "Holonet.Databank.Infrastructure\Holonet.Databank.Infrastructure.csproj", "{DD20A8C4-6880-432A-BB44-0EB1778E197D}"
 EndProject

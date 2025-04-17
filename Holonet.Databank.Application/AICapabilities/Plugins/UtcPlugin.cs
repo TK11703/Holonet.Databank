@@ -5,7 +5,7 @@ using System.ComponentModel;
 namespace Holonet.Databank.Application.AICapabilities.Plugins;
 public class UtcPlugin
 {
-	protected UtcPlugin()
+	public UtcPlugin()
     {
     }
 
