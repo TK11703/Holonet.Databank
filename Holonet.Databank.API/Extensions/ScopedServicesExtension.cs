@@ -9,6 +9,8 @@ using Holonet.Databank.Infrastructure.Health;
 using Azure;
 using Azure.Search.Documents.Indexes;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.SemanticKernel.Embeddings;
+
 
 namespace Holonet.Databank.API.Extensions;
 
@@ -48,40 +50,45 @@ public static class ScopedServicesExtension
 
 		services.AddHttpClient();
 
-		services.AddTransient<Kernel>(sp =>
+#pragma warning disable SKEXP0010 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+        services.AddAzureOpenAITextEmbeddingGeneration(
+            deploymentName: configuration.GetValue<string>("AzureOpenAi:EmbeddingModel")!,
+            endpoint: configuration.GetValue<string>("AzureOpenAi:Endpoint")!,
+            apiKey: configuration.GetValue<string>("AzureOpenAi:ApiKey")!
+            );
+#pragma warning restore SKEXP0010 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+
+        services.AddSingleton<SearchIndexClient>(sp =>
+                new SearchIndexClient(
+                    endpoint: new Uri(configuration.GetValue<string>("AzureAiSearch:Endpoint")!),
+                    credential: new AzureKeyCredential(configuration.GetValue<string>("AzureAiSearch:ApiKey")!)
+                    )
+                );
+
+        services.AddTransient<Kernel>(sp =>
 		{
 			var kernelBuilder = Kernel.CreateBuilder();
+
             kernelBuilder.Services.AddSingleton<IConfiguration>(configuration);
+
             kernelBuilder.AddAzureOpenAIChatCompletion( 
 				deploymentName: configuration.GetValue<string>("AzureOpenAi:Model")!,
 				endpoint: configuration.GetValue<string>("AzureOpenAi:Endpoint")!,
 				apiKey: configuration.GetValue<string>("AzureOpenAi:ApiKey")!
 				);
 
-#pragma warning disable SKEXP0010 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-            kernelBuilder.Services.AddAzureOpenAITextEmbeddingGeneration(
-                deploymentName: configuration.GetValue<string>("AzureOpenAi:EmbeddingModel")!,
-                endpoint: configuration.GetValue<string>("AzureOpenAi:Endpoint")!,
-                apiKey: configuration.GetValue<string>("AzureOpenAi:ApiKey")!
-				);
-#pragma warning restore SKEXP0010 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-
-            kernelBuilder.Services.AddSingleton<SearchIndexClient>(sp => 
-				new SearchIndexClient(
-					endpoint: new Uri(configuration.GetValue<string>("AzureAiSearch:Endpoint")!),
-					credential: new AzureKeyCredential(configuration.GetValue<string>("AzureAiSearch:ApiKey")!)
-					)
-				);
+            
 #pragma warning disable SKEXP0020 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             kernelBuilder.AddAzureAISearchVectorStore();
 #pragma warning disable SKEXP0020 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
 
-#pragma warning restore SKEXP0020 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             kernelBuilder.Plugins.AddFromType<UtcPlugin>("UTCTime");
             kernelBuilder.Plugins.AddFromObject(new GeocodingPlugin(sp.GetRequiredService<IHttpClientFactory>(), configuration), "GeocodingPlugin");
             kernelBuilder.Plugins.AddFromObject(new WeatherPlugin(sp.GetRequiredService<IHttpClientFactory>()), "WeatherPlugin");
-#pragma warning restore SKEXP0020 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+
+#pragma warning disable SKEXP0001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             //kernelBuilder.Plugins.AddFromObject(new HolonetSearchPlugin(sp.GetRequiredService<ITextEmbeddingGenerationService>(), sp.GetRequiredService<SearchIndexClient>(), configuration), "HolonetSearchPlugin");
+#pragma warning restore SKEXP0001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
 
             kernelBuilder.Plugins.AddFromType<HolonetSearchPlugin>("HolonetSearchPlugin");
             kernelBuilder.Plugins.AddFromObject(new BingSearchPlugin(sp.GetRequiredService<IHttpClientFactory>(), configuration), "BingSearchPlugin");
