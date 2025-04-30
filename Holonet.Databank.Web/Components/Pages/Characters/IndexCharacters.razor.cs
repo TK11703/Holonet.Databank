@@ -12,7 +12,7 @@ namespace Holonet.Databank.Web.Components.Pages.Characters;
 
 public partial class IndexCharacters
 {
-    private PageResult<CharacterModel> ResultPage { get; set; } = default!;
+    private PageResult<CharacterViewingModel> ResultPage { get; set; } = default!;
 
 	private PageRequest PageRequest { get; set; } = default!;
 
@@ -114,7 +114,7 @@ public partial class IndexCharacters
         await GetData();
 	}
 
-	private RenderFragment<Models.CharacterModel> CharacterIdentification = character => builder =>
+	private RenderFragment<Models.CharacterViewingModel> CharacterIdentification = character => builder =>
 	{
 		builder.OpenElement(0, "dl");
 		builder.AddAttribute(1, "class", "row");

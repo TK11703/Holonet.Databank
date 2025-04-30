@@ -11,7 +11,7 @@ namespace Holonet.Databank.Web.Components.Pages.Species;
 
 public partial class IndexSpecies
 {
-    private PageResult<SpeciesModel> ResultPage { get; set; } = default!;
+    private PageResult<SpeciesViewingModel> ResultPage { get; set; } = default!;
 
     private PageRequest PageRequest { get; set; } = default!;
 	public AppModal Modal { get; set; } = default!;
@@ -110,7 +110,7 @@ public partial class IndexSpecies
 		await GetData();
 	}
 
-	private RenderFragment<Models.SpeciesModel> SpeciesIdentification = species => builder =>
+	private RenderFragment<Models.SpeciesViewingModel> SpeciesIdentification = species => builder =>
 	{
 		builder.OpenElement(0, "dl");
 		builder.AddAttribute(1, "class", "row");

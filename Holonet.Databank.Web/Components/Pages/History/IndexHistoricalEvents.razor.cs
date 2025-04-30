@@ -11,7 +11,7 @@ namespace Holonet.Databank.Web.Components.Pages.History;
 
 public partial class IndexHistoricalEvents
 {
-    private PageResult<HistoricalEventModel> ResultPage { get; set; } = default!;
+    private PageResult<HistoricalEventViewingModel> ResultPage { get; set; } = default!;
 
     private PageRequest PageRequest { get; set; } = default!;
 
@@ -111,7 +111,7 @@ public partial class IndexHistoricalEvents
 		await GetData();
 	}
 
-	private RenderFragment<Models.HistoricalEventModel> HistoricalEventIdentification = historicalEvent => builder =>
+	private RenderFragment<Models.HistoricalEventViewingModel> HistoricalEventIdentification = historicalEvent => builder =>
 	{
 		builder.OpenElement(0, "dl");
 		builder.AddAttribute(1, "class", "row");

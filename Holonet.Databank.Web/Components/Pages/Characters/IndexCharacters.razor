@@ -84,10 +84,10 @@
 									</td>
 									<td>@characterModel.FamilyName</td>
 									<td>
-										@if (!string.IsNullOrEmpty(@characterModel.Shard))
+										@if (!string.IsNullOrEmpty(@characterModel.LatestShard))
 										{
-											<a class="btn btn-link btn-sm" href="@characterModel.Shard" target="_blank" title="Click to view the source details.">
-												<i class="bi bi-link"></i> @characterModel.Shard
+											<a class="btn btn-link btn-sm" href="@characterModel.LatestShard" target="_blank" title="Click to view the source details.">
+												<i class="bi bi-link"></i> @characterModel.LatestShard
 											</a>
 										}
 									</td>

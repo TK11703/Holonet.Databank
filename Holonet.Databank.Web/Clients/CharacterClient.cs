@@ -50,7 +50,7 @@ public sealed class CharacterClient : ClientBase
 		return default;
 	}
 
-	public async Task<PageResult<CharacterModel>> GetAll(PageRequest pagedRequest)
+	public async Task<PageResult<CharacterViewingModel>> GetAll(PageRequest pagedRequest)
 	{
 		if (base.RequiresBearToken())
 		{
@@ -72,12 +72,12 @@ public sealed class CharacterClient : ClientBase
 			var resultDto = await response.Content.ReadFromJsonAsync<PageResultDto<CharacterDto>>();
 			if (resultDto != null)
 			{
-				var results = resultDto.ToPageResult<CharacterDto, CharacterModel>();
-				results.Collection = resultDto.Collection.Select(characterDto => characterDto.ToCharacterModel());
+				var results = resultDto.ToPageResult<CharacterDto, CharacterViewingModel>();
+				results.Collection = resultDto.Collection.Select(characterDto => characterDto.ToCharacterViewingModel());
 				return results;
 			}
 		}
-		return new PageResult<CharacterModel>()
+		return new PageResult<CharacterViewingModel>()
 		{
 			Start = 0,
 			PageSize = pagedRequest.PageSize,

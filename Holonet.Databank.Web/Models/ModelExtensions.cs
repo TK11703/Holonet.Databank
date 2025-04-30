@@ -55,7 +55,8 @@ public static class ModelExtensions
 		return new CreateRecordDto
 		(
 			record.Data,
-			record.CharacterId,
+            record.Shard ?? string.Empty,
+            record.CharacterId,
 			record.HistoricalEventId,
 			record.PlanetId,
 			record.SpeciesId,			
@@ -69,7 +70,8 @@ public static class ModelExtensions
 		{
 			Id = record.Id,
 			Data = record.Data,
-			CharacterId = record.CharacterId,
+            Shard = record.Shard,
+            CharacterId = record.CharacterId,
 			HistoricalEventId = record.HistoricalEventId,
 			PlanetId = record.PlanetId,
 			SpeciesId = record.SpeciesId,
@@ -84,7 +86,6 @@ public static class ModelExtensions
 		(
 			character.GivenName,
 			character.FamilyName,
-			character.Shard,
 			character.BirthDate,
 			character.PlanetId,
 			character.SpeciesIds,
@@ -100,7 +101,6 @@ public static class ModelExtensions
 			character.Id,
 			character.GivenName,
 			character.FamilyName,
-			character.Shard,
 			character.BirthDate,
 			character.PlanetId,
             character.SpeciesIds,
@@ -116,7 +116,6 @@ public static class ModelExtensions
 			Id = character.Id,
 			GivenName = character.GivenName,
 			FamilyName = character.FamilyName,
-			Shard = character.Shard,
 			BirthDate = character.BirthDate,
 			PlanetId = character.Planet?.Id,
 			Planet = character.Planet?.ToPlanetModel(),
@@ -129,12 +128,25 @@ public static class ModelExtensions
 		};
 	}
 
-	public static CreatePlanetDto ToCreatePlanetDto(this PlanetModel planet)
+    public static CharacterViewingModel ToCharacterViewingModel(this CharacterDto character)
+    {
+        return new CharacterViewingModel()
+        {
+            Id = character.Id,
+            GivenName = character.GivenName,
+            FamilyName = character.FamilyName,
+            LatestShard = character.DataRecords.OrderByDescending(x => x.UpdatedOn).FirstOrDefault()?.Shard ?? string.Empty,
+            PlanetId = character.Planet?.Id,
+            Planet = character.Planet?.ToPlanetModel(),
+            UpdatedOn = character.UpdatedOn
+        };
+    }
+
+    public static CreatePlanetDto ToCreatePlanetDto(this PlanetModel planet)
 	{
 		return new CreatePlanetDto
 		(
 			planet.Name,
-			planet.Shard,
 			planet.Aliases.Select(alias => alias.Name),
 			AzureId: planet.UpdatedBy?.AzureId ?? Guid.Empty
 		);
@@ -146,7 +158,6 @@ public static class ModelExtensions
 		(
 			planet.Id,
 			planet.Name,
-			planet.Shard,
 			planet.Aliases.Select(alias => alias.Name),
 			AzureId: planet.UpdatedBy?.AzureId ?? Guid.Empty
 		);
@@ -158,7 +169,6 @@ public static class ModelExtensions
 		{
 			Id = planet.Id,
 			Name = planet.Name,
-			Shard = planet.Shard,
 			Aliases = planet.Aliases.Select(alias => alias.ToAliasModel()).ToList(),
 			DataRecords = planet.DataRecords.Select(record => record.ToDataRecordModel()).ToList(),
 			UpdatedBy = planet.UpdatedBy?.ToAuthorModel(),
@@ -166,12 +176,22 @@ public static class ModelExtensions
 		};
 	}
 
+    public static PlanetViewingModel ToPlanetViewingModel(this PlanetDto planet)
+    {
+        return new PlanetViewingModel()
+        {
+            Id = planet.Id,
+            Name = planet.Name,
+            LatestShard = planet.DataRecords.OrderByDescending(x => x.UpdatedOn).FirstOrDefault()?.Shard ?? string.Empty,           
+            UpdatedOn = planet.UpdatedOn
+        };
+    }
+
     public static CreateSpeciesDto ToCreateSpeciesDto(this SpeciesModel species)
     {
         return new CreateSpeciesDto
         (
             species.Name,
-            species.Shard,
 			species.Aliases.Select(alias => alias.Name),
 			AzureId: species.UpdatedBy?.AzureId ?? Guid.Empty
 		);
@@ -183,7 +203,6 @@ public static class ModelExtensions
         (
             species.Id,
             species.Name,
-            species.Shard,
 			species.Aliases.Select(alias => alias.Name),
 			AzureId: species.UpdatedBy?.AzureId ?? Guid.Empty
 		);
@@ -195,7 +214,6 @@ public static class ModelExtensions
         {
             Id = species.Id,
             Name = species.Name,
-            Shard = species.Shard,
 			Aliases = species.Aliases.Select(alias => alias.ToAliasModel()).ToList(),
 			DataRecords = species.DataRecords.Select(record => record.ToDataRecordModel()).ToList(),
 			UpdatedBy = species.UpdatedBy?.ToAuthorModel(),
@@ -203,12 +221,22 @@ public static class ModelExtensions
 		};
     }
 
+    public static SpeciesViewingModel ToSpeciesViewingModel(this SpeciesDto species)
+    {
+        return new SpeciesViewingModel()
+        {
+            Id = species.Id,
+            Name = species.Name,
+            LatestShard = species.DataRecords.OrderByDescending(x => x.UpdatedOn).FirstOrDefault()?.Shard ?? string.Empty,
+            UpdatedOn = species.UpdatedOn
+        };
+    }
+
     public static CreateHistoricalEventDto ToCreateHistoricalEventDto(this HistoricalEventModel historicalEvent)
 	{
 		return new CreateHistoricalEventDto
 		(
 			Name: historicalEvent.Name,
-			Shard: historicalEvent.Shard,
 			DatePeriod: historicalEvent.DatePeriod,
 			PlanetIds: historicalEvent.PlanetIds,
 			CharacterIds: historicalEvent.CharacterIds,
@@ -223,7 +251,6 @@ public static class ModelExtensions
 		(
 			Id: historicalEvent.Id,
 			Name: historicalEvent.Name,
-			Shard: historicalEvent.Shard,
 			DatePeriod: historicalEvent.DatePeriod,
 			PlanetIds: historicalEvent.PlanetIds,
 			CharacterIds: historicalEvent.CharacterIds,
@@ -238,7 +265,6 @@ public static class ModelExtensions
 		{
 			Id = historicalEventDto.Id,
 			Name = historicalEventDto.Name,
-			Shard = historicalEventDto.Shard,
 			DatePeriod = historicalEventDto.DatePeriod,
 			PlanetIds = historicalEventDto.Planets.Select(p => p.Id).ToList(),
 			Planets = historicalEventDto.Planets.Select(p=>p.ToPlanetModel()),
@@ -250,4 +276,20 @@ public static class ModelExtensions
 			UpdatedOn = historicalEventDto.UpdatedOn
 		};
 	}
+
+    public static HistoricalEventViewingModel ToHistoricalEventViewingModel(this HistoricalEventDto historicalEventDto)
+    {
+        return new HistoricalEventViewingModel()
+        {
+            Id = historicalEventDto.Id,
+            Name = historicalEventDto.Name,
+            DatePeriod = historicalEventDto.DatePeriod,
+            PlanetIds = historicalEventDto.Planets.Select(p => p.Id).ToList(),
+            Planets = historicalEventDto.Planets.Select(p => p.ToPlanetModel()),
+            CharacterIds = historicalEventDto.Characters.Select(c => c.Id).ToList(),
+            Characters = historicalEventDto.Characters.Select(c => c.ToCharacterModel()),
+            LatestShard = historicalEventDto.DataRecords.OrderByDescending(x => x.UpdatedOn).FirstOrDefault()?.Shard ?? string.Empty,
+            UpdatedOn = historicalEventDto.UpdatedOn
+        };
+    }
 }

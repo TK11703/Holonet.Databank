@@ -111,10 +111,10 @@
 										<td>Unknown</td>
 									}
 									<td>
-										@if (!string.IsNullOrEmpty(@historicalEventModel.Shard))
+										@if (!string.IsNullOrEmpty(@historicalEventModel.LatestShard))
 										{
-											<a class="btn btn-link btn-sm" href="@historicalEventModel.Shard" target="_blank" title="Click to view the source details.">
-												<i class="bi bi-link"></i> @historicalEventModel.Shard
+											<a class="btn btn-link btn-sm" href="@historicalEventModel.LatestShard" target="_blank" title="Click to view the source details.">
+												<i class="bi bi-link"></i> @historicalEventModel.LatestShard
 											</a>
 										}
 									</td>

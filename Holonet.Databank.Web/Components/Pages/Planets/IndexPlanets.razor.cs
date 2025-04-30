@@ -12,7 +12,7 @@ namespace Holonet.Databank.Web.Components.Pages.Planets;
 
 public partial class IndexPlanets
 {
-    private PageResult<PlanetModel> ResultPage { get; set; } = default!;
+    private PageResult<PlanetViewingModel> ResultPage { get; set; } = default!;
 
     private PageRequest PageRequest { get; set; } = default!;
 	public AppModal Modal { get; set; } = default!;
@@ -112,7 +112,7 @@ public partial class IndexPlanets
 		await GetData();
 	}
 
-	private RenderFragment<Models.PlanetModel> PlanetIdentification = planet => builder =>
+	private RenderFragment<Models.PlanetViewingModel> PlanetIdentification = planet => builder =>
 	{
 		builder.OpenElement(0, "dl");
 		builder.AddAttribute(1, "class", "row");

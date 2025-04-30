@@ -50,7 +50,7 @@ public sealed class PlanetClient : ClientBase
 		return default;
 	}
 
-	public async Task<PageResult<PlanetModel>> GetAll(PageRequest pagedRequest)
+	public async Task<PageResult<PlanetViewingModel>> GetAll(PageRequest pagedRequest)
 	{
 		if (base.RequiresBearToken())
 		{
@@ -72,13 +72,13 @@ public sealed class PlanetClient : ClientBase
 			var resultDto = await response.Content.ReadFromJsonAsync<PageResultDto<PlanetDto>>();
 			if (resultDto != null)
 			{
-				var results = resultDto.ToPageResult<PlanetDto, PlanetModel>();
-				results.Collection = resultDto.Collection.Select(planetDto => planetDto.ToPlanetModel());
+				var results = resultDto.ToPageResult<PlanetDto, PlanetViewingModel>();
+				results.Collection = resultDto.Collection.Select(planetDto => planetDto.ToPlanetViewingModel());
 				return results;
 			}
 		}
 
-		return new PageResult<PlanetModel>()
+		return new PageResult<PlanetViewingModel>()
 		{
 			Start = 0,
 			PageSize = pagedRequest.PageSize,

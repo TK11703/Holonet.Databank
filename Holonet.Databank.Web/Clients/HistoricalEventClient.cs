@@ -51,7 +51,7 @@ public sealed class HistoricalEventClient : ClientBase
 		return default;
 	}
 
-	public async Task<PageResult<HistoricalEventModel>> GetAll(PageRequest pagedRequest)
+	public async Task<PageResult<HistoricalEventViewingModel>> GetAll(PageRequest pagedRequest)
 	{
 		if (base.RequiresBearToken())
 		{
@@ -73,13 +73,13 @@ public sealed class HistoricalEventClient : ClientBase
 			var resultDto = await response.Content.ReadFromJsonAsync<PageResultDto<HistoricalEventDto>>();
 			if (resultDto != null)
 			{
-				var results = resultDto.ToPageResult<HistoricalEventDto, HistoricalEventModel>();
-				results.Collection = resultDto.Collection.Select(historicalEventDto => historicalEventDto.ToHistoricalEventModel());
+				var results = resultDto.ToPageResult<HistoricalEventDto, HistoricalEventViewingModel>();
+				results.Collection = resultDto.Collection.Select(historicalEventDto => historicalEventDto.ToHistoricalEventViewingModel());
 				return results;
 			}
 		}
 		
-		return new PageResult<HistoricalEventModel>()
+		return new PageResult<HistoricalEventViewingModel>()
 		{
 			Start = 0,
 			PageSize = pagedRequest.PageSize,

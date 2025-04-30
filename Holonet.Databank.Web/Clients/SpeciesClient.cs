@@ -50,7 +50,7 @@ public sealed class SpeciesClient : ClientBase
 		return default;
 	}
 
-	public async Task<PageResult<SpeciesModel>> GetAll(PageRequest pagedRequest)
+	public async Task<PageResult<SpeciesViewingModel>> GetAll(PageRequest pagedRequest)
 	{
 		if (base.RequiresBearToken())
 		{
@@ -73,13 +73,13 @@ public sealed class SpeciesClient : ClientBase
 			var resultDto = await response.Content.ReadFromJsonAsync<PageResultDto<SpeciesDto>>();
 			if (resultDto != null)
 			{
-				var results = resultDto.ToPageResult<SpeciesDto, SpeciesModel>();
-				results.Collection = resultDto.Collection.Select(speciesDto => speciesDto.ToSpeciesModel());
+				var results = resultDto.ToPageResult<SpeciesDto, SpeciesViewingModel>();
+				results.Collection = resultDto.Collection.Select(speciesDto => speciesDto.ToSpeciesViewingModel());
 				return results;
 			}
 		}
 
-		return new PageResult<SpeciesModel>()
+		return new PageResult<SpeciesViewingModel>()
 		{
 			Start = 0,
 			PageSize = pagedRequest.PageSize,
