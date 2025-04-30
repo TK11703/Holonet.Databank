@@ -13,8 +13,6 @@ public class UpdateSpeciesRequestDtoValidator : AbstractValidator<UpdateSpeciesD
 			.NotEmpty().WithMessage("Name is required.")
 			.Length(2, 150).WithMessage("Name must be no more than 150 characters in length.");
 
-		RuleFor(x => x.Shard)
-			.Length(0, 500).WithMessage("Shard must be no more than 500 characters in length.");
 
 		RuleForEach(x => x.Aliases)
 			.Must(item => item.Length <= 150)

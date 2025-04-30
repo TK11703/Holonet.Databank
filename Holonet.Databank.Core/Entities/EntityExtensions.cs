@@ -27,7 +27,8 @@ public static class EntityExtensions
 		(
 			record.Id,
 			record.Data,
-			record.CharacterId,
+			record.Shard ?? string.Empty,
+            record.CharacterId,
 			record.PlanetId,
 			record.SpeciesId,
 			record.HistoricalEventId,
@@ -53,7 +54,6 @@ public static class EntityExtensions
 		(
 			planet.Id,
 			planet.Name,
-			planet.Shard,
 			planet.Aliases.Select(alias => alias.ToDto()),
 			planet.DataRecords.Select(record => record.ToDto()),
 			planet.UpdatedBy?.ToDto(),
@@ -67,7 +67,6 @@ public static class EntityExtensions
 		(
 			species.Id,
 			species.Name,
-			species.Shard,
 			species.Aliases.Select(alias => alias.ToDto()),
 			species.DataRecords.Select(record => record.ToDto()),
 			species.UpdatedBy?.ToDto(),
@@ -82,7 +81,6 @@ public static class EntityExtensions
 			historicalEvent.Id,
 			historicalEvent.Name,
 			historicalEvent.DatePeriod,
-			historicalEvent.Shard,
 			historicalEvent.Characters.Select(character => character.ToDto()),
 			historicalEvent.Planets.Select(planet => planet.ToDto()),
 			historicalEvent.Aliases.Select(alias => alias.ToDto()),
@@ -99,7 +97,6 @@ public static class EntityExtensions
 			character.Id,
 			character.GivenName,
 			character.FamilyName,
-			character.Shard,
 			character.BirthDate,
 			character.Planet?.ToDto(),
 			character.Species.Select(species => species.ToDto()),

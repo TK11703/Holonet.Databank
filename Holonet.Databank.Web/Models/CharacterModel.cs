@@ -13,10 +13,6 @@ public class CharacterModel
 	[StringLength(150, ErrorMessage = "Family name can only be {1} characters in length.")]
 	public string? FamilyName { get; set; } = string.Empty;
 
-	[Url]
-	[StringLength(500, ErrorMessage = "Shard can only be {1} characters in length.")]
-	public string? Shard { get; set; }
-
 	[StringLength(200)]
 	public string? BirthDate
 	{

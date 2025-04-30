@@ -70,7 +70,6 @@ public class CharacterRepository(ISqlDataAccess dataAccess) : ICharacterReposito
 		p.Add(name: "@GivenName", itemModel.GivenName);
 		p.Add(name: "@FamilyName", itemModel.FamilyName);
 		p.Add(name: "@BirthDate", itemModel.BirthDate);
-		p.Add(name: "@Shard", itemModel.Shard);
 		p.Add(name: "@PlanetId", itemModel.PlanetId);
 		p.Add(name: "@AzureAuthorId", itemModel.UpdatedBy.AzureId);
 		p.Add(name: "@Id", value: 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
@@ -88,7 +87,6 @@ public class CharacterRepository(ISqlDataAccess dataAccess) : ICharacterReposito
 		p.Add(name: "@GivenName", itemModel.GivenName);
 		p.Add(name: "@FamilyName", itemModel.FamilyName);
 		p.Add(name: "@BirthDate", itemModel.BirthDate);
-		p.Add(name: "@Shard", itemModel.Shard);
 		p.Add(name: "@PlanetId", itemModel.PlanetId);
 		p.Add(name: "@AzureAuthorId", itemModel.UpdatedBy.AzureId);
 		p.Add(name: "@Output", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);

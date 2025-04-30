@@ -6,7 +6,6 @@ public record HistoricalEventDto(
 	int Id,
 	string Name,
 	string? DatePeriod,
-	string? Shard,
 	IEnumerable<CharacterDto> Characters,
 	IEnumerable<PlanetDto> Planets,
 	IEnumerable<AliasDto> Aliases,

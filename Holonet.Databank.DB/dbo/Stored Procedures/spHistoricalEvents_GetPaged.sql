@@ -19,13 +19,23 @@ BEGIN
 		[DatePeriod] nvarchar(200),
 		[Shard] nvarchar(500),
 		[UpdatedOn] datetime
-	)
+	);
 
 	--Populate table with content
+	WITH LatestRecords AS (
+		SELECT 
+			HistoricalEventId,
+			Shard,
+			ROW_NUMBER() OVER (PARTITION BY HistoricalEventId ORDER BY UpdatedOn DESC) as rn
+		FROM DataRecords
+		WHERE Shard IS NOT NULL
+	)
+
 	INSERT INTO #TempResults ( Id, [Name], [DatePeriod], [Shard], [UpdatedOn]	)
-		Select Id, [Name] as 'Name', [DatePeriod], [Shard], [UpdatedOn] 
-			From HistoricalEvents
-				WHERE [Active]=1;
+		Select he.Id, he.[Name] as 'Name', he.[DatePeriod], lr.[Shard], he.[UpdatedOn] 
+			From HistoricalEvents as he
+			LEFT JOIN LatestRecords lr ON lr.HistoricalEventId = he.Id AND lr.rn = 1
+				WHERE he.[Active]=1;
 
 	SELECT @Total = Count(Id) 
 		FROM #TempResults

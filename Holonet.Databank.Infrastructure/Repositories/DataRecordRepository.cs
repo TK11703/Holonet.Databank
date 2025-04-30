@@ -24,7 +24,8 @@ public class DataRecordRepository(ISqlDataAccess dataAccess) : IDataRecordReposi
 	{
 		var p = new DynamicParameters();
 		p.Add(name: "@Data", record.Data);
-		p.Add(name: "@CharacterId", record.CharacterId);
+        p.Add(name: "@Shard", record.Shard);
+        p.Add(name: "@CharacterId", record.CharacterId);
 		p.Add(name: "@HistoricalEventId", record.HistoricalEventId);
 		p.Add(name: "@PlanetId", record.PlanetId);
 		p.Add(name: "@SpeciesId", record.SpeciesId);
@@ -43,7 +44,32 @@ public class DataRecordRepository(ISqlDataAccess dataAccess) : IDataRecordReposi
 		}
 	}
 
-	public async Task<bool> DeleteDataRecord(int recordId, int? characterId = null, int? historicalEventId = null, int? planetId = null, int? speciesId = null)
+    public async Task<bool> UpdateDataRecord(DataRecord record)
+    {
+        var p = new DynamicParameters();
+        p.Add(name: "@Id", record.Id);
+        p.Add(name: "@Data", record.Data);
+        p.Add(name: "@Shard", record.Shard);
+        p.Add(name: "@CharacterId", record.CharacterId);
+        p.Add(name: "@HistoricalEventId", record.HistoricalEventId);
+        p.Add(name: "@PlanetId", record.PlanetId);
+        p.Add(name: "@SpeciesId", record.SpeciesId);
+        p.Add(name: "@AzureAuthorId", record.UpdatedBy.AzureId);
+        p.Add(name: "@Output", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+
+        await _dataAccess.SaveDataAsync("dbo.spDataRecords_Update", p);
+        var completed = p.Get<int?>("@Output");
+        if (completed.HasValue && completed.Value.Equals(1))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> DeleteDataRecord(int recordId, int? characterId = null, int? historicalEventId = null, int? planetId = null, int? speciesId = null)
 	{
 		var p = new DynamicParameters();
 		p.Add(name: "@Id", recordId);

@@ -4,17 +4,17 @@ using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Core.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace Holonet.Databank.API.Endpoints.HistoricalEvents.AddRecord;
+namespace Holonet.Databank.API.Endpoints.Species.UpdateRecord;
 
-public class AddRecordToHistoricalEvent : IEndpoint
+public class UpdateRecordToSpecies : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapPost($"/HistoricalEvents/{{id}}/AddRecord", Handle)
-			.AddEndpointFilter<ValidatorFilter<CreateRecordDto>>()
-			.WithTags(Tags.HistoricalEvents);
+		app.MapPost($"/Species/{{id}}/UpdateRecord/{{recordId}}", Handle)
+			.AddEndpointFilter<ValidatorFilter<UpdateRecordDto>>()
+			.WithTags(Tags.Species);
 	}
-	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> Handle(int id, CreateRecordDto itemModel, IDataRecordService dataRecordService, IAuthorService authorService)
+	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> Handle(int id, int recordId, UpdateRecordDto itemModel, IDataRecordService dataRecordService, IAuthorService authorService)
 	{
 		try
 		{
@@ -25,7 +25,8 @@ public class AddRecordToHistoricalEvent : IEndpoint
 			}
 			var record = new DataRecord
 			{
-				Data = itemModel.Data,
+                Id = recordId,
+                Data = itemModel.Data,
                 Shard = itemModel.Shard,
                 CharacterId = itemModel.CharacterId,
 				HistoricalEventId = itemModel.HistoricalEventId,
@@ -33,12 +34,12 @@ public class AddRecordToHistoricalEvent : IEndpoint
 				SpeciesId = itemModel.SpeciesId,
 				UpdatedBy = author
 			};
-			if(!record.HistoricalEventId.HasValue || !record.HistoricalEventId.Equals(id))
+			if(!record.SpeciesId.HasValue || !record.SpeciesId.Equals(id))
 			{
 				return TypedResults.Problem("Data record assignment did not match the item it was intended. Please resubmit with the correct identifiers.");
 			}
 			
-			var rowsUpdated = await dataRecordService.CreateDataRecord(record);
+			var rowsUpdated = await dataRecordService.UpdateDataRecord(record);
 			return TypedResults.Ok(rowsUpdated);
 		}
 		catch (Exception ex)

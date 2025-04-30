@@ -26,7 +26,8 @@ public class AddRecordToPlanet : IEndpoint
 			var record = new DataRecord
 			{
 				Data = itemModel.Data,
-				CharacterId = itemModel.CharacterId,
+                Shard = itemModel.Shard,
+                CharacterId = itemModel.CharacterId,
 				HistoricalEventId = itemModel.HistoricalEventId,
 				PlanetId = itemModel.PlanetId,
 				SpeciesId = itemModel.SpeciesId,

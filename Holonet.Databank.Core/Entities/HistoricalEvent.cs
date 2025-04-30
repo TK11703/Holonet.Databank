@@ -12,10 +12,6 @@ public class HistoricalEvent : EntityBase
 	[StringLength(200)]
 	public string? DatePeriod { get; set; }
 
-	[Url]
-	[StringLength(500)]
-	public string? Shard { get; set; }
-
 	public IEnumerable<int> CharacterIds { get; set; } = [];
 	public IEnumerable<Character> Characters { get; set; } = [];
 

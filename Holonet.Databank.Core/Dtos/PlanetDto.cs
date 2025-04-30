@@ -5,7 +5,6 @@ namespace Holonet.Databank.Core.Dtos;
 public record PlanetDto(
 	int Id,
 	string Name,
-	string? Shard,
 	IEnumerable<AliasDto> Aliases,
 	IEnumerable<DataRecordDto> DataRecords,
 	AuthorDto? UpdatedBy,

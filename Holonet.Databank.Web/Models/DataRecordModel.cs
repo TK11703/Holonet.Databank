@@ -6,7 +6,11 @@ public class DataRecordModel
 {
 	public int Id { get; set; }
 
-	[Required(ErrorMessage = "Data is required.")]
+    [Url]
+    [StringLength(500, ErrorMessage = "Shard can only be {1} characters in length.")]
+    public string? Shard { get; set; }
+
+    [Required(ErrorMessage = "Data is required.")]
 	public string Data { get; set; } = string.Empty;
 
 	public int? CharacterId { get; set; }

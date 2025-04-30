@@ -3,7 +3,6 @@
 	@PlanetId int,
 	@GivenName nvarchar(150),
 	@FamilyName nvarchar(150) = null,
-	@Shard nvarchar(500),
 	@BirthDate nvarchar(200),
 	@AzureAuthorId uniqueidentifier
 AS
@@ -19,8 +18,8 @@ BEGIN
 	ELSE
 	BEGIN
 		UPDATE dbo.Characters
-			SET [PlanetId]=@PlanetId, [GivenName]=@GivenName, [FamilyName]=@FamilyName, [Shard]=@Shard, 
-				[BirthDate]=@BirthDate, [UpdatedOn]=GETDATE(), [AuthorId]=@AuthorId
+			SET [PlanetId]=@PlanetId, [GivenName]=@GivenName, [FamilyName]=@FamilyName, [BirthDate]=@BirthDate, 
+			[UpdatedOn]=GETDATE(), [AuthorId]=@AuthorId
 		WHERE [Id]=@Id;
 
 		IF (@@ROWCOUNT > 0)

@@ -3,7 +3,8 @@
 namespace Holonet.Databank.Core.Dtos;
 
 public record CreateRecordDto(
-	[Required] string Data,
+    [Url][StringLength(500)] string? Shard,
+    [Required] string Data,
 	int? CharacterId,
 	int? HistoricalEventId,
 	int? PlanetId,

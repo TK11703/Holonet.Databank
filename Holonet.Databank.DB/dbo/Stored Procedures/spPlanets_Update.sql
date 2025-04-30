@@ -1,7 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[spPlanets_Update]
 	@Id int,
 	@Name nvarchar(150),
-	@Shard nvarchar(500),
 	@AzureAuthorId uniqueidentifier
 AS
 BEGIN
@@ -16,7 +15,7 @@ BEGIN
 	ELSE
 	BEGIN
 		UPDATE dbo.Planets
-			SET [Name]=@Name, [Shard]=@Shard, [UpdatedOn]=GETDATE(), [AuthorId]=@AuthorId
+			SET [Name]=@Name, [UpdatedOn]=GETDATE(), [AuthorId]=@AuthorId
 		WHERE [Id]=@Id;
 
 		IF (@@ROWCOUNT > 0)

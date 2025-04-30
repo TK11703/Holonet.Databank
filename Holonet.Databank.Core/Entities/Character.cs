@@ -12,10 +12,6 @@ public class Character : EntityBase
 	[StringLength(150)]
 	public string? FamilyName { get; set; }	
 
-	[Url]
-	[StringLength(500)]
-	public string? Shard { get; set; }
-
 	[StringLength(200)]
 	public string? BirthDate { get; set; }
 

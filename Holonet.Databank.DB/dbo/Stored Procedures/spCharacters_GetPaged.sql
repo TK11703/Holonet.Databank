@@ -21,12 +21,23 @@ BEGIN
 		[PlanetName] varchar(150),
 		[Shard] nvarchar(500),
 		[UpdatedOn] datetime
-	)
+	);
 
 	--Populate table with content
+	WITH LatestRecords AS (
+		SELECT 
+			CharacterId,
+			Shard,
+			ROW_NUMBER() OVER (PARTITION BY CharacterId ORDER BY UpdatedOn DESC) as rn
+		FROM DataRecords
+		WHERE Shard IS NOT NULL
+	)
+
 	INSERT INTO #TempResults ( Id, [GivenName], [FamilyName], [PlanetId], [PlanetName], [Shard], [UpdatedOn] )
-		Select c.Id, c.[GivenName], c.[FamilyName], p.[Id] as 'PlanetId', p.[Name] as 'PlanetName', c.[Shard], c.[UpdatedOn] 
-			From Characters as c inner join Planets as p on c.PlanetId = p.Id
+		Select c.Id, c.[GivenName], c.[FamilyName], p.[Id] as 'PlanetId', p.[Name] as 'PlanetName', lr.[Shard], c.[UpdatedOn] 
+			From Characters as c 
+			inner join Planets as p on c.PlanetId = p.Id
+			LEFT JOIN LatestRecords lr ON lr.CharacterId = c.Id AND lr.rn = 1
 				WHERE c.[Active]=1;
 
 	SELECT @Total = Count(Id) 

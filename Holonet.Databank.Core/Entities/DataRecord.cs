@@ -5,7 +5,11 @@ namespace Holonet.Databank.Core.Entities;
 
 public class DataRecord : EntityBase
 {
-	[Required]	
+    [Url]
+    [StringLength(500)]
+    public string? Shard { get; set; }
+
+    [Required]
 	public required string Data { get; set; }
 
 	public int? CharacterId { get; set; }

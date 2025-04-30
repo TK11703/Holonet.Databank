@@ -18,13 +18,23 @@ BEGIN
 		[Name] varchar(150),
 		[Shard] nvarchar(500),
 		[UpdatedOn] datetime
-	)
+	);
 
 	--Populate table with content
+	WITH LatestRecords AS (
+		SELECT 
+			PlanetId,
+			Shard,
+			ROW_NUMBER() OVER (PARTITION BY PlanetId ORDER BY UpdatedOn DESC) as rn
+		FROM DataRecords
+		WHERE Shard IS NOT NULL
+	)
+
 	INSERT INTO #TempResults ( Id, [Name], [Shard], [UpdatedOn])
-		Select Id, [Name] as 'Name', [Shard], [UpdatedOn]
-			From Planets
-				WHERE [Active]=1;
+		Select p.Id, p.[Name] as 'Name', lr.[Shard], p.[UpdatedOn]
+			From Planets as p
+			LEFT JOIN LatestRecords lr ON lr.PlanetId = p.Id AND lr.rn = 1
+				WHERE p.[Active]=1;
 
 	SELECT @Total = Count(Id) 
 		FROM #TempResults

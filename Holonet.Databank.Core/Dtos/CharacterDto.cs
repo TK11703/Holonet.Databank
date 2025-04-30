@@ -5,7 +5,6 @@ public record CharacterDto(
 	int Id,
 	string GivenName,
 	string? FamilyName,
-	string? Shard,
 	string? BirthDate,
 	PlanetDto? Planet,
     IEnumerable<SpeciesDto> Species,

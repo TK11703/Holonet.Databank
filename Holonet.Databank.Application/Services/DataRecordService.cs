@@ -39,7 +39,12 @@ public class DataRecordService(IDataRecordRepository dataRecordRepository, IAuth
 		return await _dataRecordRepository.AddDataRecord(record);
 	}
 
-	public async Task<bool> DeleteDataRecord(int id, int? characterId = null, int? historicalEventId = null, int? planetId = null, int? speciesId = null)
+    public async Task<bool> UpdateDataRecord(DataRecord record)
+    {
+        return await _dataRecordRepository.UpdateDataRecord(record);
+    }
+
+    public async Task<bool> DeleteDataRecord(int id, int? characterId = null, int? historicalEventId = null, int? planetId = null, int? speciesId = null)
 	{
 		return await _dataRecordRepository.DeleteDataRecord(id, characterId, historicalEventId, planetId, speciesId);
 	}

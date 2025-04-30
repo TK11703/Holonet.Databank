@@ -1,7 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[spHistoricalEvents_Insert]
 	@Name nvarchar(150),
 	@DatePeriod nvarchar(200),
-	@Shard nvarchar(500),
 	@AzureAuthorId uniqueidentifier,
 	@Id int output
 AS
@@ -17,9 +16,9 @@ BEGIN
 	ELSE
 	BEGIN
 		INSERT INTO dbo.HistoricalEvents
-			([Name], [DatePeriod], [Shard], [UpdatedOn], [AuthorId], [Active])
+			([Name], [DatePeriod], [UpdatedOn], [AuthorId], [Active])
 		Values
-			(@Name, @DatePeriod, @Shard, GETDATE(), @AuthorId, 1);
+			(@Name, @DatePeriod, GETDATE(), @AuthorId, 1);
 
 		SET @Id = SCOPE_IDENTITY();
 

@@ -1,6 +1,6 @@
-﻿CREATE PROCEDURE [dbo].[spSpecies_Update]
+﻿CREATE PROCEDURE [dbo].[spDataRecords_Update]
 	@Id int,
-	@Name nvarchar(150),
+	@Data nvarchar(max) = null,
 	@AzureAuthorId uniqueidentifier
 AS
 BEGIN
@@ -14,8 +14,8 @@ BEGIN
 	END
 	ELSE
 	BEGIN
-		UPDATE dbo.Species
-			SET [Name]=@Name, [UpdatedOn]=GETDATE(), [AuthorId]=@AuthorId
+		UPDATE dbo.DataRecords
+			SET [Data]=@Data, [UpdatedOn]=GETDATE(), [AuthorId]=@AuthorId
 		WHERE [Id]=@Id;
 
 		IF (@@ROWCOUNT > 0)

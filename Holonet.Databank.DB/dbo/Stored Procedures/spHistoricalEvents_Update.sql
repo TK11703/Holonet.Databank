@@ -2,7 +2,6 @@
 	@Id int,
 	@Name nvarchar(150),
 	@DatePeriod nvarchar(200),
-	@Shard nvarchar(500),
 	@AzureAuthorId uniqueidentifier
 AS
 BEGIN
@@ -17,7 +16,7 @@ BEGIN
 	ELSE
 	BEGIN
 		UPDATE dbo.HistoricalEvents
-			SET [Name]=@Name, [DatePeriod]=@DatePeriod, [Shard]=@Shard, [UpdatedOn]=GETDATE(), [AuthorId]=@AuthorId
+			SET [Name]=@Name, [DatePeriod]=@DatePeriod, [UpdatedOn]=GETDATE(), [AuthorId]=@AuthorId
 		WHERE [Id]=@Id;
 
 		IF (@@ROWCOUNT > 0)

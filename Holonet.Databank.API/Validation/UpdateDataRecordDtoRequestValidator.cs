@@ -2,11 +2,14 @@
 using Holonet.Databank.Core.Dtos;
 namespace Holonet.Databank.API.Validation;
 
-public class CreateDataRecordDtoRequestValidator : AbstractValidator<CreateRecordDto>
+public class UpdateDataRecordDtoRequestValidator : AbstractValidator<UpdateRecordDto>
 {
-	public CreateDataRecordDtoRequestValidator()
+	public UpdateDataRecordDtoRequestValidator()
 	{
-		RuleFor(x => x.Data)
+        RuleFor(x => x.Id)
+            .NotEmpty().WithMessage("Id is required.");
+
+        RuleFor(x => x.Data)
 			.NotEmpty().WithMessage("Data is required.");
 
         RuleFor(x => x.Shard)

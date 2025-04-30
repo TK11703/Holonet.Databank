@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[spDataRecords_Insert]
-	@Data nvarchar(max),
+	@Shard nvarchar(500),
+	@Data nvarchar(max) = null,
 	@CharacterId int = null,
 	@HistoricalEventId int = null,
 	@PlanetId int = null,

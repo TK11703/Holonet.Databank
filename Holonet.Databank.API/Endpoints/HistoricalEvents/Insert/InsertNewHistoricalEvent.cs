@@ -32,7 +32,6 @@ public class InsertNewHistoricalEvent : IEndpoint
 				CharacterIds = itemModel.CharacterIds,
 				PlanetIds = itemModel.PlanetIds,
 				Aliases = itemModel.Aliases.Select(alias => new Alias { Name = alias, UpdatedBy = author }),
-				Shard = itemModel.Shard,
 				UpdatedBy = author
 			};
 			int newId = await historicalEventService.CreateHistoricalEvent(newHistoricalEvent);

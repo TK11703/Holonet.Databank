@@ -3,7 +3,8 @@
 namespace Holonet.Databank.Core.Dtos;
 public record DataRecordDto(
 	int Id,
-	string Data,
+    string? Shard,
+    string Data,
 	int? CharacterId,
 	int? PlanetId,
 	int? SpeciesId,
