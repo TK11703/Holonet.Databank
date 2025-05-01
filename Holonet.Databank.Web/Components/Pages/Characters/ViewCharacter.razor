@@ -52,14 +52,10 @@
 								</h6>
 								@if (!string.IsNullOrEmpty(dataRecord.Shard))
 								{
-									<div class="row mb-2">
-										<div class="col-12">
-											<a href="@dataRecord.Shard" target="_blank" class="text-decoration-none">
-												<i class="bi bi-link"></i>
-												@dataRecord.Shard
-											</a>
-										</div>
-									</div>
+									<a href="@dataRecord.Shard" target="_blank" class="card-link">
+										<i class="bi bi-link"></i>
+										@dataRecord.Shard
+									</a>
 								}
 								@GetFormattedDescription(dataRecord.Data)
 							</div>

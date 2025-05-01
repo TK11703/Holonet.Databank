@@ -26,8 +26,8 @@ public static class EntityExtensions
 		return new DataRecordDto
 		(
 			record.Id,
-			record.Data,
-			record.Shard ?? string.Empty,
+            record.Shard ?? string.Empty,
+            record.Data,			
             record.CharacterId,
 			record.PlanetId,
 			record.SpeciesId,
