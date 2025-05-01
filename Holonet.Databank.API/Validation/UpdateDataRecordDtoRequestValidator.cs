@@ -7,13 +7,14 @@ public class UpdateDataRecordDtoRequestValidator : AbstractValidator<UpdateRecor
 	public UpdateDataRecordDtoRequestValidator()
 	{
         RuleFor(x => x.Id)
-            .NotEmpty().WithMessage("Id is required.");
-
-        RuleFor(x => x.Data)
-			.NotEmpty().WithMessage("Data is required.");
+            .NotEmpty().WithMessage("Id is required.");        
 
         RuleFor(x => x.Shard)
             .Length(0, 500).WithMessage("Shard must be no more than 500 characters in length.");
+
+        RuleFor(x => x)
+            .Must(x => !string.IsNullOrEmpty(x.Shard) || !string.IsNullOrEmpty(x.Data))
+            .WithMessage("Either a shard or a data entry is needed.");
 
         RuleFor(x => x.AzureId)
 			.NotEmpty().WithMessage("AzureId is required.");
