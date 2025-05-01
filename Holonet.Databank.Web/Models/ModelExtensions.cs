@@ -54,8 +54,8 @@ public static class ModelExtensions
 	{
 		return new CreateRecordDto
 		(
-			record.Data,
             record.Shard ?? string.Empty,
+            record.Data ?? string.Empty,            
             record.CharacterId,
 			record.HistoricalEventId,
 			record.PlanetId,

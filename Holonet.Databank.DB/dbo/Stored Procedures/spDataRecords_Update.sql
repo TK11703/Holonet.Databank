@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[spDataRecords_Update]
 	@Id int,
+	@Shard nvarchar(500) = null,
 	@Data nvarchar(max) = null,
 	@AzureAuthorId uniqueidentifier
 AS

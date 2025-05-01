@@ -2,7 +2,7 @@
 (
 	[Id] INT NOT NULL PRIMARY KEY identity,
 	[Shard] NVARCHAR(500) NULL,
-	[Data] NVARCHAR(max) NOT NULL,
+	[Data] NVARCHAR(max) NULL,
 	[CharacterId] INT NULL,
 	[HistoricalEventId] INT NULL,
 	[PlanetId] INT NULL,

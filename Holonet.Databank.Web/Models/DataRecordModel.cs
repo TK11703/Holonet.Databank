@@ -2,7 +2,7 @@
 
 namespace Holonet.Databank.Web.Models;
 
-public class DataRecordModel
+public class DataRecordModel : IValidatableObject
 {
 	public int Id { get; set; }
 
@@ -10,8 +10,7 @@ public class DataRecordModel
     [StringLength(500, ErrorMessage = "Shard can only be {1} characters in length.")]
     public string? Shard { get; set; }
 
-    [Required(ErrorMessage = "Data is required.")]
-	public string Data { get; set; } = string.Empty;
+	public string? Data { get; set; }
 
 	public int? CharacterId { get; set; }
 
@@ -25,4 +24,11 @@ public class DataRecordModel
 
 	public DateTime? UpdatedOn { get; set; }
 
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (string.IsNullOrEmpty(Shard) && string.IsNullOrEmpty(Data))
+        {
+            yield return new ValidationResult("Either Shard or Data must be provided", new[] { nameof(Shard), nameof(Data) } );
+        }
+    }
 }
