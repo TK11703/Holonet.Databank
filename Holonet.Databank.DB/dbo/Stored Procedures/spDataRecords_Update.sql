@@ -16,7 +16,7 @@ BEGIN
 	ELSE
 	BEGIN
 		UPDATE dbo.DataRecords
-			SET [Data]=@Data, [UpdatedOn]=GETDATE(), [AuthorId]=@AuthorId
+			SET [Data]=@Data, [Shard]=@Shard, [UpdatedOn]=GETDATE(), [AuthorId]=@AuthorId
 		WHERE [Id]=@Id;
 
 		IF (@@ROWCOUNT > 0)

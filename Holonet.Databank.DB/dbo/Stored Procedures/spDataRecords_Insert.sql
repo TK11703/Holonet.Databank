@@ -18,9 +18,9 @@ BEGIN
 	ELSE
 	BEGIN
 		INSERT INTO dbo.DataRecords
-			([Data], [CharacterId], [HistoricalEventId], [PlanetId], [SpeciesId], [UpdatedOn], [AuthorId])
+			([Data], [Shard], [CharacterId], [HistoricalEventId], [PlanetId], [SpeciesId], [UpdatedOn], [AuthorId])
 		Values
-			(@Data, @CharacterId, @HistoricalEventId, @PlanetId, @SpeciesId, GETDATE(), @AuthorId)
+			(@Data, @Shard, @CharacterId, @HistoricalEventId, @PlanetId, @SpeciesId, GETDATE(), @AuthorId)
 
 		return 1;		
 	END
