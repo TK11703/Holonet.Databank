@@ -50,6 +50,17 @@
 										</AuthorizeView>
 									</span>
 								</h6>
+								@if (!string.IsNullOrEmpty(dataRecord.Shard))
+								{
+									<div class="row mb-2">
+										<div class="col-12">
+											<a href="@dataRecord.Shard" target="_blank" class="text-decoration-none">
+												<i class="bi bi-link"></i>
+												@dataRecord.Shard
+											</a>
+										</div>
+									</div>
+								}
 								@GetFormattedDescription(dataRecord.Data)
 							</div>
 						</div>
@@ -132,8 +143,8 @@
 	<Title>Add New Data Record</Title>
 	<Body>
 		<EditForm FormName="AddDataRecord" OnValidSubmit="HandleAddNew" EditContext="@EditContext" id="editForm">
-			<DataAnnotationsValidator /> 
-			<ValidationSummary /> 
+			<DataAnnotationsValidator />
+			<ValidationSummary />
 			<div class="form-group mb-3">
 				<label for="Shard" class="form-label">Shard (External Data Link)</label>
 				<InputText id="Shard" class="form-control" @bind-Value="RecordModel.Shard" />
@@ -141,8 +152,8 @@
 			</div>
 			<div class="form-group">
 				<label for="recordData">Data Record</label>
-				<InputTextArea id="recordData" class="form-control" @bind-Value="RecordModel.Data" /> 
-			</div> 
+				<InputTextArea id="recordData" class="form-control" @bind-Value="RecordModel.Data" />
+			</div>
 		</EditForm>
 	</Body>
 	<Footer>

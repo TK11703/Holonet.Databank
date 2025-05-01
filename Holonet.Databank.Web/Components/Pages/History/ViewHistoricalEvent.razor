@@ -50,6 +50,17 @@
 										</AuthorizeView>
 									</span>
 								</h6>
+								@if (!string.IsNullOrEmpty(dataRecord.Shard))
+								{
+									<div class="row mb-2">
+										<div class="col-12">
+											<a href="@dataRecord.Shard" target="_blank" class="text-decoration-none">
+												<i class="bi bi-link"></i>
+												@dataRecord.Shard
+											</a>
+										</div>
+									</div>
+								}
 								@GetFormattedDescription(dataRecord.Data)
 							</div>
 						</div>
