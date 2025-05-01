@@ -129,6 +129,7 @@
     <Build Include="dbo\Stored Procedures\spDataRecords_Insert.sql" />
     <Build Include="dbo\Stored Procedures\spDataRecords_Delete.sql" />
     <Build Include="dbo\Stored Procedures\spDataRecords_Update.sql" />
+    <Build Include="dbo\Stored Procedures\spDataRecords_Get.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Holonet.Databank.DB.publish.xml" />

@@ -8,6 +8,22 @@ public class CharacterClient(HttpClient httpClient, ILogger<CharacterClient> log
     private readonly HttpClient _httpClient = httpClient;
     private readonly ILogger<CharacterClient> _logger = logger;
 
+    public async Task<bool> UpdateDataRecord(int recordId, int characterId, string shard, string recordText)
+    {
+        var updateRecordDto = new UpdateRecordDto(recordId, shard, recordText, characterId, null, null, null, Guid.Empty);
+
+        using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"{characterId}/UpdateRecord/{recordId}", updateRecordDto);
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
+        }
+        else
+        {
+            return await response.Content.ReadFromJsonAsync<bool>();
+        }
+        return default;
+    }
+
     public async Task<IEnumerable<CharacterDto>?> GetAll()
     {
         var getEntityCollectionDto = new GetEntityCollectionDto(true, true, null);

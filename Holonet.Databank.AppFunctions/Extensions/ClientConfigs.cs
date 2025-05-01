@@ -70,6 +70,19 @@ internal static class ClientConfigs
                 };
             })
             .SetHandlerLifetime(Timeout.InfiniteTimeSpan);
-		}
+
+            services.AddHttpClient<AIServiceClient>(client =>
+            {
+                client.BaseAddress = new Uri(new Uri(baseApiAddress), "AIServices/");
+            })
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                return new SocketsHttpHandler
+                {
+                    PooledConnectionLifetime = TimeSpan.FromMinutes(5)
+                };
+            })
+            .SetHandlerLifetime(Timeout.InfiniteTimeSpan);
+        }
     }
 }

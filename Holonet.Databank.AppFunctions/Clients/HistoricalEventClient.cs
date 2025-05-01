@@ -8,6 +8,22 @@ public class HistoricalEventClient(HttpClient httpClient, ILogger<HistoricalEven
     private readonly HttpClient _httpClient = httpClient;
     private readonly ILogger<HistoricalEventClient> _logger = logger;
 
+    public async Task<bool> UpdateDataRecord(int recordId, int historicalEventId, string shard, string recordText)
+    {
+        var updateRecordDto = new UpdateRecordDto(recordId, shard, recordText, null, historicalEventId, null, null, Guid.Empty);
+
+        using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"{historicalEventId}/UpdateRecord/{recordId}", updateRecordDto);
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
+        }
+        else
+        {
+            return await response.Content.ReadFromJsonAsync<bool>();
+        }
+        return default;
+    }
+
     public async Task<IEnumerable<HistoricalEventDto>?> GetAll()
     {
         var getEntityCollectionDto = new GetEntityCollectionDto(true, true, null);

@@ -9,4 +9,5 @@ public static class Tags
 	public const string Authors = "Authors";	
 	public const string Tests = "Tests";
 	public const string Agent = "Agent";
+    public const string AIServices = "AI Services";
 }

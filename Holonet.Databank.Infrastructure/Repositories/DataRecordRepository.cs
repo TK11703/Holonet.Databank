@@ -20,7 +20,22 @@ public class DataRecordRepository(ISqlDataAccess dataAccess) : IDataRecordReposi
 		});
 	}
 
-	public async Task<bool> AddDataRecord(DataRecord record)
+    public async Task<DataRecord?> GetDataRecord(int id, int? characterId = null, int? historicalEventId = null, int? planetId = null, int? speciesId = null)
+    {
+
+        var results = await _dataAccess.LoadDataAsync<DataRecord?, dynamic>("dbo.spDataRecords_Get", new
+        {
+            id = id,
+            CharacterId = characterId,
+            HistoricalEventId = historicalEventId,
+            PlanetId = planetId,
+            SpeciesId = speciesId
+        });
+
+        return results.FirstOrDefault();
+    }
+
+    public async Task<bool> AddDataRecord(DataRecord record)
 	{
 		var p = new DynamicParameters();
 		p.Add(name: "@Data", record.Data);
