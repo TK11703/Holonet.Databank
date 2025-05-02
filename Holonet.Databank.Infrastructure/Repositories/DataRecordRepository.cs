@@ -63,8 +63,8 @@ public class DataRecordRepository(ISqlDataAccess dataAccess) : IDataRecordReposi
     {
         var p = new DynamicParameters();
         p.Add(name: "@Id", record.Id);
-        p.Add(name: "@Data", record.Data);
         p.Add(name: "@Shard", record.Shard);
+        p.Add(name: "@Data", record.Data);        
         p.Add(name: "@CharacterId", record.CharacterId);
         p.Add(name: "@HistoricalEventId", record.HistoricalEventId);
         p.Add(name: "@PlanetId", record.PlanetId);

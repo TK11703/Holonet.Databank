@@ -4,6 +4,8 @@ using Holonet.Databank.Web.Clients;
 using Holonet.Databank.Web.Components.Shared;
 using Holonet.Databank.Web.Models;
 using Holonet.Databank.Web.Services;
+using Markdig.Extensions.AutoLinks;
+using Markdig;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
@@ -53,8 +55,8 @@ public partial class ViewCharacter
 
 	private MarkupString GetFormattedDescription(string input)
 	{
-		// Replace newline characters with <br> tags
-		return new MarkupString(input.Replace("\n", "<br>"));
+        var pipeline = new MarkdownPipelineBuilder().UseAutoLinks(new AutoLinkOptions { OpenInNewWindow = true }).Build();
+        return new MarkupString(Markdown.ToHtml(markdown: input, pipeline: pipeline));
 	}
 
 	protected async Task HandleAddNew()
