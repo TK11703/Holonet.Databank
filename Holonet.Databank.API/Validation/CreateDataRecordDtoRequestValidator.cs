@@ -13,7 +13,7 @@ public class CreateDataRecordDtoRequestValidator : AbstractValidator<CreateRecor
             .Must(x => !string.IsNullOrEmpty(x.Shard) || !string.IsNullOrEmpty(x.Data))
             .WithMessage("Either a shard or a data entry is needed.");
 
-        RuleFor(x => x.AzureId)
-			.NotEmpty().WithMessage("AzureId is required.");
+        RuleFor(x => x.CreatedAzureId)
+			.NotEmpty().WithMessage("CreatedAzureId is required.");
 	}
 }

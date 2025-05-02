@@ -9,5 +9,5 @@ public record CreateRecordDto(
 	int? HistoricalEventId,
 	int? PlanetId,
 	int? SpeciesId,
-	[Required] Guid AzureId
+	[Required] Guid CreatedAzureId
 );

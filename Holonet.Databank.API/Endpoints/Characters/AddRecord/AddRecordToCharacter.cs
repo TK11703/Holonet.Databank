@@ -17,7 +17,7 @@ public class AddRecordToCharacter : IEndpoint
 	{
 		try
 		{
-			var author = await authorService.GetAuthorByAzureId(itemModel.AzureId);
+			var author = await authorService.GetAuthorByAzureId(itemModel.CreatedAzureId);
 			if (author == null)
 			{
 				return TypedResults.Problem("Author not found");
@@ -30,8 +30,9 @@ public class AddRecordToCharacter : IEndpoint
 				HistoricalEventId = itemModel.HistoricalEventId,
 				PlanetId = itemModel.PlanetId,
 				SpeciesId = itemModel.SpeciesId,
-				UpdatedBy = author
-			};
+				CreatedBy = author,
+                UpdatedBy = author
+            };
 			if(!record.CharacterId.HasValue || !record.CharacterId.Equals(id))
 			{
 				return TypedResults.Problem("Data record assignment did not match the item it was intended. Please resubmit with the correct identifiers.");

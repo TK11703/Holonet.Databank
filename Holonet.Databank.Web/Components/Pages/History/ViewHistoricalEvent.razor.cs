@@ -66,7 +66,7 @@ public partial class ViewHistoricalEvent
 		RecordModel.HistoricalEventId = ID;
 		if (UserService.IsUserAuthenticated())
 		{
-			RecordModel.UpdatedBy = new AuthorModel() { AzureId = UserService.GetAzureId() };
+			RecordModel.CreatedBy = new AuthorModel() { AzureId = UserService.GetAzureId() };
 		}
 		var completed = await HistoricalEventClient.CreateDataRecord(ID, RecordModel);
 		if (completed)

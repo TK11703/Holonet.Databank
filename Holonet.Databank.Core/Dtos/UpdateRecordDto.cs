@@ -10,5 +10,5 @@ public record UpdateRecordDto(
     int? HistoricalEventId,
     int? PlanetId,
     int? SpeciesId,
-    [Required] Guid AzureId
+    [Required] Guid UpdatedAzureId
 );

@@ -9,6 +9,8 @@ public record DataRecordDto(
 	int? PlanetId,
 	int? SpeciesId,
 	int? HistoricalEventId,
-	AuthorDto? UpdatedBy,
+    AuthorDto? CreatedBy,
+    DateTime? CreatedOn,
+    AuthorDto? UpdatedBy,
 	DateTime? UpdatedOn
 );

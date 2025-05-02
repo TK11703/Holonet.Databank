@@ -39,7 +39,10 @@
 						<div class="card mb-3">
 							<div class="card-body">
 								<h6 class="card-subtitle mb-2 text-muted d-flex">
-									<span class="flex-grow-1">Added: @dataRecord.UpdatedOn.ToString() by @(dataRecord.UpdatedBy?.DisplayName ?? "Unknown Source")</span>
+									<span class="flex-grow-1 small">
+										<strong>Added:</strong> @dataRecord.CreatedOn.ToString() by @(dataRecord.CreatedBy?.DisplayName ?? "Unknown Source")<br />
+										<strong>Updated:</strong> @dataRecord.UpdatedOn.ToString() by @(dataRecord.UpdatedBy?.DisplayName ?? "Unknown Source")
+									</span>
 									<span>
 										<AuthorizeView Roles="@ApplicationRole.Administrator">
 											<Authorized>

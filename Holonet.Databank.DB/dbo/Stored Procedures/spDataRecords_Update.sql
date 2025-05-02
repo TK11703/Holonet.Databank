@@ -20,7 +20,7 @@ BEGIN
 	ELSE
 	BEGIN
 		UPDATE dbo.DataRecords
-			SET [Data]=@Data, [Shard]=@Shard, [UpdatedOn]=GETDATE(), [AuthorId]=@AuthorId,
+			SET [Data]=@Data, [Shard]=@Shard, [UpdatedOn]=GETDATE(), [UpdatedAuthorId]=@AuthorId,
 				[CharacterId]=@CharacterId, [HistoricalEventId]=@HistoricalEventId, [PlanetId]=@PlanetId, [SpeciesId]=@SpeciesId
 		WHERE [Id]=@Id;
 

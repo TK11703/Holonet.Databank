@@ -44,7 +44,7 @@ public class DataRecordRepository(ISqlDataAccess dataAccess) : IDataRecordReposi
 		p.Add(name: "@HistoricalEventId", record.HistoricalEventId);
 		p.Add(name: "@PlanetId", record.PlanetId);
 		p.Add(name: "@SpeciesId", record.SpeciesId);
-		p.Add(name: "@AzureAuthorId", record.UpdatedBy.AzureId);
+		p.Add(name: "@AzureAuthorId", record.CreatedBy?.AzureId);
 		p.Add(name: "@Output", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
 		await _dataAccess.SaveDataAsync("dbo.spDataRecords_Insert", p);
@@ -69,7 +69,7 @@ public class DataRecordRepository(ISqlDataAccess dataAccess) : IDataRecordReposi
         p.Add(name: "@HistoricalEventId", record.HistoricalEventId);
         p.Add(name: "@PlanetId", record.PlanetId);
         p.Add(name: "@SpeciesId", record.SpeciesId);
-        p.Add(name: "@AzureAuthorId", record.UpdatedBy.AzureId);
+        p.Add(name: "@AzureAuthorId", record.UpdatedBy?.AzureId);
         p.Add(name: "@Output", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
         await _dataAccess.SaveDataAsync("dbo.spDataRecords_Update", p);

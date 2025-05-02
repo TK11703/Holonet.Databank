@@ -16,7 +16,7 @@ public class UpdateDataRecordDtoRequestValidator : AbstractValidator<UpdateRecor
             .Must(x => !string.IsNullOrEmpty(x.Shard) || !string.IsNullOrEmpty(x.Data))
             .WithMessage("Either a shard or a data entry is needed.");
 
-        RuleFor(x => x.AzureId)
-			.NotEmpty().WithMessage("AzureId is required.");
+        RuleFor(x => x.UpdatedAzureId)
+			.NotEmpty().WithMessage("UpdatedAzureId is required.");
 	}
 }

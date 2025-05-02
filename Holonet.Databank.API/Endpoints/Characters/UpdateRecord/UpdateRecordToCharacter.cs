@@ -18,7 +18,7 @@ public class UpdateRecordToCharacter : IEndpoint
 	{
 		try
 		{
-			var author = await authorService.GetAuthorByAzureId(itemModel.AzureId);
+			var author = await authorService.GetAuthorByAzureId(itemModel.UpdatedAzureId);
 			if (author == null)
 			{
 				return TypedResults.Problem("Author not found");
@@ -32,7 +32,8 @@ public class UpdateRecordToCharacter : IEndpoint
 				HistoricalEventId = itemModel.HistoricalEventId,
 				PlanetId = itemModel.PlanetId,
 				SpeciesId = itemModel.SpeciesId,
-				UpdatedBy = author
+                CreatedBy = null,
+                UpdatedBy = author
 			};
 			if(!record.CharacterId.HasValue || !record.CharacterId.Equals(id))
 			{

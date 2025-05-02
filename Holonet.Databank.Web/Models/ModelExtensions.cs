@@ -60,7 +60,7 @@ public static class ModelExtensions
 			record.HistoricalEventId,
 			record.PlanetId,
 			record.SpeciesId,			
-			AzureId: record.UpdatedBy?.AzureId ?? Guid.Empty
+			CreatedAzureId: record.CreatedBy?.AzureId ?? Guid.Empty
 		);
 	}
 
@@ -75,7 +75,9 @@ public static class ModelExtensions
 			HistoricalEventId = record.HistoricalEventId,
 			PlanetId = record.PlanetId,
 			SpeciesId = record.SpeciesId,
-			UpdatedBy = record.UpdatedBy?.ToAuthorModel(),
+            CreatedBy = record.CreatedBy?.ToAuthorModel(),
+            CreatedOn = record.CreatedOn,
+            UpdatedBy = record.UpdatedBy?.ToAuthorModel(),
 			UpdatedOn = record.UpdatedOn
 		};
 	}

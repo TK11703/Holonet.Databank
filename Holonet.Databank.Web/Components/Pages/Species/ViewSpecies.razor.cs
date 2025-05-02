@@ -65,7 +65,7 @@ public partial class ViewSpecies
 		RecordModel.SpeciesId = ID;
 		if (UserService.IsUserAuthenticated())
 		{
-			RecordModel.UpdatedBy = new AuthorModel() { AzureId = UserService.GetAzureId() };
+			RecordModel.CreatedBy = new AuthorModel() { AzureId = UserService.GetAzureId() };
 		}
 		var completed = await SpeciesClient.CreateDataRecord(ID, RecordModel);
 		if (completed)

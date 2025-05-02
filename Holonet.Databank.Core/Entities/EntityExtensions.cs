@@ -32,7 +32,9 @@ public static class EntityExtensions
 			record.PlanetId,
 			record.SpeciesId,
 			record.HistoricalEventId,
-			record.UpdatedBy?.ToDto(),
+            record.CreatedBy?.ToDto(),
+            record.CreatedOn,
+            record.UpdatedBy?.ToDto(),
 			record.UpdatedOn
 		);
 	}

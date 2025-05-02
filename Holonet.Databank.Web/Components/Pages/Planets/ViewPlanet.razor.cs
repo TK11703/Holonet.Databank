@@ -66,7 +66,7 @@ public partial class ViewPlanet
 		RecordModel.PlanetId = ID;
 		if (UserService.IsUserAuthenticated())
 		{
-			RecordModel.UpdatedBy = new AuthorModel() { AzureId = UserService.GetAzureId() };
+			RecordModel.CreatedBy = new AuthorModel() { AzureId = UserService.GetAzureId() };
 		}
 		var completed = await PlanetClient.CreateDataRecord(ID, RecordModel);
 		if (completed)

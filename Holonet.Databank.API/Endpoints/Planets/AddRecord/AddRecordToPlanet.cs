@@ -18,7 +18,7 @@ public class AddRecordToPlanet : IEndpoint
 	{
 		try
 		{
-			var author = await authorService.GetAuthorByAzureId(itemModel.AzureId);
+			var author = await authorService.GetAuthorByAzureId(itemModel.CreatedAzureId);
 			if (author == null)
 			{
 				return TypedResults.Problem("Author not found");
@@ -31,7 +31,8 @@ public class AddRecordToPlanet : IEndpoint
 				HistoricalEventId = itemModel.HistoricalEventId,
 				PlanetId = itemModel.PlanetId,
 				SpeciesId = itemModel.SpeciesId,
-				UpdatedBy = author
+                CreatedBy = author,
+                UpdatedBy = author
 			};
 			if(!record.PlanetId.HasValue || !record.PlanetId.Equals(id))
 			{

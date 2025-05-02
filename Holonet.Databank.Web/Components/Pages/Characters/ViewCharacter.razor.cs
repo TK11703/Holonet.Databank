@@ -64,7 +64,7 @@ public partial class ViewCharacter
 		RecordModel.CharacterId = ID;
 		if (UserService.IsUserAuthenticated())
 		{
-			RecordModel.UpdatedBy = new AuthorModel() { AzureId = UserService.GetAzureId() };
+			RecordModel.CreatedBy = new AuthorModel() { AzureId = UserService.GetAzureId() };
 		}
 		var completed = await CharacterClient.CreateDataRecord(ID, RecordModel);
 		if(completed)

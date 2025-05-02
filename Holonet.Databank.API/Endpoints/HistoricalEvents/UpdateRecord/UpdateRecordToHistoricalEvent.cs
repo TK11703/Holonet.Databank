@@ -18,7 +18,7 @@ public class UpdateRecordToHistoricalEvent : IEndpoint
 	{
 		try
 		{
-			var author = await authorService.GetAuthorByAzureId(itemModel.AzureId);
+			var author = await authorService.GetAuthorByAzureId(itemModel.UpdatedAzureId);
 			if (author == null)
 			{
 				return TypedResults.Problem("Author not found");

@@ -20,7 +20,11 @@ public class DataRecordModel : IValidatableObject
 
 	public int? SpeciesId { get; set; }
 
-	public AuthorModel? UpdatedBy { get; set; }
+    public AuthorModel? CreatedBy { get; set; }
+
+    public DateTime? CreatedOn { get; set; }
+
+    public AuthorModel? UpdatedBy { get; set; }
 
 	public DateTime? UpdatedOn { get; set; }
 
