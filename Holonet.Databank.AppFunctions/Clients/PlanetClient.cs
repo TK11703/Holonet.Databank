@@ -1,16 +1,19 @@
 ﻿using Holonet.Databank.Core.Dtos;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 
 namespace Holonet.Databank.AppFunctions.Clients;
-public class PlanetClient(HttpClient httpClient, ILogger<PlanetClient> logger)
+public class PlanetClient(HttpClient httpClient, ILogger<PlanetClient> logger, IConfiguration configuration)
 {
     private readonly HttpClient _httpClient = httpClient;
     private readonly ILogger<PlanetClient> _logger = logger;
+    private readonly IConfiguration _configuration = configuration;
 
     public async Task<bool> UpdateDataRecord(int recordId, int planetId, string shard, string recordText)
     {
-        var updateRecordDto = new UpdateRecordDto(recordId, shard, recordText, null, null, planetId, null, Guid.Empty);
+        Guid funcIdentityGuid = Guid.Parse(_configuration.GetValue<string>("FunctionIdentityGuid")!);
+        var updateRecordDto = new UpdateRecordDto(recordId, shard, recordText, null, null, planetId, null, funcIdentityGuid);
 
         using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"{planetId}/UpdateRecord/{recordId}", updateRecordDto);
         if (!response.IsSuccessStatusCode)

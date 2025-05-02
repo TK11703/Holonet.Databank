@@ -18,8 +18,10 @@ public class ExecuteTextSummaryRequest : IEndpoint
         TextSummaryResult result = new TextSummaryResult();
         try
         {
-            TextAnalysisService service = new TextAnalysisService(config.GetValue<string>("AzureAiLanguage:ApiKey")!, config.GetValue<string>("AzureAiLanguage:Endpoint")!);
-            result.ResultText = await service.GetSummaryAbstract(request.Input);
+            SummarizationService service = new SummarizationService(config.GetValue<string>("AzureOpenAi:Model")!, config.GetValue<string>("AzureOpenAi:Endpoint")!, config.GetValue<string>("AzureOpenAi:ApiKey")!);
+            result.ResultText = await service.SummarizeContentAsync(request.Input);
+            //TextAnalysisService service = new TextAnalysisService(config.GetValue<string>("AzureAiLanguage:ApiKey")!, config.GetValue<string>("AzureAiLanguage:Endpoint")!);
+            //result.ResultText = await service.GetSummaryAbstract(request.Input);
             return TypedResults.Ok(result);
         }
         catch (Exception ex)

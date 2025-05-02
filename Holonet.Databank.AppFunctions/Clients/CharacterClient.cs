@@ -1,16 +1,19 @@
 ﻿using Holonet.Databank.Core.Dtos;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 
 namespace Holonet.Databank.AppFunctions.Clients;
-public class CharacterClient(HttpClient httpClient, ILogger<CharacterClient> logger)
+public class CharacterClient(HttpClient httpClient, ILogger<CharacterClient> logger, IConfiguration configuration)
 {
     private readonly HttpClient _httpClient = httpClient;
     private readonly ILogger<CharacterClient> _logger = logger;
+    private readonly IConfiguration _configuration = configuration;
 
     public async Task<bool> UpdateDataRecord(int recordId, int characterId, string shard, string recordText)
     {
-        var updateRecordDto = new UpdateRecordDto(recordId, shard, recordText, characterId, null, null, null, Guid.Empty);
+        Guid funcIdentityGuid = Guid.Parse(_configuration.GetValue<string>("FunctionIdentityGuid")!);
+        var updateRecordDto = new UpdateRecordDto(recordId, shard, recordText, characterId, null, null, null, funcIdentityGuid);
 
         using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"{characterId}/UpdateRecord/{recordId}", updateRecordDto);
         if (!response.IsSuccessStatusCode)

@@ -9,6 +9,10 @@
       {
         "Path": "Holonet.Databank.Web\\Holonet.Databank.Web.csproj",
         "Action": "Start"
+      },
+      {
+        "Path": "Holonet.Databank.AppFunctions\\Holonet.Databank.AppFunctions.csproj",
+        "Action": "Start"
       }
     ]
   }

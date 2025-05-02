@@ -76,6 +76,7 @@ namespace Holonet.Databank.AppFunctions.Functions
                         StatusCode = StatusCodes.Status500InternalServerError
                     };
                 }
+                bool errorOccurred = false;
                 if (externalData.CharacterId.HasValue)
                 {
                     if (await _characterClient.UpdateDataRecord(externalData.Id, externalData.CharacterId.Value, externalData.Shard, summary.ResultText))
@@ -84,6 +85,7 @@ namespace Holonet.Databank.AppFunctions.Functions
                     }
                     else
                     {
+                        errorOccurred = true;
                         _logger.LogError("Holonet.Databank.Functions ProcessDataRecordShard CharacterId: {CharacterId} update failed.", externalData.CharacterId);
                     }
                 }
@@ -95,6 +97,7 @@ namespace Holonet.Databank.AppFunctions.Functions
                     }
                     else
                     {
+                        errorOccurred = true;
                         _logger.LogError("Holonet.Databank.Functions ProcessDataRecordShard PlanetId: {PlanetId} update failed.", externalData.PlanetId);
                     }
                 }
@@ -106,6 +109,7 @@ namespace Holonet.Databank.AppFunctions.Functions
                     }
                     else
                     {
+                        errorOccurred = true;
                         _logger.LogError("Holonet.Databank.Functions ProcessDataRecordShard SpeciesId: {SpeciesId} update failed.", externalData.SpeciesId);
                     }
                 }
@@ -117,10 +121,18 @@ namespace Holonet.Databank.AppFunctions.Functions
                     }
                     else
                     {
+                        errorOccurred = true;
                         _logger.LogError("Holonet.Databank.Functions ProcessDataRecordShard HistoricalEventId: {HistoricalEventId} update failed.", externalData.HistoricalEventId);
                     }
                 }
-                return new OkObjectResult("Requested Sync Operation Completed!");
+                if(errorOccurred)
+                {
+                    return new ObjectResult("Holonet.Databank.Functions ProcessDataRecordShard failed.")
+                    {
+                        StatusCode = StatusCodes.Status500InternalServerError
+                    };
+                }
+                return new OkObjectResult("Holonet.Databank.Functions ProcessDataRecordShard Completed!");
             }
             catch (JsonException ex)
             {

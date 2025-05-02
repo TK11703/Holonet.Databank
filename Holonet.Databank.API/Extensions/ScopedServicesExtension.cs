@@ -11,6 +11,7 @@ using Azure.Search.Documents.Indexes;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.SemanticKernel.Embeddings;
 using Microsoft.Extensions.Azure;
+using Holonet.Databank.Application.Services.AI;
 
 
 namespace Holonet.Databank.API.Extensions;
@@ -46,7 +47,7 @@ public static class ScopedServicesExtension
 		services.AddScoped<IHistoricalEventCharacterRepository, HistoricalEventCharacterRepository>();
 		services.AddScoped<IHistoricalEventPlanetRepository, HistoricalEventPlanetRepository>();
 
-		services.AddHealthChecks();
+        services.AddHealthChecks();
 			//.AddCheck<DatabaseHealthCheck>("database", HealthStatus.Unhealthy);
 
 		services.AddHttpClient();

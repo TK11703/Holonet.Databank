@@ -11,7 +11,7 @@ public class AIServiceClient(HttpClient httpClient, ILogger<AIServiceClient> log
 
     public async Task<TextSummaryResult?> ExecuteTextSummarization(string input)
     {
-        var textSummaryRequest = new TextSummaryRequest() { Input=input, Summary=true };
+        var textSummaryRequest = new TextSummaryRequest() { Input=input, Summary=true, TargetLangCode="en-us" };
         using HttpResponseMessage response = await _httpClient.PostAsJsonAsync("Language/TextSummary", textSummaryRequest);
         if (!response.IsSuccessStatusCode)
         {
