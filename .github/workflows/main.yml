@@ -15,7 +15,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      APP_SOLUTION: 'Holonet.Databank.App.sln'
+      APP_SOLUTION: 'Holonet.Databank.App-deploy.sln'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.API", "Holonet.Databank.API\Holonet.Databank.API.csproj", "{D9F0F817-DD9B-405E-92E8-498921193CBE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E06CC285-8C91-45A8-981E-3A806C214F11} = {E06CC285-8C91-45A8-981E-3A806C214F11}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.Core", "Holonet.Databank.Core\Holonet.Databank.Core.csproj", "{E06CC285-8C91-45A8-981E-3A806C214F11}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.Application", "Holonet.Databank.Application\Holonet.Databank.Application.csproj", "{5908ED69-6B5F-4218-80DB-C537F26A8448}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.Infrastructure", "Holonet.Databank.Infrastructure\Holonet.Databank.Infrastructure.csproj", "{DD20A8C4-6880-432A-BB44-0EB1778E197D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.Web", "Holonet.Databank.Web\Holonet.Databank.Web.csproj", "{AC4E3AAD-4298-4F1C-8D41-3700DF81C906}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holonet.Databank.AppFunctions", "Holonet.Databank.AppFunctions\Holonet.Databank.AppFunctions.csproj", "{0F150E02-2BBE-7378-8A35-2B48C012DE88}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D9F0F817-DD9B-405E-92E8-498921193CBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9F0F817-DD9B-405E-92E8-498921193CBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9F0F817-DD9B-405E-92E8-498921193CBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9F0F817-DD9B-405E-92E8-498921193CBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E06CC285-8C91-45A8-981E-3A806C214F11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E06CC285-8C91-45A8-981E-3A806C214F11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E06CC285-8C91-45A8-981E-3A806C214F11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E06CC285-8C91-45A8-981E-3A806C214F11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5908ED69-6B5F-4218-80DB-C537F26A8448}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5908ED69-6B5F-4218-80DB-C537F26A8448}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5908ED69-6B5F-4218-80DB-C537F26A8448}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5908ED69-6B5F-4218-80DB-C537F26A8448}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD20A8C4-6880-432A-BB44-0EB1778E197D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD20A8C4-6880-432A-BB44-0EB1778E197D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD20A8C4-6880-432A-BB44-0EB1778E197D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD20A8C4-6880-432A-BB44-0EB1778E197D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC4E3AAD-4298-4F1C-8D41-3700DF81C906}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC4E3AAD-4298-4F1C-8D41-3700DF81C906}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC4E3AAD-4298-4F1C-8D41-3700DF81C906}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC4E3AAD-4298-4F1C-8D41-3700DF81C906}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F150E02-2BBE-7378-8A35-2B48C012DE88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F150E02-2BBE-7378-8A35-2B48C012DE88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F150E02-2BBE-7378-8A35-2B48C012DE88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F150E02-2BBE-7378-8A35-2B48C012DE88}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BB5F1B12-8EA9-4B80-8419-20D6826E278B}
+	EndGlobalSection
+EndGlobal
