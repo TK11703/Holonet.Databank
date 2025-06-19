@@ -38,7 +38,7 @@ jobs:
         run: dotnet publish ./Holonet.Databank.API/Holonet.Databank.API.csproj --configuration Release --output ./publish_api
 
       - name: Publish Function App
-        run: dotnet publish ./Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj --configuration Release --output ./publish_function
+        run: dotnet publish ./Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj --configuration Release --framework net8.0 --output ./publish_function
 
       - name: Upload Blazor artifact
         uses: actions/upload-artifact@v4
