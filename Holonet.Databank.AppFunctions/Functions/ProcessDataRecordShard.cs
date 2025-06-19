@@ -30,7 +30,7 @@ namespace Holonet.Databank.AppFunctions.Functions
             _logger.LogInformation("Holonet.Databank.Functions ProcessDataRecordShard executed at: {ExecutionTime}", executedOn);
             if (req.Method == HttpMethods.Post)
             {
-                _logger.LogInformation($"Holonet.Databank.Functions ProcessDataRecordShard executed via POST HTTP in '{env}' at: {DateTime.UtcNow}");
+                _logger.LogInformation("Holonet.Databank.Functions ProcessDataRecordShard executed via POST HTTP in '{Environment}' at: {ExecutionTime}", env, DateTime.UtcNow);
                 requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 if (string.IsNullOrEmpty(requestBody))
                 {

@@ -202,8 +202,8 @@ internal class SyncEngine(ILogger<SyncEngine> logger, string connectionstring, s
 
     private void LogMessage(string message, LogLevel logLevel = LogLevel.Information)
     {
-        var msg = $"Logger, UTC:{DateTime.UtcNow} => {message}";
-        _logger.Log(logLevel, msg);
-        System.Diagnostics.Debug.WriteLine(msg);
+        const string msgTemplate = "Logger, UTC:{UtcNow} => {Message}";
+        _logger.Log(logLevel, msgTemplate, DateTime.UtcNow, message);
+        System.Diagnostics.Debug.WriteLine($"Logger, UTC:{DateTime.UtcNow} => {message}");
     }
 }
