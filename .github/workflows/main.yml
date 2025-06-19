@@ -121,8 +121,7 @@ jobs:
 
       - name: Deploy to Azure Function App
         id: deploy-to-function
-        uses: azure/webapps-deploy@v3
+        uses: azure/functions-action@v1
         with:
           app-name: 'Holonet-Func-Databank-8108'
-          slot-name: 'Production'
           package: ./publish
