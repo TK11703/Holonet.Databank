@@ -11,85 +11,52 @@ on:
     branches:
       - main
 
+env:
+  DOTNET_VERSION: '8.0.x'
+  CONFIGURATION: 'Release'
+  # Add additional global environment variables here
+
 jobs:
-  build:
-    runs-on: windows-latest
+  build-solution:
+    name: Build Solution
+    runs-on: ubuntu-latest
     env:
       APP_SOLUTION: 'Holonet.Databank.App-deploy.sln'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up .NET
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore dependencies
         run: dotnet restore ${{ env.APP_SOLUTION }}
 
-      - name: Build solution
-        run: dotnet build ${{ env.APP_SOLUTION }} --configuration Release --no-restore
+      - name: Build Solution
+        run: dotnet build --configuration ${{ env.CONFIGURATION }} ${{ env.APP_SOLUTION }}
 
-      - name: Publish Blazor app
-        run: dotnet publish ./Holonet.Databank.Web/Holonet.Databank.Web.csproj --configuration Release --output ./publish_blazor
-
-      - name: Publish API
-        run: dotnet publish ./Holonet.Databank.API/Holonet.Databank.API.csproj --configuration Release --output ./publish_api
-
-      - name: Publish Function App
-        run: dotnet publish ./Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj --configuration Release --framework net8.0 --output ./publish_function
-      
-      - name: Upload Blazor artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: blazor_app
-          path: ./publish_blazor
-
-      - name: Upload API artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: api_app
-          path: ./publish_api
-
-      - name: Upload Function App artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: function_app
-          path: ./publish_function
-
-  deploy_blazor:
-    runs-on: windows-latest
-    needs: build
+  publish-api:
+    name: Publish API
+    needs: build-solution
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_VERSION: ${{ env.DOTNET_VERSION }}
+      CONFIGURATION: ${{ env.CONFIGURATION }}
+      PUBLISH_DIR: ./publish/api
+      # Add secrets or deployment environment variables here (e.g., API_KEY: ${{ secrets.API_KEY }})
     steps:
-      - name: Download Blazor artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: blazor_app
-          path: ./publish
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Login to Azure
-        uses: azure/login@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'Holonet-App-Databank-8108'
-          slot-name: 'Production'
-          package: ./publish
-
-  deploy_api:
-    runs-on: windows-latest
-    needs: build
-    steps:
-      - name: Download API artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: api_app
-          path: ./publish
+      - name: Publish
+        run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output ${{ env.PUBLISH_DIR }} Holonet.Databank.API/Holonet.Databank.API.csproj
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -102,17 +69,60 @@ jobs:
         with:
           app-name: 'Holonet-Api-Databank-8108'
           slot-name: 'Production'
-          package: ./publish
-  
-  deploy_function:
-    runs-on: windows-latest
-    needs: build
+          package: ${{ env.PUBLISH_DIR }}
+
+  publish-web:
+    name: Publish Web
+    needs: build-solution
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_VERSION: ${{ env.DOTNET_VERSION }}
+      CONFIGURATION: ${{ env.CONFIGURATION }}
+      PUBLISH_DIR: ./publish/web
     steps:
-      - name: Download Function artifact
-        uses: actions/download-artifact@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          name: function_app
-          path: ./publish
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Publish
+        run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output ${{ env.PUBLISH_DIR }} Holonet.Databank.Web/Holonet.Databank.Web.csproj
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'Holonet-App-Databank-8108'
+          slot-name: 'Production'
+          package: ${{ env.PUBLISH_DIR }}
+
+  publish-appfunctions:
+    name: Publish Holonet.Databank.AppFunctions
+    needs: build-solution
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_VERSION: ${{ env.DOTNET_VERSION }}
+      CONFIGURATION: ${{ env.CONFIGURATION }}
+      PUBLISH_DIR: ./publish/appfunctions
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Publish
+        run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output ${{ env.PUBLISH_DIR }} Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -124,4 +134,4 @@ jobs:
         uses: azure/functions-action@v1
         with:
           app-name: 'Holonet-Func-Databank-8108'
-          package: ./publish
+          package: ${{ env.PUBLISH_DIR }}
