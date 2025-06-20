@@ -39,11 +39,7 @@ jobs:
 
       - name: Publish Function App
         run: dotnet publish ./Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj --configuration Release --framework net8.0 --output ./publish_function
-      - name: Zip Publish Output
-        run: |
-          cd publish_function
-          zip -r ../functionapp.zip .
-          cd ..
+      
       - name: Upload Blazor artifact
         uses: actions/upload-artifact@v4
         with:
@@ -116,7 +112,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: function_app
-          path: ./publish
+          path: ./publish_function
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -128,4 +124,4 @@ jobs:
         uses: azure/functions-action@v1
         with:
           app-name: 'Holonet-Func-Databank-8108'
-          package: ./publish
+          package: ./publish_function
