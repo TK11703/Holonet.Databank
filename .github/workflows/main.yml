@@ -56,7 +56,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: function_app
-          path: ./publish_function
+          path: ./publish_function/**/*
 
   deploy_blazor:
     runs-on: ubuntu-latest
