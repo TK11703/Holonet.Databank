@@ -1,10 +1,14 @@
 using Holonet.Databank.AppFunctions.Extensions;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-var host = new HostBuilder()
+try
+{
+    var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
     .ConfigureAppConfiguration((context, config) =>
     {
@@ -25,4 +29,13 @@ var host = new HostBuilder()
     })
     .Build();
 
-await host.RunAsync();
+    await host.RunAsync();
+}
+catch (Exception ex)
+{
+    var telemetryConfiguration = TelemetryConfiguration.CreateDefault();
+    var telemetryClient = new TelemetryClient(telemetryConfiguration);
+    telemetryClient.TrackException(ex);
+    telemetryClient.Flush();
+    throw;
+}
