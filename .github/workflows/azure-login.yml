@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Azure Login
-        uses: azure/login@f6f2c6c6a6c8c3b6f3e3a1e3e3c3a3f3c3a3f3e3
+        uses: azure/login@v1.4.0
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
