@@ -18,6 +18,7 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           auth-type: federated
+          enable-AzPSSession: true
 
       - name: Show Azure Account
         run: az account show
