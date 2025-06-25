@@ -33,6 +33,9 @@ jobs:
   DeploySQLDB:
     needs: Build
     runs-on: ubuntu-22.04
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
       
@@ -60,7 +63,7 @@ jobs:
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          
+      
       - name: Deploy DACPAC to Azure SQL
         uses: azure/sql-action@v2.3
         with:
