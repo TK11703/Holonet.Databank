@@ -28,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: SQLDB
-          path: ${{ github.workspace }}\Holonet.Databank.DB\bin\release\
+          path: ${{ github.workspace }}\src\Holonet.Databank.DB\bin\release\
 
   DeploySQLDB:
     needs: Build
