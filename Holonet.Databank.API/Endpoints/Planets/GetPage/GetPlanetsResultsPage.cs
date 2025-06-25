@@ -13,7 +13,7 @@ public class GetPlanetsResultsPage : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapGet($"/Planets/PagedRequest", HandleAsync)
+		app.MapPost($"/Planets/PagedRequest", HandleAsync)
 			.AddEndpointFilter<ValidatorFilter<PageRequestDto>>()
 			.WithTags(Tags.Planets);
 	}

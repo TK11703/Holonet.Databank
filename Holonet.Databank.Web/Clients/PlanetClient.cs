@@ -58,7 +58,7 @@ public sealed class PlanetClient : ClientBase
 		}
 
 		var pageRequestDto = pagedRequest.ToPageRequestDto();
-		var request = new HttpRequestMessage(HttpMethod.Get, "PagedRequest")
+		var request = new HttpRequestMessage(HttpMethod.Post, "PagedRequest")
 		{
 			Content = new StringContent(JsonSerializer.Serialize(pageRequestDto), Encoding.UTF8, MediaTypeNames.Application.Json)
 		};
