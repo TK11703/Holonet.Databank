@@ -22,7 +22,7 @@ jobs:
         uses: microsoft/setup-msbuild@v2
         
       - name: Build SQL Project
-        run: msbuild.exe ./Holonet.Databank.DB/Holonet.Databank.DB.sqlproj /p:Configuration=Release
+        run: msbuild.exe ./src/Holonet.Databank.DB/Holonet.Databank.DB.sqlproj /p:Configuration=Release
 
       - name: Publish SQL Artifact
         uses: actions/upload-artifact@v4
