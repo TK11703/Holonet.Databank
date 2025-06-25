@@ -3,22 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.API", "Holonet.Databank.API\Holonet.Databank.API.csproj", "{D9F0F817-DD9B-405E-92E8-498921193CBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.API", "src\Holonet.Databank.API\Holonet.Databank.API.csproj", "{D9F0F817-DD9B-405E-92E8-498921193CBE}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E06CC285-8C91-45A8-981E-3A806C214F11} = {E06CC285-8C91-45A8-981E-3A806C214F11}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.Core", "Holonet.Databank.Core\Holonet.Databank.Core.csproj", "{E06CC285-8C91-45A8-981E-3A806C214F11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.Core", "src\Holonet.Databank.Core\Holonet.Databank.Core.csproj", "{E06CC285-8C91-45A8-981E-3A806C214F11}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.Application", "Holonet.Databank.Application\Holonet.Databank.Application.csproj", "{5908ED69-6B5F-4218-80DB-C537F26A8448}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.Application", "src\Holonet.Databank.Application\Holonet.Databank.Application.csproj", "{5908ED69-6B5F-4218-80DB-C537F26A8448}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.Infrastructure", "Holonet.Databank.Infrastructure\Holonet.Databank.Infrastructure.csproj", "{DD20A8C4-6880-432A-BB44-0EB1778E197D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.Infrastructure", "src\Holonet.Databank.Infrastructure\Holonet.Databank.Infrastructure.csproj", "{DD20A8C4-6880-432A-BB44-0EB1778E197D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.Web", "Holonet.Databank.Web\Holonet.Databank.Web.csproj", "{AC4E3AAD-4298-4F1C-8D41-3700DF81C906}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Holonet.Databank.Web", "src\Holonet.Databank.Web\Holonet.Databank.Web.csproj", "{AC4E3AAD-4298-4F1C-8D41-3700DF81C906}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Holonet.Databank.DB", "Holonet.Databank.DB\Holonet.Databank.DB.sqlproj", "{58E93B4F-99C5-478B-A493-E72C28B85ADC}"
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Holonet.Databank.DB", "src\Holonet.Databank.DB\Holonet.Databank.DB.sqlproj", "{58E93B4F-99C5-478B-A493-E72C28B85ADC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holonet.Databank.AppFunctions", "Holonet.Databank.AppFunctions\Holonet.Databank.AppFunctions.csproj", "{53D2F9DB-5433-47AA-9893-DECB9F630EB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Holonet.Databank.AppFunctions", "src\Holonet.Databank.AppFunctions\Holonet.Databank.AppFunctions.csproj", "{53D2F9DB-5433-47AA-9893-DECB9F630EB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
