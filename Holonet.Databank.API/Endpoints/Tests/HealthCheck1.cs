@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.Identity.Web.Resource;
 
 namespace Holonet.Databank.API.Endpoints.Tests;
 

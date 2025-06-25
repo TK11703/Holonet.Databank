@@ -2,10 +2,7 @@
 using Holonet.Databank.Core.Models;
 using Holonet.Databank.Web.Models;
 using Microsoft.Identity.Web;
-using System.Net.Http.Headers;
-using System.Net.Mime;
-using System.Text;
-using System.Text.Json;
+
 namespace Holonet.Databank.Web.Clients;
 
 public sealed class CharacterClient : ClientBase
@@ -57,12 +54,8 @@ public sealed class CharacterClient : ClientBase
 			await AcquireBearerTokenForClient(_httpClient);
 		}
 
-		var pageRequestDto = pagedRequest.ToPageRequestDto();
-		var request = new HttpRequestMessage(HttpMethod.Get, "PagedRequest")
-		{
-			Content = new StringContent(JsonSerializer.Serialize(pageRequestDto), Encoding.UTF8, MediaTypeNames.Application.Json)
-		};
-		using HttpResponseMessage response = await _httpClient.SendAsync(request);
+		var pageRequestDto = pagedRequest.ToPageRequestDto();		
+		using HttpResponseMessage response = await _httpClient.PostAsJsonAsync("PagedRequest", pageRequestDto);
 		if (!response.IsSuccessStatusCode)
 		{
 			_logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());

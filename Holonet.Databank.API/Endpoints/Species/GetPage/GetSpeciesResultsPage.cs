@@ -5,15 +5,14 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Holonet.Databank.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Holonet.Databank.Core.Dtos;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Identity.Web.Resource;
+
 namespace Holonet.Databank.API.Endpoints.Species.GetPage;
 
 public class GetSpeciesResultsPage : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapGet($"/Species/PagedRequest", HandleAsync)
+		app.MapPost($"/Species/PagedRequest", HandleAsync)
 			.AddEndpointFilter<ValidatorFilter<PageRequestDto>>()
 			.WithTags(Tags.Species);
 	}

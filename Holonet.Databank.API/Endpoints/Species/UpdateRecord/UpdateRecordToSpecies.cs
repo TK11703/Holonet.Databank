@@ -10,7 +10,7 @@ public class UpdateRecordToSpecies : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapPost($"/Species/{{id}}/UpdateRecord/{{recordId}}", Handle)
+		app.MapPut($"/Species/{{id}}/UpdateRecord/{{recordId}}", Handle)
 			.AddEndpointFilter<ValidatorFilter<UpdateRecordDto>>()
 			.WithTags(Tags.Species);
 	}

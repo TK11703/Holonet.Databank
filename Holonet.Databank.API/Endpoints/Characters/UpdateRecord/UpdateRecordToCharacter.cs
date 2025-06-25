@@ -10,7 +10,7 @@ public class UpdateRecordToCharacter : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapPost($"/Characters/{{id}}/UpdateRecord/{{recordId}}", Handle)
+		app.MapPut($"/Characters/{{id}}/UpdateRecord/{{recordId}}", Handle)
 			.AddEndpointFilter<ValidatorFilter<UpdateRecordDto>>()
 			.WithTags(Tags.Characters);
 	}

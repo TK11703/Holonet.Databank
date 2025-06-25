@@ -1,7 +1,6 @@
 ﻿using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Web.Models;
 using Microsoft.Identity.Web;
-using System.Net.Http.Headers;
 
 namespace Holonet.Databank.Web.Clients;
 

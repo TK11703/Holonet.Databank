@@ -10,7 +10,7 @@ public class UpdateRecordToHistoricalEvent : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapPost($"/HistoricalEvents/{{id}}/UpdateRecord/{{recordId}}", Handle)
+		app.MapPut($"/HistoricalEvents/{{id}}/UpdateRecord/{{recordId}}", Handle)
 			.AddEndpointFilter<ValidatorFilter<UpdateRecordDto>>()
 			.WithTags(Tags.HistoricalEvents);
 	}

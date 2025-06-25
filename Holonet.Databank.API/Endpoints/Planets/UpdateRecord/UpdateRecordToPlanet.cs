@@ -10,7 +10,7 @@ public class UpdateRecordToPlanet : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapPost($"/Planets/{{id}}/UpdateRecord/{{recordId}}", Handle)
+		app.MapPut($"/Planets/{{id}}/UpdateRecord/{{recordId}}", Handle)
 			.AddEndpointFilter<ValidatorFilter<UpdateRecordDto>>()
 			.WithTags(Tags.Planets);
 	}

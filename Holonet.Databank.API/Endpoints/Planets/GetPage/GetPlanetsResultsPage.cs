@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Holonet.Databank.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Holonet.Databank.Core.Dtos;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Identity.Web.Resource;
+
 namespace Holonet.Databank.API.Endpoints.Planets.GetPage;
 
 public class GetPlanetsResultsPage : IEndpoint
