@@ -1,4 +1,4 @@
-name: Web and API CI/CD
+name: App CI/CD
 
 on:
   workflow_dispatch:
@@ -54,7 +54,7 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Publish
-        run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output ${{ env.PUBLISH_DIR }} Holonet.Databank.API/Holonet.Databank.API.csproj
+        run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output ${{ env.PUBLISH_DIR }} src/Holonet.Databank.API/Holonet.Databank.API.csproj
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -85,7 +85,7 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Publish
-        run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output ${{ env.PUBLISH_DIR }} Holonet.Databank.Web/Holonet.Databank.Web.csproj
+        run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output ${{ env.PUBLISH_DIR }} src/Holonet.Databank.Web/Holonet.Databank.Web.csproj
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -116,7 +116,7 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Publish
-        run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output ${{ env.PUBLISH_DIR }} Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj
+        run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output ${{ env.PUBLISH_DIR }} src/Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj
 
       - name: Login to Azure
         uses: azure/login@v2
