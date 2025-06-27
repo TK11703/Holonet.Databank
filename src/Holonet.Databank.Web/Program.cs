@@ -79,7 +79,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapHealthChecks("health");
+app.MapHealthChecks("health").AllowAnonymous();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
