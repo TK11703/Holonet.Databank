@@ -11,16 +11,27 @@ public class AIServiceClient(HttpClient httpClient, ILogger<AIServiceClient> log
 
     public async Task<TextSummaryResult?> ExecuteTextSummarization(string input)
     {
-        var textSummaryRequest = new TextSummaryRequest() { Input=input, Summary=true, TargetLangCode="en-us" };
-        using HttpResponseMessage response = await _httpClient.PostAsJsonAsync("Language/TextSummary", textSummaryRequest);
-        if (!response.IsSuccessStatusCode)
+        var executedOn = DateTime.UtcNow;
+        _logger.LogInformation("Holonet.Databank.AIServiceClient ExecuteTextSummarization executed at: {ExecutionTime}", executedOn);
+
+        try
         {
-            _logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
+            var textSummaryRequest = new TextSummaryRequest() { Input = input, Summary = true, TargetLangCode = "en-us" };
+            using HttpResponseMessage response = await _httpClient.PostAsJsonAsync("Language/TextSummary", textSummaryRequest);
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
+            }
+            else
+            {
+                return await response.Content.ReadFromJsonAsync<TextSummaryResult>();
+            }
+            return default;
         }
-        else
+        catch (Exception ex)
         {
-            return await response.Content.ReadFromJsonAsync<TextSummaryResult>();
+            _logger.LogError(ex, "Holonet.Databank.AIServiceClient ExecuteTextSummarization error: {ErrorMessage}", ex.Message);
+            return null;
         }
-        return default;
     }
 }
