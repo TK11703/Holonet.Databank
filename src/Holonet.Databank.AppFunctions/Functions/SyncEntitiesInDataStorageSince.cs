@@ -22,7 +22,7 @@ namespace Holonet.Databank.AppFunctions.Functions
         {
             DateTime executedOn = DateTime.UtcNow;
             _logger.LogInformation("Holonet.Databank.Functions SyncEntitiesInDataStorageSince executed at: {ExecutionTime}", executedOn);
-            string? storConString = _configuration.GetConnectionString("DataStorage");
+            string? storConString = _configuration.GetConnectionString("ConnectionStrings:DataStorage");
             if(string.IsNullOrEmpty(storConString))
             {
                 _logger.LogError("Holonet.Databank.Functions SyncEntitiesInDataStorageSince error: DataStorage connection string is null or empty");

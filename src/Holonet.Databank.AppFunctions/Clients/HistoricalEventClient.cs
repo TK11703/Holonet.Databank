@@ -15,7 +15,7 @@ public class HistoricalEventClient(HttpClient httpClient, ILogger<HistoricalEven
         Guid funcIdentityGuid = Guid.Parse(_configuration.GetValue<string>("FunctionIdentityGuid")!);
         var updateRecordDto = new UpdateRecordDto(recordId, shard, recordText, null, historicalEventId, null, null, funcIdentityGuid);
 
-        using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"{historicalEventId}/UpdateRecord/{recordId}", updateRecordDto);
+        using HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"{historicalEventId}/UpdateRecord/{recordId}", updateRecordDto);
         if (!response.IsSuccessStatusCode)
         {
             _logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());

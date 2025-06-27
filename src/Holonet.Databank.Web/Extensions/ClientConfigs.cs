@@ -17,27 +17,33 @@ internal static class ClientConfigs
         string? baseApiAddress = config.GetValue<string>("DatabankApi:DeployedUrl");
         string? apiAuthKeyName = config.GetValue<string>("DatabankApim:KeyName");
         string? apiAuthKeyValue = config.GetValue<string>("DatabankApim:KeyValue");
-        
-        if (!string.IsNullOrEmpty(baseApiAddress) && !string.IsNullOrEmpty(apiAuthKeyName) && !string.IsNullOrEmpty(apiAuthKeyValue))
-        {            
-            services.AddHttpClient<AuthorClient>(client =>
-			{
-				client.BaseAddress = new Uri(new Uri(baseApiAddress), "Authors/");
-                client.DefaultRequestHeaders.Add(apiAuthKeyName, apiAuthKeyValue);
-            })
-			.ConfigurePrimaryHttpMessageHandler(() =>
-			{
-				return new SocketsHttpHandler
-				{
-					PooledConnectionLifetime = TimeSpan.FromMinutes(5)
-				};
-			})
-			.SetHandlerLifetime(Timeout.InfiniteTimeSpan);
 
-			services.AddHttpClient<CharacterClient>(client =>
+        if (!string.IsNullOrEmpty(baseApiAddress))
+        {
+            services.AddHttpClient<AuthorClient>(client =>
+            {
+                client.BaseAddress = new Uri(new Uri(baseApiAddress), "Authors/");
+                if(!string.IsNullOrEmpty(apiAuthKeyName) && !string.IsNullOrEmpty(apiAuthKeyValue))
+                {
+                    client.DefaultRequestHeaders.Add(apiAuthKeyName, apiAuthKeyValue);
+                }
+            })
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                return new SocketsHttpHandler
+                {
+                    PooledConnectionLifetime = TimeSpan.FromMinutes(5)
+                };
+            })
+            .SetHandlerLifetime(Timeout.InfiniteTimeSpan);
+
+            services.AddHttpClient<CharacterClient>(client =>
             {
                 client.BaseAddress = new Uri(new Uri(baseApiAddress), "Characters/");
-                client.DefaultRequestHeaders.Add(apiAuthKeyName, apiAuthKeyValue);
+                if (!string.IsNullOrEmpty(apiAuthKeyName) && !string.IsNullOrEmpty(apiAuthKeyValue))
+                {
+                    client.DefaultRequestHeaders.Add(apiAuthKeyName, apiAuthKeyValue);
+                }
             })
             .ConfigurePrimaryHttpMessageHandler(() =>
             {
@@ -51,7 +57,10 @@ internal static class ClientConfigs
             services.AddHttpClient<PlanetClient>(client =>
             {
                 client.BaseAddress = new Uri(new Uri(baseApiAddress), "Planets/");
-                client.DefaultRequestHeaders.Add(apiAuthKeyName, apiAuthKeyValue);
+                if (!string.IsNullOrEmpty(apiAuthKeyName) && !string.IsNullOrEmpty(apiAuthKeyValue))
+                {
+                    client.DefaultRequestHeaders.Add(apiAuthKeyName, apiAuthKeyValue);
+                }
             })
             .ConfigurePrimaryHttpMessageHandler(() =>
             {
@@ -65,7 +74,10 @@ internal static class ClientConfigs
             services.AddHttpClient<SpeciesClient>(client =>
             {
                 client.BaseAddress = new Uri(new Uri(baseApiAddress), "Species/");
-                client.DefaultRequestHeaders.Add(apiAuthKeyName, apiAuthKeyValue);
+                if (!string.IsNullOrEmpty(apiAuthKeyName) && !string.IsNullOrEmpty(apiAuthKeyValue))
+                {
+                    client.DefaultRequestHeaders.Add(apiAuthKeyName, apiAuthKeyValue);
+                }
             })
             .ConfigurePrimaryHttpMessageHandler(() =>
             {
@@ -79,7 +91,10 @@ internal static class ClientConfigs
             services.AddHttpClient<HistoricalEventClient>(client =>
             {
                 client.BaseAddress = new Uri(new Uri(baseApiAddress), "HistoricalEvents/");
-                client.DefaultRequestHeaders.Add(apiAuthKeyName, apiAuthKeyValue);
+                if (!string.IsNullOrEmpty(apiAuthKeyName) && !string.IsNullOrEmpty(apiAuthKeyValue))
+                {
+                    client.DefaultRequestHeaders.Add(apiAuthKeyName, apiAuthKeyValue);
+                }
             })
             .ConfigurePrimaryHttpMessageHandler(() =>
             {
@@ -90,19 +105,45 @@ internal static class ClientConfigs
             })
             .SetHandlerLifetime(Timeout.InfiniteTimeSpan);
 
-			services.AddHttpClient<AgentClient>(client =>
-			{
-				client.BaseAddress = new Uri(new Uri(baseApiAddress), "Agent/");
-                client.DefaultRequestHeaders.Add(apiAuthKeyName, apiAuthKeyValue);
+            services.AddHttpClient<AgentClient>(client =>
+            {
+                client.BaseAddress = new Uri(new Uri(baseApiAddress), "Agent/");
+                if (!string.IsNullOrEmpty(apiAuthKeyName) && !string.IsNullOrEmpty(apiAuthKeyValue))
+                {
+                    client.DefaultRequestHeaders.Add(apiAuthKeyName, apiAuthKeyValue);
+                }
             })
-			.ConfigurePrimaryHttpMessageHandler(() =>
-			{
-				return new SocketsHttpHandler
-				{
-					PooledConnectionLifetime = TimeSpan.FromMinutes(5)
-				};
-			})
-			.SetHandlerLifetime(Timeout.InfiniteTimeSpan);
-		}
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                return new SocketsHttpHandler
+                {
+                    PooledConnectionLifetime = TimeSpan.FromMinutes(5)
+                };
+            })
+            .SetHandlerLifetime(Timeout.InfiniteTimeSpan);
+        }
+
+        string? baseFunctionAppAddress = config.GetValue<string>("DatabankFunctionApp:DeployedUrl");
+        string? functionAppKey = config.GetValue<string>("DatabankFunctionApp:FunctionKey");
+
+        if (!string.IsNullOrEmpty(baseFunctionAppAddress))
+        {
+            services.AddHttpClient<FunctionAppClient>(client =>
+            {
+                client.BaseAddress = new Uri(baseFunctionAppAddress);
+                if (!string.IsNullOrEmpty(functionAppKey))
+                {
+                    client.DefaultRequestHeaders.Add("x-functions-key", functionAppKey);
+                }
+            })
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                return new SocketsHttpHandler
+                {
+                    PooledConnectionLifetime = TimeSpan.FromMinutes(5)
+                };
+            })
+            .SetHandlerLifetime(Timeout.InfiniteTimeSpan);
+        }
     }
 }

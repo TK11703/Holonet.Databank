@@ -49,6 +49,9 @@
 												<button type="button" class="btn btn-sm btn-danger" title="Click to delete this data record." @onclick="()=> { DeleteID = dataRecord.Id; DeleteModal.Open();}">
 													<svg class="icon"><use xlink:href="#icon-trash"></use></svg>
 												</button>
+												<button type="button" class="btn btn-sm btn-secondary" title="Click to request further processing on this data record." @onclick="async () => { ProcessRecordID = dataRecord.Id; ProcessRecordShard = dataRecord.Shard!; await RequestDataRecordProcessing(); }">
+													<svg class="icon"><use xlink:href="#icon-robot"></use></svg>
+												</button>
 											</Authorized>
 										</AuthorizeView>
 									</span>

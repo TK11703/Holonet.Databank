@@ -15,7 +15,7 @@ public class CharacterClient(HttpClient httpClient, ILogger<CharacterClient> log
         Guid funcIdentityGuid = Guid.Parse(_configuration.GetValue<string>("FunctionIdentityGuid")!);
         var updateRecordDto = new UpdateRecordDto(recordId, shard, recordText, characterId, null, null, null, funcIdentityGuid);
 
-        using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"{characterId}/UpdateRecord/{recordId}", updateRecordDto);
+        using HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"{characterId}/UpdateRecord/{recordId}", updateRecordDto);
         if (!response.IsSuccessStatusCode)
         {
             _logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());

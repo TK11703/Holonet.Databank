@@ -9,3 +9,8 @@ Post-Deployment Script Template
                SELECT * FROM [$(TableName)]					
 --------------------------------------------------------------------------------------
 */
+
+/* This script is going to enable change tracking on a table */
+ALTER DATABASE CURRENT SET CHANGE_TRACKING = ON (CHANGE_RETENTION = 2 DAYS, AUTO_CLEANUP = ON);
+
+ALTER TABLE [dbo].[DataRecords] ENABLE CHANGE_TRACKING WITH (TRACK_COLUMNS_UPDATED = OFF);

@@ -16,7 +16,7 @@ public class SpeciesClient(HttpClient httpClient, ILogger<SpeciesClient> logger,
         Guid funcIdentityGuid = Guid.Parse(_configuration.GetValue<string>("FunctionIdentityGuid")!);
         var updateRecordDto = new UpdateRecordDto(recordId, shard, recordText, null, null, null, speciesId, funcIdentityGuid);
 
-        using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"{speciesId}/UpdateRecord/{recordId}", updateRecordDto);
+        using HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"{speciesId}/UpdateRecord/{recordId}", updateRecordDto);
         if (!response.IsSuccessStatusCode)
         {
             _logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());

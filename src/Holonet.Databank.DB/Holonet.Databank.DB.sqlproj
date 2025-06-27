@@ -130,6 +130,7 @@
     <Build Include="dbo\Stored Procedures\spDataRecords_Delete.sql" />
     <Build Include="dbo\Stored Procedures\spDataRecords_Update.sql" />
     <Build Include="dbo\Stored Procedures\spDataRecords_Get.sql" />
+    <Build Include="dbo\Stored Procedures\spDataRecords_Exists.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Holonet.Databank.DB.publish.xml" />
@@ -137,5 +138,8 @@
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Holonet.Databank.DB.refactorlog" />
+  </ItemGroup>
+  <ItemGroup>
+    <PreDeploy Include="Script.PreDeployment.sql" />
   </ItemGroup>
 </Project>

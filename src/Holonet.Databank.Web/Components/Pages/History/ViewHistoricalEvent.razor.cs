@@ -24,10 +24,16 @@ public partial class ViewHistoricalEvent
 	public AppModal AddRecordModal { get; set; } = default!;
 	public int DeleteID { get; set; }
 
-	[Inject]
+    public int ProcessRecordID { get; set; }
+    public string ProcessRecordShard { get; set; } = string.Empty;
+
+    [Inject]
 	private HistoricalEventClient HistoricalEventClient { get; set; } = default!;
 
-	[Inject]
+    [Inject]
+    private FunctionAppClient FunctionAppClient { get; set; } = default!;
+
+    [Inject]
 	private NavigationManager Navigation { get; set; } = default!;
 	[Inject]
 	private UserService UserService { get; set; } = default!;
@@ -55,8 +61,12 @@ public partial class ViewHistoricalEvent
 		EditContext = new EditContext(RecordModel);
 	}
 
-	private MarkupString GetFormattedDescription(string input)
-	{
+    private MarkupString GetFormattedDescription(string? input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return new MarkupString(string.Empty);
+        }
         var pipeline = new MarkdownPipelineBuilder().UseAutoLinks(new AutoLinkOptions { OpenInNewWindow = true }).Build();
         return new MarkupString(Markdown.ToHtml(markdown: input, pipeline: pipeline));
     }
@@ -68,14 +78,51 @@ public partial class ViewHistoricalEvent
 		{
 			RecordModel.CreatedBy = new AuthorModel() { AzureId = UserService.GetAzureId() };
 		}
-		var completed = await HistoricalEventClient.CreateDataRecord(ID, RecordModel);
-		if (completed)
-		{
-			Model.DataRecords = await HistoricalEventClient.GetDataRecords(ID) ?? Enumerable.Empty<DataRecordModel>();
-			ToastService.ShowSuccess("New data record added successfully");
+        if (string.IsNullOrEmpty(RecordModel.Shard) && string.IsNullOrEmpty(RecordModel.Data))
+        {
+            ToastService.ShowError("Either Shard or Data must be provided.");
             ResetModal();
         }
-	}
+        else if (!string.IsNullOrEmpty(RecordModel.Shard) && await RecordExists(RecordModel.Shard))
+        {
+            ToastService.ShowError("A data record with this Shard already exists. Please use a different Shard.");
+            ResetModal();
+        }
+        else
+        {
+            int newId = await HistoricalEventClient.CreateDataRecord(ID, RecordModel);
+            if (newId > 0)
+            {
+                Model.DataRecords = await HistoricalEventClient.GetDataRecords(ID) ?? Enumerable.Empty<DataRecordModel>();
+                ToastService.ShowSuccess("New data record added successfully");
+                ResetModal();
+            }
+            else
+            {
+                ToastService.ShowError("Failed to add new data record. Please try again.");
+                ResetModal();
+            }
+        }
+    }
+
+    protected async Task RequestDataRecordProcessing()
+    {
+        var dataRecord = new DataRecordModel() { HistoricalEventId = ID, Id = ProcessRecordID, Shard = ProcessRecordShard };
+        if (string.IsNullOrEmpty(dataRecord.Shard))
+        {
+            ToastService.ShowError("Could not request further processing, because the Shard cannot be empty.");
+            return;
+        }
+        var completed = await FunctionAppClient.ProcessNewDataRecord(dataRecord);
+        if (completed)
+        {
+            ToastService.ShowSuccess("Request to process data record shard was sent");
+        }
+        else
+        {
+            ToastService.ShowError("Request for data processing failed.");
+        }
+    }
 
     protected void ResetModal()
     {
@@ -95,4 +142,9 @@ public partial class ViewHistoricalEvent
 			StateHasChanged();
 		}
 	}
+
+    private async Task<bool> RecordExists(string shard)
+    {
+        return await HistoricalEventClient.DataRecordExists(ID, shard);
+    }
 }

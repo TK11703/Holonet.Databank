@@ -1,11 +1,11 @@
 using Holonet.Databank.AppFunctions.Clients;
 using Holonet.Databank.AppFunctions.HtmlHarvesting;
+using Holonet.Databank.AppFunctions.Services;
 using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Core.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
@@ -47,7 +47,7 @@ namespace Holonet.Databank.AppFunctions.Functions
             }
             try
             {
-                DataRecordFunctionDto? externalData = JsonSerializer.Deserialize<DataRecordFunctionDto>(requestBody);
+                DataRecordFunctionDto? externalData = JsonSerializer.Deserialize<DataRecordFunctionDto>(requestBody, new JsonSerializerOptions() { PropertyNameCaseInsensitive=true});
                 if (externalData == null || string.IsNullOrEmpty(externalData.Shard))
                 {
                     _logger.LogError("Holonet.Databank.Functions ProcessDataRecordShard error: Invalid JSON in request body.");
@@ -76,10 +76,13 @@ namespace Holonet.Databank.AppFunctions.Functions
                         StatusCode = StatusCodes.Status500InternalServerError
                     };
                 }
+                
                 bool errorOccurred = false;
                 if (externalData.CharacterId.HasValue)
                 {
-                    if (await _characterClient.UpdateDataRecord(externalData.Id, externalData.CharacterId.Value, externalData.Shard, summary.ResultText))
+                    ILogger<CharacterService> serviceLogger = _loggerFactory.CreateLogger<CharacterService>();
+                    CharacterService characterService = new CharacterService(serviceLogger, _characterClient);
+                    if (await characterService.ProcessNewDataRecord(externalData.Id, externalData.CharacterId, externalData.Shard, summary.ResultText))
                     {
                         _logger.LogInformation("Holonet.Databank.Functions ProcessDataRecordShard CharacterId: {CharacterId} updated successfully.", externalData.CharacterId);
                     }
@@ -91,7 +94,9 @@ namespace Holonet.Databank.AppFunctions.Functions
                 }
                 if (externalData.PlanetId.HasValue)
                 {
-                    if (await _planetClient.UpdateDataRecord(externalData.Id, externalData.PlanetId.Value, externalData.Shard, summary.ResultText))
+                    ILogger<PlanetService> serviceLogger = _loggerFactory.CreateLogger<PlanetService>();
+                    PlanetService planetService = new PlanetService(serviceLogger, _planetClient);
+                    if (await planetService.ProcessNewDataRecord(externalData.Id, externalData.PlanetId, externalData.Shard, summary.ResultText))
                     {
                         _logger.LogInformation("Holonet.Databank.Functions ProcessDataRecordShard PlanetId: {PlanetId} updated successfully.", externalData.PlanetId);
                     }
@@ -103,7 +108,9 @@ namespace Holonet.Databank.AppFunctions.Functions
                 }
                 if (externalData.SpeciesId.HasValue)
                 {
-                    if (await _speciesClient.UpdateDataRecord(externalData.Id, externalData.SpeciesId.Value, externalData.Shard, summary.ResultText))
+                    ILogger<SpeciesService> serviceLogger = _loggerFactory.CreateLogger<SpeciesService>();
+                    SpeciesService speciesService = new SpeciesService(serviceLogger, _speciesClient);
+                    if (await speciesService.ProcessNewDataRecord(externalData.Id, externalData.SpeciesId, externalData.Shard, summary.ResultText))
                     {
                         _logger.LogInformation("Holonet.Databank.Functions ProcessDataRecordShard SpeciesId: {SpeciesId} updated successfully.", externalData.SpeciesId);
                     }
@@ -115,7 +122,9 @@ namespace Holonet.Databank.AppFunctions.Functions
                 }
                 if (externalData.HistoricalEventId.HasValue)
                 {
-                    if (await _historicalEventClient.UpdateDataRecord(externalData.Id, externalData.HistoricalEventId.Value, externalData.Shard, summary.ResultText))
+                    ILogger<HistoricalEventService> serviceLogger = _loggerFactory.CreateLogger<HistoricalEventService>();
+                    HistoricalEventService historicalEventService = new HistoricalEventService(serviceLogger, _historicalEventClient);
+                    if (await historicalEventService.ProcessNewDataRecord(externalData.Id, externalData.HistoricalEventId, externalData.Shard, summary.ResultText))
                     {
                         _logger.LogInformation("Holonet.Databank.Functions ProcessDataRecordShard HistoricalEventId: {HistoricalEventId} updated successfully.", externalData.HistoricalEventId);
                     }

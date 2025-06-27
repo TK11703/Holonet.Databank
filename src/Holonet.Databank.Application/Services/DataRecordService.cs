@@ -86,10 +86,15 @@ public class DataRecordService(IDataRecordRepository dataRecordRepository, IAuth
         return record;
     }
 
-    public async Task<bool> CreateDataRecord(DataRecord record)
+    public async Task<int?> CreateDataRecord(DataRecord record)
 	{
 		return await _dataRecordRepository.AddDataRecord(record);
 	}
+
+    public async Task<bool> RecordExists(string shard, int? characterId = null, int? historicalEventId = null, int? planetId = null, int? speciesId = null)
+    {
+        return await _dataRecordRepository.RecordExists(shard, characterId, historicalEventId, planetId, speciesId);
+    }
 
     public async Task<bool> UpdateDataRecord(DataRecord record)
     {

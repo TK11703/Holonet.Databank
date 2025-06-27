@@ -35,7 +35,7 @@ public class DataRecordRepository(ISqlDataAccess dataAccess) : IDataRecordReposi
         return results.FirstOrDefault();
     }
 
-    public async Task<bool> AddDataRecord(DataRecord record)
+    public async Task<int?> AddDataRecord(DataRecord record)
 	{
 		var p = new DynamicParameters();
 		p.Add(name: "@Data", record.Data);
@@ -45,19 +45,42 @@ public class DataRecordRepository(ISqlDataAccess dataAccess) : IDataRecordReposi
 		p.Add(name: "@PlanetId", record.PlanetId);
 		p.Add(name: "@SpeciesId", record.SpeciesId);
 		p.Add(name: "@AzureAuthorId", record.CreatedBy?.AzureId);
-		p.Add(name: "@Output", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+        p.Add(name: "@NewItemId", dbType: DbType.Int32, direction: ParameterDirection.Output);
+        p.Add(name: "@Output", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
 		await _dataAccess.SaveDataAsync("dbo.spDataRecords_Insert", p);
 		var completed = p.Get<int?>("@Output");
 		if (completed.HasValue && completed.Value.Equals(1))
 		{
-			return true;
+			return p.Get<int?>("@NewItemId");
 		}
 		else
 		{
-			return false;
+			return null;
 		}
 	}
+
+    public async Task<bool> RecordExists(string shard, int? characterId = null, int? historicalEventId = null, int? planetId = null, int? speciesId = null)
+    {
+        var p = new DynamicParameters();
+        p.Add(name: "@shard", shard);
+        p.Add(name: "@CharacterId", characterId);
+        p.Add(name: "@HistoricalEventId", historicalEventId);
+        p.Add(name: "@PlanetId", planetId);
+        p.Add(name: "@SpeciesId", speciesId);
+        p.Add(name: "@Output", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+
+        await _dataAccess.SaveDataAsync("dbo.spDataRecords_Exists", p);
+        var completed = p.Get<int?>("@Output");
+        if (completed.HasValue && completed.Value.Equals(1))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
     public async Task<bool> UpdateDataRecord(DataRecord record)
     {

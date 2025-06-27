@@ -5,7 +5,8 @@
 	@HistoricalEventId int = null,
 	@PlanetId int = null,
 	@SpeciesId int = null,
-	@AzureAuthorId uniqueidentifier
+	@AzureAuthorId uniqueidentifier,
+	@NewItemId int = null output
 AS
 BEGIN
 
@@ -21,7 +22,7 @@ BEGIN
 			([Data], [Shard], [CharacterId], [HistoricalEventId], [PlanetId], [SpeciesId], [CreatedOn], [UpdatedOn], [CreatedAuthorId], [UpdatedAuthorId])
 		Values
 			(@Data, @Shard, @CharacterId, @HistoricalEventId, @PlanetId, @SpeciesId, GETDATE(), GETDATE(), @AuthorId, @AuthorId)
-
+		SET @NewItemId = SCOPE_IDENTITY();
 		return 1;		
 	END
 

@@ -159,7 +159,7 @@ public sealed class CharacterClient : ClientBase
 		return 0;
 	}
 
-	public async Task<bool> CreateDataRecord(int id, DataRecordModel item)
+	public async Task<int> CreateDataRecord(int id, DataRecordModel item)
 	{
 		if (base.RequiresBearToken())
 		{
@@ -170,13 +170,29 @@ public sealed class CharacterClient : ClientBase
 		using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"{id}/AddRecord", createdataRecordDto);
 		if (response.IsSuccessStatusCode)
 		{
-			return await response.Content.ReadFromJsonAsync<bool>();
+            return await response.Content.ReadFromJsonAsync<int>();
 		}
 		_logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
-		return false;
+		return 0;
 	}
 
-	public async Task<bool> Update(CharacterModel item, int id)
+    public async Task<bool> DataRecordExists(int id, string shard)
+    {
+        if (base.RequiresBearToken())
+        {
+            await AcquireBearerTokenForClient(_httpClient);
+        }
+
+        using HttpResponseMessage response = await _httpClient.GetAsync($"{id}/Record?shard={shard}");
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadFromJsonAsync<bool>();
+        }
+        _logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
+        return true;
+    }
+
+    public async Task<bool> Update(CharacterModel item, int id)
 	{
 		if (base.RequiresBearToken())
 		{

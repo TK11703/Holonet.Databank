@@ -15,7 +15,7 @@ public class PlanetClient(HttpClient httpClient, ILogger<PlanetClient> logger, I
         Guid funcIdentityGuid = Guid.Parse(_configuration.GetValue<string>("FunctionIdentityGuid")!);
         var updateRecordDto = new UpdateRecordDto(recordId, shard, recordText, null, null, planetId, null, funcIdentityGuid);
 
-        using HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"{planetId}/UpdateRecord/{recordId}", updateRecordDto);
+        using HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"{planetId}/UpdateRecord/{recordId}", updateRecordDto);
         if (!response.IsSuccessStatusCode)
         {
             _logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
