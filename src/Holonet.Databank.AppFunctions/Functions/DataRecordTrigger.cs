@@ -40,21 +40,39 @@ public class DataRecordTrigger(ILoggerFactory loggerFactory, AIServiceClient ser
                 {
                     _logger.LogInformation("Holonet.Databank.Functions DataRecordTrigger Skipped: User provided content (Retrieval not necessary).");
                 }
-                else if(!string.IsNullOrWhiteSpace(change.Item.Shard))                
+                else if (!string.IsNullOrWhiteSpace(change.Item.Shard))
                 {
-                    ILogger<HtmlHarvester> harvestLogger = _loggerFactory.CreateLogger<HtmlHarvester>();
-                    HtmlHarvester engine = new HtmlHarvester(harvestLogger);
-                    string harvestedHtml = await engine.HarvestHtml(change.Item.Shard);
-                    if (string.IsNullOrEmpty(harvestedHtml))
+                    string harvestedHtml = string.Empty;
+                    try
                     {
-                        _logger.LogError("Holonet.Databank.Functions DataRecordTrigger error: Unable to harvest HTML.");
-                        return;
+                        ILogger<HtmlHarvester> harvestLogger = _loggerFactory.CreateLogger<HtmlHarvester>();
+                        HtmlHarvester engine = new HtmlHarvester(harvestLogger);
+                        harvestedHtml = await engine.HarvestHtml(change.Item.Shard);
+                        if (string.IsNullOrEmpty(harvestedHtml))
+                        {
+                            _logger.LogError("Holonet.Databank.Functions DataRecordTrigger error: Unable to harvest HTML.");
+                            break;
+                        }
                     }
-                    TextSummaryResult? summary = await _serviceClient.ExecuteTextSummarization(harvestedHtml);
-                    if (summary == null || string.IsNullOrEmpty(summary.ResultText))
+                    catch (Exception ex)
                     {
-                        _logger.LogError("Holonet.Databank.Functions DataRecordTrigger error: Unable to summarize text.");
-                        return;
+                        _logger.LogError(ex, "Holonet.Databank.Functions DataRecordTrigger error: Exception occurred while harvesting HTML.");
+                        throw;
+                    }
+                    TextSummaryResult? summary = null;
+                    try
+                    {
+                        summary = await _serviceClient.ExecuteTextSummarization(harvestedHtml);
+                        if (summary == null || string.IsNullOrEmpty(summary.ResultText))
+                        {
+                            _logger.LogError("Holonet.Databank.Functions DataRecordTrigger error: Unable to summarize text.");
+                            break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Holonet.Databank.Functions DataRecordTrigger error: Exception occurred while summarizing text.");
+                        throw;
                     }
 
                     if (change.Item.CharacterId.HasValue)
