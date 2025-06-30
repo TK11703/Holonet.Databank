@@ -6,15 +6,17 @@ using Holonet.Databank.Core.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
 namespace Holonet.Databank.AppFunctions.Functions
 {
-    public class ProcessDataRecordShard(ILoggerFactory loggerFactory, AIServiceClient serviceClient, CharacterClient characterClient, PlanetClient planetClient, SpeciesClient speciesClient, HistoricalEventClient historicalEventClient)
+    public class ProcessDataRecordShard(ILoggerFactory loggerFactory, IConfiguration configuration, AIServiceClient serviceClient, CharacterClient characterClient, PlanetClient planetClient, SpeciesClient speciesClient, HistoricalEventClient historicalEventClient)
     {
         private readonly ILogger _logger = loggerFactory.CreateLogger<ProcessDataRecordShard>();
         private readonly ILoggerFactory _loggerFactory = loggerFactory;
+        private readonly IConfiguration _configuration = configuration;
         private readonly AIServiceClient _serviceClient = serviceClient;
         private readonly CharacterClient _characterClient = characterClient;
         private readonly PlanetClient _planetClient = planetClient;
@@ -57,7 +59,7 @@ namespace Holonet.Databank.AppFunctions.Functions
                     };
                 }
                 ILogger<HtmlHarvester> harvestLogger = _loggerFactory.CreateLogger<HtmlHarvester>();
-                HtmlHarvester engine = new HtmlHarvester(harvestLogger);
+                HtmlHarvester engine = new HtmlHarvester(harvestLogger, _configuration);
                 string harvestedHtml = await engine.HarvestHtml(externalData.Shard);
                 if (string.IsNullOrEmpty(harvestedHtml))
                 {

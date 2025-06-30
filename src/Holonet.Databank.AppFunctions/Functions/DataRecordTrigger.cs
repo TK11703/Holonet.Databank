@@ -5,13 +5,15 @@ using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Core.Entities;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Extensions.Sql;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Holonet.Databank.AppFunctions.Functions;
 
-public class DataRecordTrigger(ILoggerFactory loggerFactory, AIServiceClient serviceClient, CharacterClient characterClient, PlanetClient planetClient, SpeciesClient speciesClient, HistoricalEventClient historicalEventClient)
+public class DataRecordTrigger(ILoggerFactory loggerFactory, IConfiguration configuration, AIServiceClient serviceClient, CharacterClient characterClient, PlanetClient planetClient, SpeciesClient speciesClient, HistoricalEventClient historicalEventClient)
 {
     private readonly ILogger _logger = loggerFactory.CreateLogger<DataRecordTrigger>();
+    private readonly IConfiguration _configuration = configuration;
     private readonly ILoggerFactory _loggerFactory = loggerFactory;
     private readonly AIServiceClient _serviceClient = serviceClient;
     private readonly CharacterClient _characterClient = characterClient;
@@ -46,7 +48,7 @@ public class DataRecordTrigger(ILoggerFactory loggerFactory, AIServiceClient ser
                     try
                     {
                         ILogger<HtmlHarvester> harvestLogger = _loggerFactory.CreateLogger<HtmlHarvester>();
-                        HtmlHarvester engine = new HtmlHarvester(harvestLogger);
+                        HtmlHarvester engine = new HtmlHarvester(harvestLogger, _configuration);
                         harvestedHtml = await engine.HarvestHtml(change.Item.Shard);
                         if (string.IsNullOrEmpty(harvestedHtml))
                         {
