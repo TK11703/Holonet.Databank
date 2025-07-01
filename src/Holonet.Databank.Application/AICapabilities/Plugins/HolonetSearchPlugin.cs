@@ -5,13 +5,14 @@ using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Embeddings;
+
+using Microsoft.Extensions.AI;
 
 namespace Holonet.Databank.Application.AICapabilities.Plugins;
 #pragma warning disable SKEXP0001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-public class HolonetSearchPlugin(ITextEmbeddingGenerationService textEmbeddingGenerationService, SearchIndexClient indexClient, IConfiguration configuration)
+public class HolonetSearchPlugin(IEmbeddingGenerator<string, Embedding<float>> embeddingGenerator, SearchIndexClient indexClient, IConfiguration configuration)
 {
-    private readonly ITextEmbeddingGenerationService _textEmbeddingGenerationService = textEmbeddingGenerationService;
+    private readonly IEmbeddingGenerator<string, Embedding<float>> _embeddingGenerator = embeddingGenerator;
     private readonly SearchIndexClient _indexClient = indexClient;
     private readonly string _indexName = configuration["AzureAiSearch:Index"] ?? throw new MissingFieldException("AzureAiSearch:Index");
 
@@ -21,13 +22,13 @@ public class HolonetSearchPlugin(ITextEmbeddingGenerationService textEmbeddingGe
     public async Task<string> SearchAsync(string query)
     {
         // Convert string query to vector
-        ReadOnlyMemory<float> embedding = await _textEmbeddingGenerationService.GenerateEmbeddingAsync(query);
+        Embedding<float> embedding = await _embeddingGenerator.GenerateAsync(query);
 
         // Get client for search operations
         SearchClient searchClient = _indexClient.GetSearchClient(_indexName);
 
         // Configure request parameters
-        VectorizedQuery vectorQuery = new(embedding);
+        VectorizedQuery vectorQuery = new(embedding.Vector);
         vectorQuery.Fields.Add("text_vector");
 
         SearchOptions searchOptions = new() { VectorSearch = new() { Queries = { vectorQuery } } };
@@ -51,7 +52,7 @@ public class HolonetSearchPlugin(ITextEmbeddingGenerationService textEmbeddingGe
             SearchResult<IndexSchema> result = resultList[0];
             resultText = $"Details: {result.Document.Chunk}\nSource: Holonet Mainframe";
         }
-        
+
         return resultText;
     }
 
