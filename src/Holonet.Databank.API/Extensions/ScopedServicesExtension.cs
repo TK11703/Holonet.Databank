@@ -87,7 +87,6 @@ public static class ScopedServicesExtension
             kernelBuilder.Plugins.AddFromObject(new WeatherPlugin(sp.GetRequiredService<IHttpClientFactory>()), "WeatherPlugin");
             kernelBuilder.Plugins.AddFromType<HolonetSearchPlugin>("HolonetSearchPlugin");
 
-            kernelBuilder.Plugins.AddFromObject(new BingSearchPlugin(sp.GetRequiredService<IHttpClientFactory>(), configuration), "BingSearchPlugin");
             return kernelBuilder.Build();
         });
 
