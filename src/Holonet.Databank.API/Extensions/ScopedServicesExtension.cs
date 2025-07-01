@@ -108,8 +108,7 @@ public static class ScopedServicesExtension
             //kernelBuilder.Plugins.AddFromObject(new HolonetSearchPlugin(sp.GetRequiredService<ITextEmbeddingGenerationService>(), sp.GetRequiredService<SearchIndexClient>(), configuration), "HolonetSearchPlugin");
 #pragma warning restore SKEXP0001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
 
-            kernelBuilder.Plugins.AddFromType<HolonetSearchPlugin>("HolonetSearchPlugin");
-            kernelBuilder.Plugins.AddFromObject(new BingSearchPlugin(sp.GetRequiredService<IHttpClientFactory>(), configuration), "BingSearchPlugin");
+            kernelBuilder.Plugins.AddFromType<HolonetSearchPlugin>("HolonetSearchPlugin");            
             return kernelBuilder.Build();
 		});
 
