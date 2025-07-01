@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>9d76f8dc-e5b9-4f45-8f3d-1d5a24a78c4c</UserSecretsId>
@@ -13,18 +13,18 @@
 
   <ItemGroup>
     <PackageReference Include="Blazored.Toast" Version="4.2.1" />
-    <PackageReference Include="Markdig" Version="0.41.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.15" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.15" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.15" />
-    <PackageReference Include="Microsoft.Graph" Version="5.77.0" />
-    <PackageReference Include="Microsoft.Identity.Web" Version="3.8.3" />
-    <PackageReference Include="Microsoft.Identity.Web.DownstreamApi" Version="3.8.3" />
-    <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.8.3" />
-    <PackageReference Include="Microsoft.Identity.Web.UI" Version="3.8.3" />
+    <PackageReference Include="Markdig" Version="0.41.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Graph" Version="5.83.0" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="3.9.4" />
+    <PackageReference Include="Microsoft.Identity.Web.DownstreamApi" Version="3.9.4" />
+    <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.9.4" />
+    <PackageReference Include="Microsoft.Identity.Web.UI" Version="3.9.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="System.Text.Json" Version="9.0.4" />    
+    <PackageReference Include="System.Text.Json" Version="9.0.6" />    
   </ItemGroup>
 
   <ItemGroup>
