@@ -34,30 +34,42 @@ public class HtmlHarvester
         return handler;
     }
 
-    public async Task<string> HarvestHtml(string url)
+    public async Task<IEnumerable<string>> HarvestHtml(string url)
     {
         DateTime executedOn = DateTime.UtcNow;
         _logger.LogInformation("Holonet.Databank.HtmlHarvesting HtmlHarvester executed at: {ExecutionTime}", executedOn);
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            _logger.LogWarning("Holonet.Databank.HtmlHarvesting HtmlHarvester received an empty URL.");
+            return [];
+        }
 
         try
         {
             string pageHtml = await GetPageHtml(url);
-            if (!string.IsNullOrEmpty(pageHtml))
+            if (string.IsNullOrWhiteSpace(pageHtml))
             {
-                return GetSiteContent(url, pageHtml);
+                _logger.LogWarning("Holonet.Databank.HtmlHarvesting HtmlHarvester received a URL, but the provided URL did not yield any page content to process.");
             }
-            return string.Empty;
+            else
+            {
+                return GetSiteContentChunks(url, pageHtml);
+            }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Holonet.Databank.HtmlHarvesting HtmlHarvester error: {ErrorMessage}", ex.Message);
-            return "An internal server error occurred.";
         }
+        return [];
     }
 
     private async Task<string> GetPageHtml(string url)
     {
-        var result = string.Empty;
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            _logger.LogWarning("Holonet.Databank.HtmlHarvesting HtmlHarvester->GetPageHtml received an empty URL.");
+            return string.Empty;
+        }
 
         try
         {
@@ -79,55 +91,104 @@ public class HtmlHarvester
             client.DefaultRequestHeaders.Add("Sec-Fetch-User", "\"?1\"");
             client.DefaultRequestHeaders.Add("Cache-Control", "max-age=0");
 
-
-            result = await client.GetStringAsync(url);
+            return await client.GetStringAsync(url);
         }
         catch (HttpRequestException ex)
         {
-            LogMessage($"Unable to GET requested URL ({url}). Error: {ex.Message}", LogLevel.Error);
+            _logger.LogError(ex, "Unable to GET requested URL ({Url}). Error: {ErrorMessage}", url, ex.Message);
         }
 
-        return result;
+        return string.Empty;
     }
 
-    private static string GetSiteContent(string url, string html)
+    private IEnumerable<string> GetSiteContentChunks(string url, string html)
     {
-        var doc = new HtmlDocument();
-        doc.LoadHtml(html);
-        var regex = new System.Text.RegularExpressions.Regex(@"^https:\/\/starwars\.fandom\.com\/wiki\/.*$");
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            _logger.LogWarning("Holonet.Databank.HtmlHarvesting HtmlHarvester->GetSiteContentChunks received an empty URL.");
+            return [];
+        }
+        if (string.IsNullOrWhiteSpace(html))
+        {
+            _logger.LogWarning("Holonet.Databank.HtmlHarvesting HtmlHarvester->GetSiteContentChunks received an empty html parameter.");
+            return [];
+        }
+        var regex = new Regex(@"^https:\/\/starwars\.fandom\.com\/wiki\/.*$");
         if (regex.IsMatch(url))
         {
-            var textContentparagraphs = doc.DocumentNode.SelectSingleNode("//div[@id='content']")?.SelectSingleNode("//div[@id='mw-content-text']")?.SelectNodes("//p[normalize-space(.) != '']");
-            if (textContentparagraphs == null)
-            {
-                return string.Empty;
-            }
-            return string.Join(Environment.NewLine, textContentparagraphs.Select(p => CleanText(p.InnerText.Trim())));
+            return GetSite1Content(html);
         }
 
-        regex = new System.Text.RegularExpressions.Regex(@"^https:\/\/www\.starwars\.com\/databank\/.*$");
+        regex = new Regex(@"^https:\/\/www\.starwars\.com\/databank\/.*$");
         if (regex.IsMatch(url))
         {
-            var overviewContent = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'content-info')]")?.SelectNodes("//p[contains(@class, 'desc')]");
-            var historicalContent = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'rich-text-output')]")?.SelectNodes("//p");
-            if (overviewContent != null && historicalContent != null)
-            {
-                return string.Join(Environment.NewLine, overviewContent.Concat(historicalContent).Select(p => CleanText(p.InnerText.Trim())));
-            }
-            else if (overviewContent != null && historicalContent == null)
-            {
-                return string.Join(Environment.NewLine, overviewContent.Select(p => CleanText(p.InnerText.Trim())));
-            }
-            else if (overviewContent == null && historicalContent != null)
-            {
-                return string.Join(Environment.NewLine, historicalContent.Select(p => CleanText(p.InnerText.Trim())));
-            }
-            else
-            {
-                return string.Empty;
-            }
+            return GetSite2Content(html);
         }
-        return string.Empty;
+        return [];
+    }
+
+    private IEnumerable<string> GetSite1Content(string html)
+    {
+        if (string.IsNullOrWhiteSpace(html))
+        {
+            _logger.LogWarning("Holonet.Databank.HtmlHarvesting HtmlHarvester->GetSite1Content received an empty html parameter.");
+            return [];
+        }
+        var doc = new HtmlDocument();
+        doc.LoadHtml(html);
+        var contentDiv = doc.DocumentNode.SelectSingleNode("//div[@id='content']")?.SelectSingleNode(".//div[@id='mw-content-text']")?.SelectSingleNode("//div[contains(@class, 'mw-content-ltr')]");
+        if (contentDiv == null)
+        {
+            _logger.LogWarning("Holonet.Databank.HtmlHarvesting HtmlHarvester->GetSite1Content could not find the content div in the HTML.");
+            return [];
+        }
+        //only interested in the overview content for the URL
+        var paragraphs = new List<HtmlNode>();
+        foreach (var node in contentDiv.ChildNodes)
+        {
+            if (node.Name == "div" && node.GetAttributeValue("id", "") == "toc")
+                break;
+
+            if (node.Name == "p" && !string.IsNullOrWhiteSpace(node.InnerText))
+                paragraphs.Add(node);
+        }
+        var first20 = paragraphs?.Take(20).ToList();
+        if (first20 == null)
+        {
+            return [];
+        }
+        return first20.Select(p => CleanText(p.InnerText.Trim()));
+    }
+
+    private IEnumerable<string> GetSite2Content(string html)
+    {
+        if (string.IsNullOrWhiteSpace(html))
+        {
+            _logger.LogWarning("Holonet.Databank.HtmlHarvesting HtmlHarvester->GetSite2Content received an empty html parameter.");
+            return [];
+        }
+        var doc = new HtmlDocument();
+        doc.LoadHtml(html);
+        var overviewContent = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'content-info')]")?.SelectNodes("//p[contains(@class, 'desc')]");
+        var first20Overview = overviewContent?.Take(20).ToList();
+        var historicalContent = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'rich-text-output')]")?.SelectNodes("./p");
+        var first20Historical = historicalContent?.Take(20).ToList();
+        if (first20Overview != null && first20Historical != null)
+        {
+            return first20Overview.Concat(first20Historical).Select(p => CleanText(p.InnerText.Trim()));
+        }
+        else if (first20Overview != null && first20Historical == null)
+        {
+            return first20Overview.Select(p => CleanText(p.InnerText.Trim()));
+        }
+        else if (first20Overview == null && first20Historical != null)
+        {
+            return first20Historical.Select(p => CleanText(p.InnerText.Trim()));
+        }
+        else
+        {
+            return [];
+        }
     }
 
     private static string CleanText(string input)
@@ -136,14 +197,6 @@ public class HtmlHarvester
         {
             return string.Empty;
         }
-        string cleaned = Regex.Replace(input, @"(?:\[|\&#91;)\d+(?:\]|\&#93;)", "");
-        return cleaned;
-    }
-
-    private void LogMessage(string message, LogLevel logLevel = LogLevel.Information)
-    {
-        var msg = $"Logger, UTC:{DateTime.UtcNow} => {message}";
-        _logger.Log(logLevel, msg);
-        System.Diagnostics.Debug.WriteLine(msg);
+        return Regex.Replace(input, @"(?:\[|\&#91;)\d+(?:\]|\&#93;)", "");
     }
 }
