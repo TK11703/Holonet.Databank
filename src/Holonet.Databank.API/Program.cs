@@ -8,6 +8,8 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 var configuration = builder.Configuration;
 
 builder.Services.AddLogging();
@@ -28,6 +30,8 @@ builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
 builder.Services.AddHostedService<ChatHistoryCleanupService>();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 var logger = app.Services.GetService<ILogger<Program>>();
 

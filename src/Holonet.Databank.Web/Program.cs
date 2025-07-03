@@ -13,6 +13,8 @@ using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
 	.AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"))
 	.EnableTokenAcquisitionToCallDownstreamApi(options => { builder.Configuration.Bind("AzureAd", options); })
@@ -68,6 +70,8 @@ builder.Services.ConfigureClients(builder.Configuration); //custom service exten
 builder.Services.AddBlazoredToast();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -31,6 +31,7 @@
     <ProjectReference Include="..\Holonet.Databank.Core\Holonet.Databank.Core.csproj" />
     <ProjectReference Include="..\Holonet.Databank.Infrastructure\Holonet.Databank.Infrastructure.csproj" />
     <ProjectReference Include="..\Holonet.Databank.Application\Holonet.Databank.Application.csproj" />
+    <ProjectReference Include="..\Holonet.Databank.ServiceDefaults\Holonet.Databank.ServiceDefaults.csproj" />
   </ItemGroup>
 
   <ItemGroup>

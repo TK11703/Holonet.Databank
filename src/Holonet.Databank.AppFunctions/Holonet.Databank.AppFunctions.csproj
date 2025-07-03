@@ -33,6 +33,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Holonet.Databank.Core\Holonet.Databank.Core.csproj" />
+		<ProjectReference Include="..\Holonet.Databank.ServiceDefaults\Holonet.Databank.ServiceDefaults.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>808a5f1b-f7b0-4dc3-a3e3-4611a9221e1b</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0" />
+    <PackageReference Include="Aspire.Hosting.Azure.Functions" Version="(9.0-*,9.1]" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Holonet.Databank.API\Holonet.Databank.API.csproj" />
+    <ProjectReference Include="..\Holonet.Databank.AppFunctions\Holonet.Databank.AppFunctions.csproj" />
+    <ProjectReference Include="..\Holonet.Databank.Web\Holonet.Databank.Web.csproj" />
+  </ItemGroup>
+
+</Project>
