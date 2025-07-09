@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using System.Security.Claims;
-using Holonet.Databank.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
