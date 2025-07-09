@@ -1,4 +1,6 @@
+using Holonet.Databank.AppFunctions;
 using Holonet.Databank.AppFunctions.Extensions;
+using Holonet.Databank.AppFunctions.Configuration;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Azure.Functions.Worker;
@@ -23,6 +25,7 @@ try
     })
     .ConfigureServices((context, services) =>
     {
+        services.Configure<AppSettings>(context.Configuration.GetSection("AppSettings"));
         if (context.HostingEnvironment.IsDevelopment())
         {
             try

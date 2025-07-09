@@ -1,8 +1,8 @@
 using Blazored.Toast;
 using Holonet.Databank.Core;
+using Holonet.Databank.Web.Configuration;
 using Holonet.Databank.Web.Components;
 using Holonet.Databank.Web.Extensions;
-using Holonet.Databank.Web.Services;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using System.Security.Claims;
+using Holonet.Databank.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,8 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
 	.AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"))
 	.EnableTokenAcquisitionToCallDownstreamApi(options => { builder.Configuration.Bind("AzureAd", options); })
 	.AddInMemoryTokenCaches();
+
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
 builder.Services.AddAuthorization(options =>
 {
@@ -96,4 +99,4 @@ app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

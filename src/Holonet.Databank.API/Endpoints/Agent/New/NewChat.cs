@@ -1,6 +1,7 @@
 ﻿using Holonet.Databank.Application.AICapabilities;
 using Holonet.Databank.Core.Dtos;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 
@@ -13,7 +14,7 @@ public class NewChat : IEndpoint
 		app.MapGet($"/Agent/NewChat/{{id}}", HandleAsync)
 			.WithTags(Tags.Agent);
 	}
-	protected virtual async Task<Results<Ok<ChatResponseDto>, ProblemHttpResult>> HandleAsync(Guid id, Kernel kernel, IChatCompletionService chat, IChatHistoryManager chatHistoryManager)
+	protected virtual async Task<Results<Ok<ChatResponseDto>, ProblemHttpResult>> HandleAsync(Guid id, [FromServices] Kernel kernel, [FromServices] IChatCompletionService chat, [FromServices] IChatHistoryManager chatHistoryManager)
 	{
 		try
 		{

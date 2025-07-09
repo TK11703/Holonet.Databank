@@ -1,6 +1,7 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Diagnostics;
 using Holonet.Databank.API.Extensions;
+using Holonet.Databank.API.Configuration;
 using FluentValidation;
 using Holonet.Databank.API.Middleware;
 using Microsoft.Extensions.Options;
@@ -10,7 +11,6 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-var configuration = builder.Configuration;
 
 builder.Services.AddLogging();
 builder.Services.AddHttpContextAccessor();
@@ -19,8 +19,9 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
-builder.Services.AddScopedServices(configuration);
+builder.Services.AddScopedServices(builder.Configuration.TryGetSection<AppSettings>("AppSettings")!);
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
@@ -35,9 +36,9 @@ app.MapDefaultEndpoints();
 
 var logger = app.Services.GetService<ILogger<Program>>();
 
-var showSwagger = builder.Configuration.GetValue<bool>("ShowSwagger");
+var appSettings = builder.Configuration.TryGetSection<AppSettings>("AppSettings");
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment() || showSwagger)
+if (app.Environment.IsDevelopment() || appSettings!.ShowSwagger)
 {
 	app.UseSwagger();
 	app.UseSwaggerUI();
@@ -60,13 +61,8 @@ app.UseExceptionHandler(appError =>
 		var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
 		if (contextFeature is not null)
 		{
-			//log the error
-			string error = $"Error: {contextFeature.Error}";
-			if (logger is not null)
-			{
-				logger.LogError(error);
-			}
-			await context.Response.WriteAsJsonAsync(new
+            logger?.LogError("Error: {Error}", contextFeature.Error.Message);
+            await context.Response.WriteAsJsonAsync(new
 			{
 				context.Response.StatusCode,
 				Message = "Internal Server Error."
@@ -78,4 +74,4 @@ app.UseExceptionHandler(appError =>
 //Register the endpoint as services in the application for use.
 app.MapEndpoints();
 
-app.Run();
+await app.RunAsync();

@@ -1,4 +1,5 @@
 ﻿using Holonet.Databank.AppFunctions.Clients;
+using Holonet.Databank.AppFunctions.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,20 +14,20 @@ internal static class ClientConfigs
     /// <param name="services"></param>
     /// <param name="config"></param>
     public static void ConfigureClients(this IServiceCollection services, IConfiguration config)
-    {       
+    {
+        var apiSettings = config.TryGetSection<ApiGatewaySettings>("AppSettings:ApiGateway");
+        if (apiSettings == null)
+            throw new InvalidOperationException("Missing AppSettings:ApiGateway in configuration.");
+        
 
-        string? baseApiAddress = config.GetValue<string>("DatabankApiUrl");
-        string? apiAuthKeyName = config.GetValue<string>("DatabankApim:KeyName");
-        string? apiAuthKeyValue = config.GetValue<string>("DatabankApim:KeyValue");
-
-        if (!string.IsNullOrEmpty(baseApiAddress))
+        if (!string.IsNullOrEmpty(apiSettings.BaseUrl))
         {
 			services.AddHttpClient<CharacterClient>(client =>
             {
-                client.BaseAddress = new Uri(new Uri(baseApiAddress), "Characters/");
-                if (!string.IsNullOrEmpty(apiAuthKeyName) && !string.IsNullOrEmpty(apiAuthKeyValue))
+                client.BaseAddress = new Uri(new Uri(apiSettings.BaseUrl), "Characters/");
+                if (!string.IsNullOrEmpty(apiSettings.ApiKeyHeaderName) && !string.IsNullOrEmpty(apiSettings.ApiKeyHeaderValue))
                 {
-                    client.DefaultRequestHeaders.Add(apiAuthKeyName, apiAuthKeyValue);
+                    client.DefaultRequestHeaders.Add(apiSettings.ApiKeyHeaderName, apiSettings.ApiKeyHeaderValue);
                 }
             })
             .ConfigurePrimaryHttpMessageHandler(() =>
@@ -40,10 +41,10 @@ internal static class ClientConfigs
 
             services.AddHttpClient<PlanetClient>(client =>
             {
-                client.BaseAddress = new Uri(new Uri(baseApiAddress), "Planets/");
-                if (!string.IsNullOrEmpty(apiAuthKeyName) && !string.IsNullOrEmpty(apiAuthKeyValue))
+                client.BaseAddress = new Uri(new Uri(apiSettings.BaseUrl), "Planets/");
+                if (!string.IsNullOrEmpty(apiSettings.ApiKeyHeaderName) && !string.IsNullOrEmpty(apiSettings.ApiKeyHeaderValue))
                 {
-                    client.DefaultRequestHeaders.Add(apiAuthKeyName, apiAuthKeyValue);
+                    client.DefaultRequestHeaders.Add(apiSettings.ApiKeyHeaderName, apiSettings.ApiKeyHeaderValue);
                 }
             })
             .ConfigurePrimaryHttpMessageHandler(() =>
@@ -57,10 +58,10 @@ internal static class ClientConfigs
 
             services.AddHttpClient<SpeciesClient>(client =>
             {
-                client.BaseAddress = new Uri(new Uri(baseApiAddress), "Species/");
-                if (!string.IsNullOrEmpty(apiAuthKeyName) && !string.IsNullOrEmpty(apiAuthKeyValue))
+                client.BaseAddress = new Uri(new Uri(apiSettings.BaseUrl), "Species/");
+                if (!string.IsNullOrEmpty(apiSettings.ApiKeyHeaderName) && !string.IsNullOrEmpty(apiSettings.ApiKeyHeaderValue))
                 {
-                    client.DefaultRequestHeaders.Add(apiAuthKeyName, apiAuthKeyValue);
+                    client.DefaultRequestHeaders.Add(apiSettings.ApiKeyHeaderName, apiSettings.ApiKeyHeaderValue);
                 }
             })
             .ConfigurePrimaryHttpMessageHandler(() =>
@@ -74,10 +75,10 @@ internal static class ClientConfigs
 
             services.AddHttpClient<HistoricalEventClient>(client =>
             {
-                client.BaseAddress = new Uri(new Uri(baseApiAddress), "HistoricalEvents/");
-                if (!string.IsNullOrEmpty(apiAuthKeyName) && !string.IsNullOrEmpty(apiAuthKeyValue))
+                client.BaseAddress = new Uri(new Uri(apiSettings.BaseUrl), "HistoricalEvents/");
+                if (!string.IsNullOrEmpty(apiSettings.ApiKeyHeaderName) && !string.IsNullOrEmpty(apiSettings.ApiKeyHeaderValue))
                 {
-                    client.DefaultRequestHeaders.Add(apiAuthKeyName, apiAuthKeyValue);
+                    client.DefaultRequestHeaders.Add(apiSettings.ApiKeyHeaderName, apiSettings.ApiKeyHeaderValue);
                 }
             })
             .ConfigurePrimaryHttpMessageHandler(() =>
@@ -91,10 +92,10 @@ internal static class ClientConfigs
 
             services.AddHttpClient<AIServiceClient>(client =>
             {
-                client.BaseAddress = new Uri(new Uri(baseApiAddress), "AIServices/");
-                if (!string.IsNullOrEmpty(apiAuthKeyName) && !string.IsNullOrEmpty(apiAuthKeyValue))
+                client.BaseAddress = new Uri(new Uri(apiSettings.BaseUrl), "AIServices/");
+                if (!string.IsNullOrEmpty(apiSettings.ApiKeyHeaderName) && !string.IsNullOrEmpty(apiSettings.ApiKeyHeaderValue))
                 {
-                    client.DefaultRequestHeaders.Add(apiAuthKeyName, apiAuthKeyValue);
+                    client.DefaultRequestHeaders.Add(apiSettings.ApiKeyHeaderName, apiSettings.ApiKeyHeaderValue);
                 }
             })
             .ConfigurePrimaryHttpMessageHandler(() =>

@@ -1,18 +1,20 @@
-﻿using Holonet.Databank.Core.Dtos;
-using Microsoft.Extensions.Configuration;
+﻿using Holonet.Databank.AppFunctions.Configuration;
+using Holonet.Databank.Core.Dtos;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Net.Http.Json;
 
 namespace Holonet.Databank.AppFunctions.Clients;
-public class HistoricalEventClient(HttpClient httpClient, ILogger<HistoricalEventClient> logger, IConfiguration configuration)
+public class HistoricalEventClient(HttpClient httpClient, ILogger<HistoricalEventClient> logger, IOptions<AppSettings> options)
 {
     private readonly HttpClient _httpClient = httpClient;
     private readonly ILogger<HistoricalEventClient> _logger = logger;
-    private readonly IConfiguration _configuration = configuration;
+    private readonly AppSettings _appSettings = options.Value;
 
     public async Task<bool> UpdateDataRecord(int recordId, int historicalEventId, string shard, string recordText)
     {
-        Guid funcIdentityGuid = Guid.Parse(_configuration.GetValue<string>("FunctionIdentityGuid")!);
+
+        Guid funcIdentityGuid = Guid.Parse(_appSettings.FunctionIdentityGuid!);
         var updateRecordDto = new UpdateRecordDto(recordId, shard, recordText, null, historicalEventId, null, null, funcIdentityGuid);
 
         using HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"{historicalEventId}/UpdateRecord/{recordId}", updateRecordDto);

@@ -1,18 +1,19 @@
 using Holonet.Databank.AppFunctions.Clients;
+using Holonet.Databank.AppFunctions.Configuration;
 using Holonet.Databank.AppFunctions.Syncing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Holonet.Databank.AppFunctions.Functions
 {
-    public class SyncAllEntitiesInDataStorage(ILoggerFactory loggerFactory, IConfiguration configuration, CharacterClient characterClient, HistoricalEventClient historicalEventClient, PlanetClient planetClient, SpeciesClient speciesClient)
+    public class SyncAllEntitiesInDataStorage(ILoggerFactory loggerFactory, IOptions<AppSettings> appSettings, CharacterClient characterClient, HistoricalEventClient historicalEventClient, PlanetClient planetClient, SpeciesClient speciesClient)
     {
         private readonly ILogger _logger = loggerFactory.CreateLogger<SyncAllEntitiesInDataStorage>();
         private readonly ILoggerFactory _loggerFactory = loggerFactory;
-        private readonly IConfiguration _configuration = configuration;
+        private readonly AppSettings _appSettings = appSettings.Value;
         private readonly CharacterClient _characterClient = characterClient;
         private readonly HistoricalEventClient _historicalEventClient = historicalEventClient;
         private readonly PlanetClient _planetClient = planetClient;
@@ -23,13 +24,13 @@ namespace Holonet.Databank.AppFunctions.Functions
         {
             DateTime executedOn = DateTime.UtcNow;
             _logger.LogInformation("Holonet.Databank.Functions SyncAllEntitiesInDataStorage executed at: {ExecutionTime}", executedOn);
-            string? storConString = _configuration.GetConnectionString("DataStorage");
+            string? storConString = _appSettings.DataStorage.ConnectionString;
             if (string.IsNullOrEmpty(storConString))
             {
                 _logger.LogError("Holonet.Databank.Functions SyncAllEntitiesInDataStorage error: DataStorage connection string is null or empty");
                 return new ObjectResult(new { error = "An internal server error occurred." }) { StatusCode = 500 };
             }
-            string? storContainerName = _configuration["DataStorage:ContainerName"];
+            string? storContainerName = _appSettings.DataStorage.ContainerName;
             if (string.IsNullOrEmpty(storContainerName))
             {
                 _logger.LogError("Holonet.Databank.Functions SyncAllEntitiesInDataStorage error: DataStorage container name is null or empty");

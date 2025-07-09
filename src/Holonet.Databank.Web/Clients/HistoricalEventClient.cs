@@ -1,6 +1,8 @@
 ﻿using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Core.Models;
 using Holonet.Databank.Web.Models;
+using Holonet.Databank.Web.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 
 namespace Holonet.Databank.Web.Clients;
@@ -10,7 +12,7 @@ public sealed class HistoricalEventClient : ClientBase
 	private readonly HttpClient _httpClient;
 	private readonly ILogger<HistoricalEventClient> _logger;
 
-	public HistoricalEventClient(HttpClient httpClient, ILogger<HistoricalEventClient> logger, ITokenAcquisition tokenAcquisition, IConfiguration configuration) : base(tokenAcquisition, configuration)
+	public HistoricalEventClient(HttpClient httpClient, ILogger<HistoricalEventClient> logger, ITokenAcquisition tokenAcquisition, IOptions<AppSettings> options) : base(tokenAcquisition, options)
 	{
 		_httpClient = httpClient;
 		_logger = logger;

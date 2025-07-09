@@ -1,20 +1,17 @@
-﻿using System.ComponentModel;
-using System.Text.Json.Serialization;
-using Azure.Search.Documents;
+﻿using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Models;
-using Microsoft.Extensions.Configuration;
-using Microsoft.SemanticKernel;
-
 using Microsoft.Extensions.AI;
+using Microsoft.SemanticKernel;
+using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace Holonet.Databank.Application.AICapabilities.Plugins;
-#pragma warning disable SKEXP0001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-public class HolonetSearchPlugin(IEmbeddingGenerator<string, Embedding<float>> embeddingGenerator, SearchIndexClient indexClient, IConfiguration configuration)
+public class HolonetSearchPlugin(IEmbeddingGenerator<string, Embedding<float>> embeddingGenerator, SearchIndexClient indexClient, string indexName)
 {
     private readonly IEmbeddingGenerator<string, Embedding<float>> _embeddingGenerator = embeddingGenerator;
     private readonly SearchIndexClient _indexClient = indexClient;
-    private readonly string _indexName = configuration["AzureAiSearch:Index"] ?? throw new MissingFieldException("AzureAiSearch:Index");
+    private readonly string _indexName = indexName;
 
     [KernelFunction("holonet_search")]
     [Description("Queries the Holonet mainframe for details on Star Wars characters, planets, species, historical events and includes the source of the data.")]

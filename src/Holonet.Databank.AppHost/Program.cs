@@ -1,7 +1,7 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 var apiBaseUrl = builder.ExecutionContext.IsPublishMode
-    ? builder.Configuration["ApiGateway:BaseUrl"]
+    ? builder.Configuration["MyAppSettings:ApiGateway:BaseUrl"]
     : builder.AddProject<Projects.Holonet_Databank_API>("holonet-databank-api").GetEndpoint("http").ToString();
 
 var web = builder.AddProject<Projects.Holonet_Databank_Web>("holonet-databank-web")

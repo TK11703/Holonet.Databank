@@ -1,5 +1,7 @@
 ﻿using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Web.Models;
+using Holonet.Databank.Web.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 
 namespace Holonet.Databank.Web.Clients;
@@ -9,7 +11,7 @@ public sealed class AuthorClient : ClientBase
 	private readonly HttpClient _httpClient;
 	private readonly ILogger<AuthorClient> _logger;
 
-	public AuthorClient(HttpClient httpClient, ILogger<AuthorClient> logger, ITokenAcquisition tokenAcquisition, IConfiguration configuration) : base(tokenAcquisition, configuration)
+	public AuthorClient(HttpClient httpClient, ILogger<AuthorClient> logger, ITokenAcquisition tokenAcquisition, IOptions<AppSettings> options) : base(tokenAcquisition, options)
 	{
 		_httpClient = httpClient;
 		_logger = logger;

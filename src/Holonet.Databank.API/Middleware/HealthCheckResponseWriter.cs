@@ -4,14 +4,14 @@ using System.Text.Json;
 namespace Holonet.Databank.API.Middleware;
 public static class HealthCheckResponseWriter
 {
+    private static readonly JsonSerializerOptions CachedJsonSerializerOptions = new JsonSerializerOptions
+    {
+        WriteIndented = true
+    };
+
     public static Task WriteResponse(HttpContext context, HealthReport result)
     {
         context.Response.ContentType = "application/json";
-
-        var options = new JsonSerializerOptions
-        {
-            WriteIndented = true
-        };
 
         var json = JsonSerializer.Serialize(new
         {
@@ -22,7 +22,7 @@ public static class HealthCheckResponseWriter
                 status = entry.Value.Status.ToString(),
                 description = entry.Value.Description
             })
-        }, options);
+        }, CachedJsonSerializerOptions);
 
         return context.Response.WriteAsync(json);
     }

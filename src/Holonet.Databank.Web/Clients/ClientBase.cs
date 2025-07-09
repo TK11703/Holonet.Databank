@@ -1,32 +1,26 @@
-﻿using Microsoft.Identity.Web;
+﻿using Microsoft.Extensions.Options;
+using Microsoft.Identity.Web;
 using System.Net.Http.Headers;
+using Holonet.Databank.Web.Configuration;
 
 namespace Holonet.Databank.Web.Clients;
 
-public class ClientBase
+public class ClientBase(ITokenAcquisition tokenAcquisition, IOptions<AppSettings> options)
 {
-	private readonly ITokenAcquisition _tokenAcquisition;
-	private readonly IEnumerable<string> _scopes;
-	private readonly bool _requiresBearerToken;
+	private readonly ITokenAcquisition _tokenAcquisition = tokenAcquisition;
+	private readonly IEnumerable<string> _scopes = GetScopesFromConfiguration(options.Value.ApiGateway);
+	private readonly bool _requiresBearerToken = options.Value.ApiGateway.RequiresBearerToken;
 
-	public ClientBase(ITokenAcquisition tokenAcquisition, IConfiguration configuration)
+    protected static IEnumerable<string> GetScopesFromConfiguration(ApiGatewaySettings apiSettings)
 	{
-		_tokenAcquisition = tokenAcquisition;
-		_scopes = GetScopesFromConfiguration(configuration);
-		_requiresBearerToken = configuration.GetValue<bool>("DatabankApi:RequiresBearerToken");
-	}
-
-	protected static IEnumerable<string> GetScopesFromConfiguration(IConfiguration configuration)
-	{
-		var section = configuration.GetSection("DatabankApi:Scopes");
-		if (section.Exists())
+		if(!string.IsNullOrWhiteSpace(apiSettings.Scopes))
 		{
-			return section.Get<string>()?.Split(' ') ?? Array.Empty<string>();
-		}
+			return apiSettings.Scopes.Split(' ');
+        }
 		else
 		{
-			return Array.Empty<string>();
-		}
+            return Array.Empty<string>();
+        }
 	}
 
 	public bool RequiresBearToken()

@@ -1,19 +1,19 @@
 ﻿using Holonet.Databank.Core.Dtos;
-using Holonet.Databank.Core.Entities;
-using Microsoft.Extensions.Configuration;
+using Holonet.Databank.AppFunctions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Net.Http.Json;
 
 namespace Holonet.Databank.AppFunctions.Clients;
-public class SpeciesClient(HttpClient httpClient, ILogger<SpeciesClient> logger, IConfiguration configuration)
+public class SpeciesClient(HttpClient httpClient, ILogger<SpeciesClient> logger, IOptions<AppSettings> options)
 {
     private readonly HttpClient _httpClient = httpClient;
     private readonly ILogger<SpeciesClient> _logger = logger;
-    private readonly IConfiguration _configuration = configuration;
+    private readonly AppSettings _appSettings = options.Value;
 
     public async Task<bool> UpdateDataRecord(int recordId, int speciesId, string shard, string recordText)
     {
-        Guid funcIdentityGuid = Guid.Parse(_configuration.GetValue<string>("FunctionIdentityGuid")!);
+        Guid funcIdentityGuid = Guid.Parse(_appSettings.FunctionIdentityGuid!);
         var updateRecordDto = new UpdateRecordDto(recordId, shard, recordText, null, null, null, speciesId, funcIdentityGuid);
 
         using HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"{speciesId}/UpdateRecord/{recordId}", updateRecordDto);

@@ -1,4 +1,6 @@
 ﻿using Holonet.Databank.Web.Models;
+using Holonet.Databank.Web.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 
 namespace Holonet.Databank.Web.Clients;
@@ -8,7 +10,7 @@ public class FunctionAppClient : ClientBase
 	private readonly HttpClient _httpClient;
 	private readonly ILogger<FunctionAppClient> _logger;
 
-	public FunctionAppClient(HttpClient httpClient, ILogger<FunctionAppClient> logger, ITokenAcquisition tokenAcquisition, IConfiguration configuration) : base(tokenAcquisition, configuration)
+	public FunctionAppClient(HttpClient httpClient, ILogger<FunctionAppClient> logger, ITokenAcquisition tokenAcquisition, IOptions<AppSettings> options) : base(tokenAcquisition, options)
 	{
 		_httpClient = httpClient;
 		_logger = logger;
