@@ -1,4 +1,5 @@
 using Holonet.Databank.AppFunctions.Clients;
+using Holonet.Databank.AppFunctions.Configuration;
 using Holonet.Databank.AppFunctions.HtmlHarvesting;
 using Holonet.Databank.AppFunctions.Services;
 using Holonet.Databank.Core.Dtos;
@@ -6,13 +7,14 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Extensions.Sql;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Holonet.Databank.AppFunctions.Functions;
 
-public class DataRecordTrigger(ILoggerFactory loggerFactory, IConfiguration configuration, AIServiceClient serviceClient, CharacterClient characterClient, PlanetClient planetClient, SpeciesClient speciesClient, HistoricalEventClient historicalEventClient)
+public class DataRecordTrigger(ILoggerFactory loggerFactory, IOptions<AppSettings> appSettings, AIServiceClient serviceClient, CharacterClient characterClient, PlanetClient planetClient, SpeciesClient speciesClient, HistoricalEventClient historicalEventClient)
 {
     private readonly ILogger _logger = loggerFactory.CreateLogger<DataRecordTrigger>();
-    private readonly IConfiguration _configuration = configuration;
+    private readonly AppSettings _settings = appSettings.Value;
     private readonly ILoggerFactory _loggerFactory = loggerFactory;
     private readonly AIServiceClient _serviceClient = serviceClient;
     private readonly CharacterClient _characterClient = characterClient;
@@ -47,7 +49,7 @@ public class DataRecordTrigger(ILoggerFactory loggerFactory, IConfiguration conf
                     try
                     {
                         ILogger<HtmlHarvester> harvestLogger = _loggerFactory.CreateLogger<HtmlHarvester>();
-                        HtmlHarvester engine = new HtmlHarvester(harvestLogger, _configuration);
+                        HtmlHarvester engine = new HtmlHarvester(harvestLogger, _settings);
                         harvestedHtmlChunks = await engine.HarvestHtml(change.Item.Shard);
                         if (harvestedHtmlChunks.Count().Equals(0))
                         {

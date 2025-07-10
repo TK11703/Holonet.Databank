@@ -1,24 +1,21 @@
-﻿using HtmlAgilityPack;
+﻿using Holonet.Databank.AppFunctions.Configuration;
+using HtmlAgilityPack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
-
 
 namespace Holonet.Databank.AppFunctions.HtmlHarvesting;
 public class HtmlHarvester
 {
     private readonly ILogger _logger;
-    private readonly IConfiguration _configuration;
+    private readonly AppSettings _settings;
     private readonly HttpClient client;
 
-    public HtmlHarvester(ILogger<HtmlHarvester> logger, IConfiguration configuration)
+    public HtmlHarvester(ILogger<HtmlHarvester> logger, AppSettings settings)
     {
         _logger = logger;
-        _configuration = configuration;
+        _settings = settings;
         client = new HttpClient(GetCustomizedHandler());
     }
 
@@ -73,24 +70,7 @@ public class HtmlHarvester
 
         try
         {
-            client.DefaultRequestHeaders.UserAgent.ParseAdd(_configuration.GetValue<string>("HttpClientHeaders:UserAgent")!);
-            //Add additional headers which might be required.
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.ParseAdd("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8");
-            client.DefaultRequestHeaders.Referrer = new Uri("https://www.google.com"); // Optional but helps
-            client.DefaultRequestHeaders.AcceptLanguage.ParseAdd("en-US,en;q=0.5");
-            client.DefaultRequestHeaders.AcceptEncoding.ParseAdd("gzip, deflate");
-            client.DefaultRequestHeaders.ConnectionClose = false;
-            client.DefaultRequestHeaders.Add("Upgrade-Insecure-Requests", "1");
-            client.DefaultRequestHeaders.Add("Sec-CH-UA", "\"Chromium\";v=\"122\", \"Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"122\"");
-            client.DefaultRequestHeaders.Add("Sec-CH-UA-Mobile", "?0");
-            client.DefaultRequestHeaders.Add("Sec-CH-UA-Platform", "\"Windows\"");
-            client.DefaultRequestHeaders.Add("Sec-Fetch-Dest", "\"document\"");
-            client.DefaultRequestHeaders.Add("Sec-Fetch-Mode", "\"navigate\"");
-            client.DefaultRequestHeaders.Add("Sec-Fetch-Site", "\"none\"");
-            client.DefaultRequestHeaders.Add("Sec-Fetch-User", "\"?1\"");
-            client.DefaultRequestHeaders.Add("Cache-Control", "max-age=0");
-
+            SetCustomHttpRequestHeaders();
             return await client.GetStringAsync(url);
         }
         catch (HttpRequestException ex)
@@ -99,6 +79,71 @@ public class HtmlHarvester
         }
 
         return string.Empty;
+    }
+
+    private void SetCustomHttpRequestHeaders()
+    {
+        if (!string.IsNullOrWhiteSpace(_settings.HarvestingHttpReqHeaders.UserAgent))
+        {
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(_settings.HarvestingHttpReqHeaders.UserAgent);
+        }
+        //Add additional headers which might be required.
+        if (!string.IsNullOrWhiteSpace(_settings.HarvestingHttpReqHeaders.Referrer))
+        {
+            client.DefaultRequestHeaders.Referrer = new Uri(_settings.HarvestingHttpReqHeaders.Referrer);
+        }
+        if (!string.IsNullOrWhiteSpace(_settings.HarvestingHttpReqHeaders.Accept))
+        {
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.ParseAdd(_settings.HarvestingHttpReqHeaders.Accept);
+        }
+        if (!string.IsNullOrWhiteSpace(_settings.HarvestingHttpReqHeaders.AcceptLanguage))
+        {
+            client.DefaultRequestHeaders.AcceptLanguage.Clear();
+            client.DefaultRequestHeaders.AcceptLanguage.ParseAdd(_settings.HarvestingHttpReqHeaders.AcceptLanguage);
+        }
+        if (!string.IsNullOrWhiteSpace(_settings.HarvestingHttpReqHeaders.CacheControl))
+        {
+            client.DefaultRequestHeaders.Add("Cache-Control", _settings.HarvestingHttpReqHeaders.CacheControl);
+        }
+        if (!string.IsNullOrWhiteSpace(_settings.HarvestingHttpReqHeaders.AcceptLanguage))
+        {
+            client.DefaultRequestHeaders.AcceptEncoding.Clear();
+            client.DefaultRequestHeaders.AcceptEncoding.ParseAdd(_settings.HarvestingHttpReqHeaders.AcceptEncoding);
+        }                
+        client.DefaultRequestHeaders.ConnectionClose = false;
+        if (!string.IsNullOrWhiteSpace(_settings.HarvestingHttpReqHeaders.UpgradeInsecureRequests))
+        {
+            client.DefaultRequestHeaders.Add("Upgrade-Insecure-Requests", _settings.HarvestingHttpReqHeaders.UpgradeInsecureRequests);
+        }
+        if(!string.IsNullOrWhiteSpace(_settings.HarvestingHttpReqHeaders.SecCHUA))
+        {
+             client.DefaultRequestHeaders.Add("Sec-CH-UA", _settings.HarvestingHttpReqHeaders.SecCHUA);
+        }
+        if (!string.IsNullOrWhiteSpace(_settings.HarvestingHttpReqHeaders.SecCHUAPlatform))
+        {
+            client.DefaultRequestHeaders.Add("Sec-CH-UA-Platform", _settings.HarvestingHttpReqHeaders.SecCHUAPlatform);
+        }
+        if (!string.IsNullOrWhiteSpace(_settings.HarvestingHttpReqHeaders.SecCHUAMobile))
+        {
+            client.DefaultRequestHeaders.Add("Sec-CH-UA-Mobile", _settings.HarvestingHttpReqHeaders.SecCHUAMobile);
+        }
+        if (!string.IsNullOrWhiteSpace(_settings.HarvestingHttpReqHeaders.SecFetchDest))
+        {
+            client.DefaultRequestHeaders.Add("Sec-Fetch-Dest", _settings.HarvestingHttpReqHeaders.SecFetchDest);
+        }
+        if (!string.IsNullOrWhiteSpace(_settings.HarvestingHttpReqHeaders.SecFetchMode))
+        {
+            client.DefaultRequestHeaders.Add("Sec-Fetch-Mode", _settings.HarvestingHttpReqHeaders.SecFetchMode);
+        }
+        if (!string.IsNullOrWhiteSpace(_settings.HarvestingHttpReqHeaders.SecFetchSite))
+        {
+            client.DefaultRequestHeaders.Add("Sec-Fetch-Site", _settings.HarvestingHttpReqHeaders.SecFetchSite);
+        }
+        if (!string.IsNullOrWhiteSpace(_settings.HarvestingHttpReqHeaders.SecFetchUser))
+        {
+            client.DefaultRequestHeaders.Add("Sec-Fetch-User", _settings.HarvestingHttpReqHeaders.SecFetchUser);
+        }
     }
 
     private IEnumerable<string> GetSiteContentChunks(string url, string html)
