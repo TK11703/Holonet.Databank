@@ -18,8 +18,13 @@ namespace Holonet.Databank.AppFunctions.Functions
         private readonly PlanetClient _planetClient = planetClient;
         private readonly SpeciesClient _speciesClient = speciesClient;
 
+        /// <summary>
+        /// Execute the sync operation for all entities in the data storage since a specified date.
+        /// </summary>
+        /// <param name="myTimer">The NCRONTAB format is "Seconds Minutes Hours DayofMonth Month DayOfWeek"</param>
+        /// <returns></returns>
         [Function("SyncEntitiesInDataStorageSince")]
-        public async Task Run([TimerTrigger("0 8 * * *")] TimerInfo myTimer)
+        public async Task Run([TimerTrigger("0 0 8 * * *")] TimerInfo myTimer)
         {
             DateTime executedOn = DateTime.UtcNow;
             _logger.LogInformation("Holonet.Databank.Functions SyncEntitiesInDataStorageSince executed at: {ExecutionTime}", executedOn);
