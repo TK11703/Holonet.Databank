@@ -12,7 +12,15 @@ public partial class CheckboxSelector : ComponentBase
 	[Parameter]
 	public List<int> SelectedOptionIds { get; set; } = [];
 
-	private void UpdateSelection(int id, bool isSelected)
+	private void HandleCheckboxChange(int id,ChangeEventArgs e)
+	{
+		if (e.Value is bool isSelected)
+		{
+			UpdateSelection(id, isSelected);
+		}
+    }
+
+    private void UpdateSelection(int id, bool isSelected)
 	{
 		if (isSelected && !SelectedOptionIds.Contains(id))
 		{
@@ -23,4 +31,9 @@ public partial class CheckboxSelector : ComponentBase
 			SelectedOptionIds.Remove(id);
 		}
 	}
+
+    private bool ShowAsSelected(int id)
+	{
+		return SelectedOptionIds.Contains(id);
+    }
 }
