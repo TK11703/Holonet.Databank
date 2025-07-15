@@ -42,8 +42,12 @@ public static class ScopedServicesExtension
 
         services.AddScoped<IHistoricalEventService, HistoricalEventService>();
         services.AddScoped<IHistoricalEventRepository, HistoricalEventRepository>();
+
         services.AddScoped<IHistoricalEventCharacterRepository, HistoricalEventCharacterRepository>();
         services.AddScoped<IHistoricalEventPlanetRepository, HistoricalEventPlanetRepository>();
+
+        services.AddScoped<IGenericDBService, GenericDBService>();
+        services.AddScoped<IGenericDBRepository, GenericDBRepository>();
 
         services.AddHealthChecks();
         //.AddCheck<DatabaseHealthCheck>("database", HealthStatus.Unhealthy);

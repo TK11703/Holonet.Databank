@@ -106,6 +106,23 @@ internal static class ClientConfigs
                 };
             })
             .SetHandlerLifetime(Timeout.InfiniteTimeSpan);
+
+            services.AddHttpClient<GenericDBClient>(client =>
+            {
+                client.BaseAddress = new Uri(new Uri(apiSettings.BaseUrl), "Tests/");
+                if (!string.IsNullOrEmpty(apiSettings.ApiKeyHeaderName) && !string.IsNullOrEmpty(apiSettings.ApiKeyHeaderValue))
+                {
+                    client.DefaultRequestHeaders.Add(apiSettings.ApiKeyHeaderName, apiSettings.ApiKeyHeaderValue);
+                }
+            })
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                return new SocketsHttpHandler
+                {
+                    PooledConnectionLifetime = TimeSpan.FromMinutes(5)
+                };
+            })
+            .SetHandlerLifetime(Timeout.InfiniteTimeSpan);
         }
     }
 }
