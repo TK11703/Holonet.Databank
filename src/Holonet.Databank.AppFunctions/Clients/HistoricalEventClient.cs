@@ -11,11 +11,44 @@ public class HistoricalEventClient(HttpClient httpClient, ILogger<HistoricalEven
     private readonly ILogger<HistoricalEventClient> _logger = logger;
     private readonly AppSettings _appSettings = options.Value;
 
+    public async Task<bool> UpdateDataRecordForProcessing(int recordId, int historicalEventId, string shard)
+    {
+        Guid funcIdentityGuid = Guid.Parse(_appSettings.FunctionIdentityGuid!);
+        var updateRecordDto = new UpdateRecordDto(recordId, shard, string.Empty, false, true, false, null, null, historicalEventId, null, null, funcIdentityGuid);
+
+        using HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"{historicalEventId}/UpdateRecord/{recordId}", updateRecordDto);
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
+        }
+        else
+        {
+            return await response.Content.ReadFromJsonAsync<bool>();
+        }
+        return default;
+    }
+
+    public async Task<bool> UpdateDataRecordForProcessingError(int recordId, int historicalEventId, string shard, string errorMessage)
+    {
+        Guid funcIdentityGuid = Guid.Parse(_appSettings.FunctionIdentityGuid!);
+        var updateRecordDto = new UpdateRecordDto(recordId, shard, string.Empty, false, false, false, errorMessage, null, historicalEventId, null, null, funcIdentityGuid);
+
+        using HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"{historicalEventId}/UpdateRecord/{recordId}", updateRecordDto);
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
+        }
+        else
+        {
+            return await response.Content.ReadFromJsonAsync<bool>();
+        }
+        return default;
+    }
+
     public async Task<bool> UpdateDataRecord(int recordId, int historicalEventId, string shard, string recordText)
     {
-
         Guid funcIdentityGuid = Guid.Parse(_appSettings.FunctionIdentityGuid!);
-        var updateRecordDto = new UpdateRecordDto(recordId, shard, recordText, null, historicalEventId, null, null, funcIdentityGuid);
+        var updateRecordDto = new UpdateRecordDto(recordId, shard, recordText, false, false, true, null, null, historicalEventId, null, null, funcIdentityGuid);
 
         using HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"{historicalEventId}/UpdateRecord/{recordId}", updateRecordDto);
         if (!response.IsSuccessStatusCode)

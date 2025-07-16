@@ -27,6 +27,9 @@ public class AddRecordToHistoricalEvent : IEndpoint
             {
                 Data = itemModel.Data,
                 Shard = itemModel.Shard,
+                IsNew = true,
+                IsProcessing = false,
+                IsProcessed = false,
                 CharacterId = itemModel.CharacterId,
                 HistoricalEventId = itemModel.HistoricalEventId,
                 PlanetId = itemModel.PlanetId,

@@ -11,10 +11,44 @@ public class PlanetClient(HttpClient httpClient, ILogger<PlanetClient> logger, I
     private readonly ILogger<PlanetClient> _logger = logger;
     private readonly AppSettings _appSettings = options.Value;
 
+    public async Task<bool> UpdateDataRecordForProcessing(int recordId, int planetId, string shard)
+    {
+        Guid funcIdentityGuid = Guid.Parse(_appSettings.FunctionIdentityGuid!);
+        var updateRecordDto = new UpdateRecordDto(recordId, shard, string.Empty, false, true, false, null, null, null, planetId, null, funcIdentityGuid);
+
+        using HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"{planetId}/UpdateRecord/{recordId}", updateRecordDto);
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
+        }
+        else
+        {
+            return await response.Content.ReadFromJsonAsync<bool>();
+        }
+        return default;
+    }
+
+    public async Task<bool> UpdateDataRecordForProcessingError(int recordId, int planetId, string shard, string errorMessage)
+    {
+        Guid funcIdentityGuid = Guid.Parse(_appSettings.FunctionIdentityGuid!);
+        var updateRecordDto = new UpdateRecordDto(recordId, shard, string.Empty, false, false, false, errorMessage, null, null, planetId, null, funcIdentityGuid);
+
+        using HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"{planetId}/UpdateRecord/{recordId}", updateRecordDto);
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Http Status:{StatusCode}{Newline}Http Message: {Content}", response.StatusCode, Environment.NewLine, await response.Content.ReadAsStringAsync());
+        }
+        else
+        {
+            return await response.Content.ReadFromJsonAsync<bool>();
+        }
+        return default;
+    }
+
     public async Task<bool> UpdateDataRecord(int recordId, int planetId, string shard, string recordText)
     {
         Guid funcIdentityGuid = Guid.Parse(_appSettings.FunctionIdentityGuid!);
-        var updateRecordDto = new UpdateRecordDto(recordId, shard, recordText, null, null, planetId, null, funcIdentityGuid);
+        var updateRecordDto = new UpdateRecordDto(recordId, shard, recordText, false, false, true, null, null, null, planetId, null, funcIdentityGuid);
 
         using HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"{planetId}/UpdateRecord/{recordId}", updateRecordDto);
         if (!response.IsSuccessStatusCode)

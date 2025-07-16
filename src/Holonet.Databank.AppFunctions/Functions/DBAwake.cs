@@ -30,7 +30,7 @@ public class DBAwake(GenericDBClient genericDBClient, ILoggerFactory loggerFacto
         catch (Exception ex)
         {
             _logger.LogError(ex, "Holonet.Databank.Functions DBAwake error: Exception occurred while checking DB readiness. Executed at: {ExecutionTime}", executedOn);
-            throw new InvalidOperationException($"Exception occurred in DBAwake at {executedOn}", ex);
+            throw new InvalidOperationException($"Exception occurred in DBAwake at {executedOn}.", ex);
         }
 
         if (myTimer.ScheduleStatus is not null)

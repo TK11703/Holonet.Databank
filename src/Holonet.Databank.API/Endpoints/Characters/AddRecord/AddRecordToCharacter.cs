@@ -31,7 +31,10 @@ public class AddRecordToCharacter : IEndpoint
                 PlanetId = itemModel.PlanetId,
                 SpeciesId = itemModel.SpeciesId,
                 CreatedBy = author,
-                UpdatedBy = author
+                UpdatedBy = author,
+                IsNew = true,
+                IsProcessing = false,
+                IsProcessed = false
             };
             if (!record.CharacterId.HasValue || !record.CharacterId.Equals(id))
             {

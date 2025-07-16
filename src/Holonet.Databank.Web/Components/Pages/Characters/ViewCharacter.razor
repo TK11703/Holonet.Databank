@@ -39,6 +39,32 @@
 						<div class="card mb-3">
 							<div class="card-body">
 								<h6 class="card-subtitle mb-2 text-muted d-flex">
+									<span class="me-2">
+										@if (dataRecord.IsProcessed)
+										{
+											<button type="button" class="btn btn-outline-success btn-sm" title="Data record has been processed.">
+												<svg class="icon"><use xlink:href="#icon-star-filled"></use></svg>
+											</button>
+										}
+										else if (dataRecord.IsProcessing)
+										{
+											<button type="button" class="btn btn-outline-secondary btn-sm" title="Data record is being processed.">
+												<svg class="icon"><use xlink:href="#icon-star-half"></use></svg>
+											</button>
+										}
+										else if (dataRecord.IsNew)
+										{
+											<button type="button" class="btn btn-outline-primary btn-sm" title="Data record is new and has not been processed.">
+												<svg class="icon"><use xlink:href="#icon-star"></use></svg>
+											</button>
+										}
+										else
+										{
+											<button type="button" class="btn btn-outline-danger btn-sm" title="Processing Error: '@dataRecord.SystemMessage'">
+												<svg class="icon"><use xlink:href="#icon-exclamation-circle"></use></svg>
+											</button>
+										}
+									</span>
 									<span class="flex-grow-1 small">
 										<strong>Added:</strong> @dataRecord.CreatedOn.ToString() by @(dataRecord.CreatedBy?.DisplayName ?? "Unknown Source")<br />
 										<strong>Updated:</strong> @dataRecord.UpdatedOn.ToString() by @(dataRecord.UpdatedBy?.DisplayName ?? "Unknown Source")
@@ -54,6 +80,7 @@
 												</button>
 											</Authorized>
 										</AuthorizeView>
+										
 									</span>
 								</h6>
 								@if (!string.IsNullOrEmpty(dataRecord.Shard))

@@ -12,7 +12,15 @@ public class DataRecordModel : IValidatableObject
 
 	public string? Data { get; set; }
 
-	public int? CharacterId { get; set; }
+    public bool IsNew { get; set; } = true;
+
+    public bool IsProcessing { get; set; } = false;
+
+    public bool IsProcessed { get; set; } = false;
+
+    public string? SystemMessage { get; set; }
+
+    public int? CharacterId { get; set; }
 
 	public int? HistoricalEventId { get; set; }
 

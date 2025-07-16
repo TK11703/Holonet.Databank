@@ -13,8 +13,17 @@ public class DataRecord
 
     [Required]
 	public required string Data { get; set; }
+    
+    public bool IsNew { get; set; } = true;
+    
+    public bool IsProcessing { get; set; } = false;
+    
+    public bool IsProcessed { get; set; } = false;
 
-	public int? CharacterId { get; set; }
+    [StringLength(150)]
+    public string? SystemMessage { get; set; }
+
+    public int? CharacterId { get; set; }
 
 	public int? PlanetId { get; set; }
 

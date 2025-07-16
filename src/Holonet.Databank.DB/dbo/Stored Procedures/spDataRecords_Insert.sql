@@ -19,9 +19,9 @@ BEGIN
 	ELSE
 	BEGIN
 		INSERT INTO dbo.DataRecords
-			([Data], [Shard], [CharacterId], [HistoricalEventId], [PlanetId], [SpeciesId], [CreatedOn], [UpdatedOn], [CreatedAuthorId], [UpdatedAuthorId])
+			([Data], [Shard], [IsNew], [IsProcessing], [IsProcessed], [CharacterId], [HistoricalEventId], [PlanetId], [SpeciesId], [CreatedOn], [UpdatedOn], [CreatedAuthorId], [UpdatedAuthorId])
 		Values
-			(@Data, @Shard, @CharacterId, @HistoricalEventId, @PlanetId, @SpeciesId, GETDATE(), GETDATE(), @AuthorId, @AuthorId)
+			(@Data, @Shard, 1, 0, 0, @CharacterId, @HistoricalEventId, @PlanetId, @SpeciesId, GETDATE(), GETDATE(), @AuthorId, @AuthorId)
 		SET @NewItemId = SCOPE_IDENTITY();
 		return 1;		
 	END

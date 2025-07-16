@@ -12,12 +12,12 @@ public class IsDBAwake : IEndpoint
 		app.MapGet($"/Tests/DBAwake", Handle)
 			.WithTags(Tags.Tests);
 	}
-	protected virtual async Task<Results<Ok<string>, ProblemHttpResult>> Handle(IGenericDBService genericDBService)
+	protected virtual async Task<Results<Ok<bool>, ProblemHttpResult>> Handle(IGenericDBService genericDBService)
 	{
 		try
 		{
 			var isDbAwake = await genericDBService.DBReady();
-			return isDbAwake ? TypedResults.Ok("Database is available!") : TypedResults.Problem("Database not awake");
+			return TypedResults.Ok(isDbAwake);
 		}
 		catch (Exception ex)
 		{

@@ -2,6 +2,9 @@
 	@Id int,
 	@Shard nvarchar(500) = null,
 	@Data nvarchar(max) = null,
+	@IsProcessing bit = 0,
+	@IsProcessed bit = 0,
+	@SystemMessage nvarchar(150) = null,
 	@CharacterId int = null,
 	@HistoricalEventId int = null,
 	@PlanetId int = null,
@@ -19,10 +22,18 @@ BEGIN
 	END
 	ELSE
 	BEGIN
+		DECLARE @IsNew bit;
+		SELECT @IsNew = [IsNew] FROM dbo.DataRecords WHERE [Id]=@Id;
+		IF(@IsProcessed = 1 OR @IsProcessing = 1 OR @SystemMessage IS NOT NULL)
+		BEGIN
+			SET @IsNew = 0;
+		END
+		
 		UPDATE dbo.DataRecords
-			SET [Data]=@Data, [Shard]=@Shard, [UpdatedOn]=GETDATE(), [UpdatedAuthorId]=@AuthorId,
+			SET [Data]=@Data, [Shard]=@Shard, 
+				[IsNew]=@IsNew, [IsProcessing]=@IsProcessing, [IsProcessed]=@IsProcessed, [SystemMessage]=@SystemMessage, [UpdatedOn]=GETDATE(), [UpdatedAuthorId]=@AuthorId,
 				[CharacterId]=@CharacterId, [HistoricalEventId]=@HistoricalEventId, [PlanetId]=@PlanetId, [SpeciesId]=@SpeciesId
-		WHERE [Id]=@Id;
+			WHERE [Id]=@Id;
 
 		IF (@@ROWCOUNT > 0)
 		BEGIN
