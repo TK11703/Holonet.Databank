@@ -77,4 +77,8 @@ jobs:
           connection-string: '${{ secrets.AZURE_SQL_CONNECTION }}'
           path: 'dacpac/Holonet.Databank.DB.dacpac'
           action: 'publish'          
-          arguments: '/p:BlockOnPossibleDataLoss=false'
+          arguments: >
+            /p:BlockOnPossibleDataLoss=false
+            /p:DoNotDropUsers=true
+            /p:DoNotDropPermissions=true
+            /p:DoNotDropRoleMembership=true
