@@ -3,11 +3,8 @@ using Holonet.Databank.AppFunctions.Configuration;
 using Holonet.Databank.AppFunctions.HtmlHarvesting;
 using Holonet.Databank.AppFunctions.Services;
 using Holonet.Databank.Core.Dtos;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Extensions.Sql;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -29,75 +26,75 @@ public class DataRecordTrigger(ILoggerFactory loggerFactory, IOptions<AppSetting
     public async Task Run([SqlTrigger("[dbo].[DataRecords]", "ConnectionStrings:DefaultConnection")] IReadOnlyList<SqlChange<DataRecordDto>> changes, FunctionContext context)
     {
         DateTime executedOn = DateTime.UtcNow;
-        _logger.LogInformation("Holonet.Databank.Functions DataRecordTrigger was triggered at: {ExecutionTime}", executedOn);
+        _logger.LogInformation("Holonet.Databank.Functions DataRecordTrigger was triggered at: {ExecutionTime} for {TotalChanges} total changes.", executedOn, changes.Count);
 
-        foreach (var change in changes)
+        var inserts = changes.Where(c => c.Operation == SqlChangeOperation.Insert).ToList();
+        _logger.LogInformation("Insert operations detected: {TotalInserts}", inserts.Count);
+
+        foreach (var change in inserts)
         {
-            if (change.Operation == SqlChangeOperation.Insert)
+            _logger.LogInformation("Inserted record: {RecordId}", change.Item.Id);
+
+            if (change.Item.Id.Equals(0))
             {
-                _logger.LogInformation("New Data Record Inserted: {RecordId}", change.Item.Id);
+                _logger.LogError("Holonet.Databank.Functions DataRecordTrigger error: Invalid data record - no item ID.");
+            }
+            else if (!string.IsNullOrWhiteSpace(change.Item.Data))
+            {
+                _logger.LogInformation("Holonet.Databank.Functions DataRecordTrigger Skipped: User provided content (Retrieval not necessary).");
+            }
+            else if (!string.IsNullOrWhiteSpace(change.Item.Shard))
+            {
 
-                if (change.Item.Id.Equals(0))
+                bool recordUpdatedForProcessing = await UpdateDataRecordForProcessing(change);
+                if (!recordUpdatedForProcessing)
                 {
-                    _logger.LogError("Holonet.Databank.Functions DataRecordTrigger error: Invalid data record - no item ID.");
+                    _logger.LogError("Holonet.Databank.Functions DataRecordTrigger error: Unable to update status of data record.");
+                    break;
                 }
-                else if (!string.IsNullOrWhiteSpace(change.Item.Data))
-                {
-                    _logger.LogInformation("Holonet.Databank.Functions DataRecordTrigger Skipped: User provided content (Retrieval not necessary).");
-                }
-                else if (!string.IsNullOrWhiteSpace(change.Item.Shard))
-                {
 
-                    bool recordUpdatedForProcessing = await UpdateDataRecordForProcessing(change);
-                    if (!recordUpdatedForProcessing)
+                IEnumerable<string> harvestedHtmlChunks;
+                try
+                {
+                    ILogger<HtmlHarvester> harvestLogger = _loggerFactory.CreateLogger<HtmlHarvester>();
+                    HtmlHarvester engine = new HtmlHarvester(harvestLogger, _settings);
+                    harvestedHtmlChunks = await engine.HarvestHtml(change.Item.Shard);
+                    if (harvestedHtmlChunks.Count().Equals(0))
                     {
-                        _logger.LogError("Holonet.Databank.Functions DataRecordTrigger error: Unable to update status of data record.");
+                        await UpdateDataRecordForProcessing(change, MessageConstants.HtmlHarvesterNoData);
+                        _logger.LogError("Holonet.Databank.Functions DataRecordTrigger error: Unable to harvest HTML.");
                         break;
                     }
-
-                    IEnumerable<string> harvestedHtmlChunks;
-                    try
-                    {
-                        ILogger<HtmlHarvester> harvestLogger = _loggerFactory.CreateLogger<HtmlHarvester>();
-                        HtmlHarvester engine = new HtmlHarvester(harvestLogger, _settings);
-                        harvestedHtmlChunks = await engine.HarvestHtml(change.Item.Shard);
-                        if (harvestedHtmlChunks.Count().Equals(0))
-                        {
-                            await UpdateDataRecordForProcessing(change, MessageConstants.HtmlHarvesterNoData);
-                            _logger.LogError("Holonet.Databank.Functions DataRecordTrigger error: Unable to harvest HTML.");
-                            break;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        await UpdateDataRecordForProcessing(change, MessageConstants.HtmlHarvesterError);
-                        _logger.LogError(ex, "Holonet.Databank.Functions DataRecordTrigger error: Exception occurred while harvesting HTML.");
-                        throw;
-                    }
-                    string summary = string.Empty;
-                    try
-                    {
-                        summary = await _serviceClient.ExecuteTextSummarization(harvestedHtmlChunks);
-                        if (string.IsNullOrWhiteSpace(summary))
-                        {
-                            await UpdateDataRecordForProcessing(change, MessageConstants.TextSummarizationNoData);
-                            _logger.LogError("Holonet.Databank.Functions DataRecordTrigger error: Unable to summarize text.");
-                            break;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        await UpdateDataRecordForProcessing(change, MessageConstants.TextSummarizationError);
-                        _logger.LogError(ex, "Holonet.Databank.Functions DataRecordTrigger error: Exception occurred while summarizing text.");
-                        throw;
-                    }
-
-                    await ProcessNewDataRecord(change, summary);
                 }
-                else
+                catch (Exception ex)
                 {
-                    _logger.LogWarning("Holonet.Databank.Functions DataRecordTrigger Warning: No shard provided for record ID: {RecordId}", change.Item.Id);
+                    await UpdateDataRecordForProcessing(change, MessageConstants.HtmlHarvesterError);
+                    _logger.LogError(ex, "Holonet.Databank.Functions DataRecordTrigger error: Exception occurred while harvesting HTML.");
+                    throw;
                 }
+                string summary = string.Empty;
+                try
+                {
+                    summary = await _serviceClient.ExecuteTextSummarization(harvestedHtmlChunks);
+                    if (string.IsNullOrWhiteSpace(summary))
+                    {
+                        await UpdateDataRecordForProcessing(change, MessageConstants.TextSummarizationNoData);
+                        _logger.LogError("Holonet.Databank.Functions DataRecordTrigger error: Unable to summarize text.");
+                        break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await UpdateDataRecordForProcessing(change, MessageConstants.TextSummarizationError);
+                    _logger.LogError(ex, "Holonet.Databank.Functions DataRecordTrigger error: Exception occurred while summarizing text.");
+                    throw;
+                }
+
+                await ProcessNewDataRecord(change, summary);
+            }
+            else
+            {
+                _logger.LogWarning("Holonet.Databank.Functions DataRecordTrigger Warning: No shard provided for record ID: {RecordId}", change.Item.Id);
             }
         }
     }
