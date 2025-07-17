@@ -79,9 +79,7 @@ jobs:
           action: 'publish'          
           arguments: >
             /p:BlockOnPossibleDataLoss=false
-            /p:DoNotDropUsers=true
-            /p:DoNotDropPermissions=true
-            /p:DoNotDropRoleMembership=true
+            /p:ExcludeObjectTypes=Users;Logins;RoleMembership;Permissions
             
       - name: Run pre-publish SQL script
         uses: azure/sql-action@v2.3
