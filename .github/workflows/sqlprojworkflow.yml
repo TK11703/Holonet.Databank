@@ -82,3 +82,10 @@ jobs:
             /p:DoNotDropUsers=true
             /p:DoNotDropPermissions=true
             /p:DoNotDropRoleMembership=true
+            
+      - name: Run pre-publish SQL script
+        uses: azure/sql-action@v2.3
+        with:
+          connection-string: '${{ secrets.AZURE_SQL_CONNECTION }}'
+          path: './infrastructure/db-scripts/enable-change-tracking.sql'
+          action: 'publish'
