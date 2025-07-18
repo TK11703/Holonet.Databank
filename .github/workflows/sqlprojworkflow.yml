@@ -63,7 +63,16 @@ jobs:
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
+
+      - name: Wake up SQL with dummy query
+        uses: azure/sql-action@v2.3
+        with:
+          connection-string: '${{ secrets.AZURE_SQL_CONNECTION }}'
+          path: './infrastructure/db-scripts/wakeup.sql'
+
+      - name: Wait for SQL to finish waking up
+        run: sleep 60
+
       - name: Disable change tracking SQL script
         uses: azure/sql-action@v2.3
         with:
