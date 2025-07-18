@@ -1,0 +1,172 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0" version="28.0.6">
+  <diagram name="Page-1" id="Z6uwd8glNHOKKR8o7s89">
+    <mxGraphModel dx="1208" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-7" value="Holonet APIM" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/app_services/API_Management_Services.svg;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="428" y="320" width="65" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-60" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="IOJvnIvSWEOMd2ZIk_6C-9" target="IOJvnIvSWEOMd2ZIk_6C-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-38" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="IOJvnIvSWEOMd2ZIk_6C-13" target="IOJvnIvSWEOMd2ZIk_6C-35">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-47" value="Login" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;" vertex="1" connectable="0" parent="IOJvnIvSWEOMd2ZIk_6C-38">
+          <mxGeometry x="0.254" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-13" value="Holonet&amp;nbsp; User" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#232F3D;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.user;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="150" width="44.5" height="44.5" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-16" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="IOJvnIvSWEOMd2ZIk_6C-3" target="IOJvnIvSWEOMd2ZIk_6C-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-29" value="Web Publish" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;" vertex="1" connectable="0" parent="IOJvnIvSWEOMd2ZIk_6C-16">
+          <mxGeometry x="-0.1763" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-17" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.426;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="IOJvnIvSWEOMd2ZIk_6C-3" target="IOJvnIvSWEOMd2ZIk_6C-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-30" value="Web Publish" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;" vertex="1" connectable="0" parent="IOJvnIvSWEOMd2ZIk_6C-17">
+          <mxGeometry x="-0.0066" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-18" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.875;entryY=0.188;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="IOJvnIvSWEOMd2ZIk_6C-3" target="IOJvnIvSWEOMd2ZIk_6C-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-28" value="Web Publish" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;" vertex="1" connectable="0" parent="IOJvnIvSWEOMd2ZIk_6C-18">
+          <mxGeometry x="0.012" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-19" value="SQL Publish" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.484;entryY=-0.065;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="IOJvnIvSWEOMd2ZIk_6C-3" target="IOJvnIvSWEOMd2ZIk_6C-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-24" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.338;entryY=0.067;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="IOJvnIvSWEOMd2ZIk_6C-8" target="IOJvnIvSWEOMd2ZIk_6C-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-25" value="Http Trigger" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;" vertex="1" connectable="0" parent="IOJvnIvSWEOMd2ZIk_6C-24">
+          <mxGeometry x="-0.315" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-26" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.938;exitY=0.457;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="IOJvnIvSWEOMd2ZIk_6C-11" target="IOJvnIvSWEOMd2ZIk_6C-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-27" value="SQL Trigger" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;" vertex="1" connectable="0" parent="IOJvnIvSWEOMd2ZIk_6C-26">
+          <mxGeometry x="-0.134" y="-3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="IOJvnIvSWEOMd2ZIk_6C-35" target="IOJvnIvSWEOMd2ZIk_6C-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-48" value="Auth Token" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;" vertex="1" connectable="0" parent="IOJvnIvSWEOMd2ZIk_6C-39">
+          <mxGeometry x="-0.1089" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-35" value="Entra Id" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/identity/Entra_Domain_Services.svg;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="224" y="30" width="68" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-43" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.016;entryY=0.625;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="IOJvnIvSWEOMd2ZIk_6C-13" target="IOJvnIvSWEOMd2ZIk_6C-8">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="80" y="210" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="80" y="270" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-58" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.531;entryY=0.109;entryDx=0;entryDy=0;entryPerimeter=0;shape=link;" edge="1" parent="1" source="IOJvnIvSWEOMd2ZIk_6C-7" target="IOJvnIvSWEOMd2ZIk_6C-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-59" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.031;entryY=0.45;entryDx=0;entryDy=0;entryPerimeter=0;shape=link;" edge="1" parent="1" source="IOJvnIvSWEOMd2ZIk_6C-8" target="IOJvnIvSWEOMd2ZIk_6C-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-61" value="Holonet Web Application" style="swimlane;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="210" y="160" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-8" value="Azure App Service" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/app_services/App_Services.svg;rounded=0;" vertex="1" parent="IOJvnIvSWEOMd2ZIk_6C-61">
+          <mxGeometry x="68" y="68" width="64" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-53" value="Managed Identity" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/identity/Entra_Managed_Identities.svg;rounded=0;" vertex="1" parent="IOJvnIvSWEOMd2ZIk_6C-61">
+          <mxGeometry x="40" y="160" width="23" height="20.44" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-75" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;shape=link;exitX=0.023;exitY=0.484;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="IOJvnIvSWEOMd2ZIk_6C-9" target="IOJvnIvSWEOMd2ZIk_6C-69">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-62" value="Holonet API" style="swimlane;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="360.5" y="520" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-9" value="Holonet API" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/app_services/App_Services.svg;rounded=0;" vertex="1" parent="IOJvnIvSWEOMd2ZIk_6C-62">
+          <mxGeometry x="69" y="68" width="64" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-67" value="Managed Identity" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/identity/Entra_Managed_Identities.svg;rounded=0;" vertex="1" parent="IOJvnIvSWEOMd2ZIk_6C-62">
+          <mxGeometry x="39.5" y="160" width="23" height="20.44" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-63" value="Holonet Functions" style="swimlane;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="950" y="160" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-10" value="Azure Function App" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/compute/Function_Apps.svg;rounded=0;" vertex="1" parent="IOJvnIvSWEOMd2ZIk_6C-63">
+          <mxGeometry x="66" y="70" width="68" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-68" value="Managed Identity" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/identity/Entra_Managed_Identities.svg;rounded=0;" vertex="1" parent="IOJvnIvSWEOMd2ZIk_6C-63">
+          <mxGeometry x="134" y="160" width="23.56" height="20.94" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-66" value="Holonet Data" style="swimlane;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="730" y="520" width="200" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-11" value="Azure Sql Server" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/databases/Azure_SQL.svg;rounded=0;" vertex="1" parent="IOJvnIvSWEOMd2ZIk_6C-66">
+          <mxGeometry x="66" y="49" width="64" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-12" value="Holonet\Databank" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/databases/SQL_Database.svg;rounded=0;" vertex="1" parent="IOJvnIvSWEOMd2ZIk_6C-66">
+          <mxGeometry x="74" y="142" width="48" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-20" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.542;entryY=0.125;entryDx=0;entryDy=0;entryPerimeter=0;shape=link;" edge="1" parent="IOJvnIvSWEOMd2ZIk_6C-66" source="IOJvnIvSWEOMd2ZIk_6C-11" target="IOJvnIvSWEOMd2ZIk_6C-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-69" value="AI Components" style="swimlane;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="80" y="460" width="110" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-70" value="Az OpenAI" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/ai_machine_learning/Azure_OpenAI.svg;rounded=0;" vertex="1" parent="IOJvnIvSWEOMd2ZIk_6C-69">
+          <mxGeometry x="37.15" y="35" width="38" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-71" value="Search" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/app_services/Search_Services.svg;rounded=0;" vertex="1" parent="IOJvnIvSWEOMd2ZIk_6C-69">
+          <mxGeometry x="32.839999999999996" y="185" width="44.31" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-72" value="Language" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/ai_machine_learning/Language_Services.svg;rounded=0;" vertex="1" parent="IOJvnIvSWEOMd2ZIk_6C-69">
+          <mxGeometry x="37.15" y="105" width="38" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-73" value="GeoCode" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#0080F0;shadow=0;dashed=0;shape=mxgraph.ios7.icons.globe;rounded=0;" vertex="1" parent="IOJvnIvSWEOMd2ZIk_6C-69">
+          <mxGeometry x="37.15" y="245" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-77" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="IOJvnIvSWEOMd2ZIk_6C-8" target="IOJvnIvSWEOMd2ZIk_6C-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-78" value="Unauthenticated" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;" vertex="1" connectable="0" parent="IOJvnIvSWEOMd2ZIk_6C-77">
+          <mxGeometry x="0.0369" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-79" value="Source Control/Automation" style="swimlane;whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="620" y="30" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-3" value="Github Repo" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://icons.diagrams.net/icon-cache1/Picons_Social-2097/github_rounded-685.svg;rounded=0;" vertex="1" parent="IOJvnIvSWEOMd2ZIk_6C-79">
+          <mxGeometry x="71.5" y="30" width="57" height="57" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-50" value="Entra App&lt;div&gt;Registration&lt;/div&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/identity/App_Registrations.svg;rounded=0;" vertex="1" parent="IOJvnIvSWEOMd2ZIk_6C-79">
+          <mxGeometry x="80" y="140" width="19.69" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="IOJvnIvSWEOMd2ZIk_6C-80" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.044;entryY=0.567;entryDx=0;entryDy=0;entryPerimeter=0;shape=link;" edge="1" parent="1" source="IOJvnIvSWEOMd2ZIk_6C-7" target="IOJvnIvSWEOMd2ZIk_6C-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
