@@ -45,25 +45,13 @@ jobs:
           name: SQLDB
           path: ./dacpac
       
-      
-      - name: Fix Microsoft APT Source Conflict
-        run: |
-          sudo rm -f /etc/apt/sources.list.d/mssql-release.list
-          sudo rm -f /etc/apt/sources.list.d/archive_uri-https_packages_microsoft_com_ubuntu_22_04_prod-jammy.list
-          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft-prod.gpg] https://packages.microsoft.com/ubuntu/22.04/prod jammy main" | \
-            sudo tee /etc/apt/sources.list.d/mssql-release.list
-          sudo apt-get update
-      
-      - name: Install sqlpackage
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y curl apt-transport-https
-          curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-          sudo add-apt-repository "$(curl -sSL https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list)"
-          sudo apt-get update
-          sudo apt-get install -y mssql-tools
-          echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
-          source ~/.bashrc
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x' # Adjust as needed
+
+      - name: Install SqlPackage
+        run: dotnet tool install --global Microsoft.SqlPackage
           
       - name: Verify sqlpackage installation
         run: sqlpackage /?
