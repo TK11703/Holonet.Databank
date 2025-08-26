@@ -45,13 +45,16 @@ jobs:
           name: SQLDB
           path: ./dacpac
       
-      - name: Fix Microsoft repo sources
+      - name: Remove conflicting Microsoft sources
         run: |
           sudo rm -f /etc/apt/sources.list.d/mssql-release.list
           sudo rm -f /etc/apt/sources.list.d/archive_uri-https_packages_microsoft_com_ubuntu_22_04_prod-jammy.list
-          curl https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/microsoft-prod.gpg
-          echo "deb [signed-by=/usr/share/keyrings/microsoft-prod.gpg] https://packages.microsoft.com/ubuntu/22.04/prod/ jammy main" | \
-            sudo tee /etc/apt/sources.list.d/mssql-release.list
+          sudo rm -f /usr/share/keyrings/microsoft-prod.gpg
+
+      - name: Add Microsoft apt repository
+        run: |
+          wget -qO- https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/microsoft-prod.gpg
+          echo "deb [signed-by=/usr/share/keyrings/microsoft-prod.gpg] https://packages.microsoft.com/ubuntu/22.04/prod jammy main" | sudo tee /etc/apt/sources.list.d/mssql-release.list
           sudo apt-get update
 
       - name: Install sqlpackage
