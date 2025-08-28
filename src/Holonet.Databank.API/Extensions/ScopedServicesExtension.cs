@@ -83,6 +83,7 @@ public static class ScopedServicesExtension
             kernelBuilder.Services.AddAzureAISearchVectorStore();
 
             kernelBuilder.Plugins.AddFromType<UtcPlugin>("UTCTime");
+            kernelBuilder.Plugins.AddFromType<LightsPlugin>("Lights");
 
             kernelBuilder.Plugins.AddFromObject(new GeocodingPlugin(sp.GetRequiredService<IHttpClientFactory>(), appSettings.GeoCodingApiKey), "GeocodingPlugin");
             kernelBuilder.Plugins.AddFromObject(new WeatherPlugin(sp.GetRequiredService<IHttpClientFactory>()), "WeatherPlugin");
