@@ -108,7 +108,7 @@ jobs:
     needs: build-solution
     runs-on: ubuntu-latest
     env:
-      PUBLISH_DIR: ${{runner.temp}}/publish/appfunctions
+      PUBLISH_DIR: ./publish/appfunctions
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
