@@ -119,8 +119,8 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Publish
-        run: dotnet publish src/Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj --configuration ${{ env.CONFIGURATION }} --output ${{ env.PUBLISH_DIR }}
-
+        run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output ${{ env.PUBLISH_DIR }} src/Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj
+        
       - name: Login to Azure
         uses: azure/login@v2
         with:
