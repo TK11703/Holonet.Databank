@@ -38,8 +38,4 @@
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <AdditionalFiles Remove="C:\Users\achorpenning\AppData\Roaming\SonarLint for Visual Studio\.global\csharp\SonarLint.xml" />
-  </ItemGroup>
-
 </Project>
