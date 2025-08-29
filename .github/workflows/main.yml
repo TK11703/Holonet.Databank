@@ -136,7 +136,7 @@ jobs:
         run: |
           az functionapp deployment source config-zip \
             --name ${{ env.FUNCAPP_NAME }} \
-            --resource-group <YOUR_RESOURCE_GROUP> \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --src ./publish/appfunctions.zip
 
       #- name: Deploy to Azure Function App
