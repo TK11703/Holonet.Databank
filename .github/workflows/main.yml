@@ -17,6 +17,7 @@ env:
   WEBAPP_NAME: 'Holonet-App-Databank-8108'
   WEBAPI_NAME: 'Holonet-Api-Databank-8108'
   FUNCAPP_NAME: 'Holonet-Func-Databank-8108'
+  RESOURCE_GROUP: 'Holonet'
   # Add additional global environment variables here
 
 jobs:
@@ -129,10 +130,11 @@ jobs:
         run: |
           cd ${{ env.PUBLISH_DIR }}
           zip -r ../functionapp.zip .
-      
+
       - name: Deploy to Azure Function App
         id: deploy-to-function
-        uses: azure/functions-action@v1
-        with:
-          app-name: ${{ env.FUNCAPP_NAME }}
-          package: ./publish/functionapp.zip
+        run: |
+          az functionapp deployment source config-zip \
+            --name ${{ env.FUNCAPP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --src ./publish/functionapp.zip
