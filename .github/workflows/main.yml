@@ -137,4 +137,4 @@ jobs:
           az functionapp deployment source config-zip \
             --name ${{ env.FUNCAPP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
-            --src ./publish/functionapp.zip
+            --src ${{ env.PUBLISH_DIR }}/functionapp.zip
