@@ -53,13 +53,17 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Publish
-        run: dotnet publish ./src/Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj --configuration ${{ env.CONFIGURATION }} --output ${{ env.PUBLISH_DIR }}
+        run: dotnet publish ./src/Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj --configuration ${{ env.CONFIGURATION }} --output ${{ env.PUBLISH_DIR }} --no-build --no-restore
         
       - name: Login to Azure
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Set run-from-package
+        run: |
+          az functionapp config appsettings set --name ${{ env.FUNCAPP_NAME }} --resource-group ${{ env.RESOURCE_GROUP }} --settings WEBSITE_RUN_FROM_PACKAGE=1
+      
       - name: Deploy to Azure Functions
         id: deploy-to-function
         uses: azure/functions-action@v1
