@@ -60,14 +60,10 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      
-      - name: Zip and deploy via Azure CLI
+      - name: Deploy with Azure Functions Core Tools
         run: |
-          zip -r functionapp.zip ./publish
-          az functionapp deployment source config-zip \
-            --name ${{ env.FUNCAPP_NAME }} \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --src functionapp.zip
-            --build-remote true
-
-      
+          npm install -g azure-functions-core-tools@4 --unsafe-perm true
+          cd publish
+          func azure functionapp publish ${{ env.FUNCAPP_NAME }} \
+            --no-build \
+            --no-bundle 
