@@ -60,10 +60,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Set run-from-package
-        run: |
-          az functionapp config appsettings set --name ${{ env.FUNCAPP_NAME }} --resource-group ${{ env.RESOURCE_GROUP }} --settings WEBSITE_RUN_FROM_PACKAGE=1
-
+      
       - name: Zip and deploy via Azure CLI
         run: |
           zip -r functionapp.zip ./publish
