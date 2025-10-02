@@ -65,5 +65,6 @@ jobs:
           npm install -g azure-functions-core-tools@4 --unsafe-perm true
           cd publish
           func azure functionapp publish ${{ env.FUNCAPP_NAME }} \
+            --dotnet-isolated \
             --no-build \
             --no-bundle 
