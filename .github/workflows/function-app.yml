@@ -68,5 +68,6 @@ jobs:
             --name ${{ env.FUNCAPP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --src functionapp.zip
+            --build-remote true
 
       
