@@ -60,15 +60,6 @@ jobs:
           # otherwise remove 'id-token: write' permission above and use a secret-based SP:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: (Idempotent) Set runtime to .NET 9 isolated
-        run: |
-          az functionapp update \
-            -g ${{ env.RESOURCE_GROUP }} \
-            -n ${{ env.FUNCAPP_NAME }} \
-            --set siteConfig.linuxFxVersion="DOTNET-ISOLATED|9.0"
-          echo "Current runtime:"
-          az functionapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.FUNCAPP_NAME }} --query "siteConfig.linuxFxVersion"
-
       - name: Install Azure Functions Core Tools v4 (latest)
         run: |
           npm install -g azure-functions-core-tools@4 --unsafe-perm true
