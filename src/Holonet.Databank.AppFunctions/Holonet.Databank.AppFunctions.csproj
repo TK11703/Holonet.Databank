@@ -7,6 +7,7 @@
 		<OutputType>Exe</OutputType>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<GenerateFunctionMetadata>true</GenerateFunctionMetadata>
 		<UserSecretsId>ffc6598d-d89e-4d89-8c04-8c8b3fc982a0</UserSecretsId>
 	</PropertyGroup>
 	<ItemGroup>
@@ -19,12 +20,12 @@
 		</None>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Azure.Storage.Blobs" Version="12.24.1" />
-		<PackageReference Include="HtmlAgilityPack" Version="1.12.1" />
-		<PackageReference Include="Microsoft.Azure.Functions.Worker" Version="2.0.0" />
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.25.1" />
+		<PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
+		<PackageReference Include="Microsoft.Azure.Functions.Worker" Version="2.1.0" />
 		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.3.0" />
 		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http.AspNetCore" Version="2.0.2" />
-		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Sql" Version="3.1.512" />
+		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Sql" Version="3.1.527" />
 		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Timer" Version="4.3.1" />
 		<PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="2.0.5" OutputItemType="Analyzer" />
 		<PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.23.0" />
