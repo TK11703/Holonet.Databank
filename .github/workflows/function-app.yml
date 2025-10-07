@@ -1,0 +1,84 @@
+name: Function App CI/CD
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/workflows/**'
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write   # if using federated credentials with azure/login
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  CONFIGURATION: 'Release'
+  FUNCAPP_NAME: 'Holonet-Func-Databank-8108'
+  RESOURCE_GROUP: 'Holonet'
+  APP_PROJECT: './src/Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj'
+  PUBLISH_DIR: 'publish'
+
+jobs:
+  build-and-deploy:
+    name: Build, Publish, Deploy (.NET 9 Isolated)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 9 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+            dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
+      - name: Restore
+        run: dotnet restore ${{ env.APP_PROJECT }}
+
+      - name: Build
+        run: dotnet build ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} --no-restore
+
+      - name: Publish
+        run: dotnet publish ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} -o ${{ env.PUBLISH_DIR }} --no-build
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          # If using federated credentials, ensure the Azure AD app is configured;
+          # otherwise remove 'id-token: write' permission above and use a secret-based SP:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: List contents of the publish directory
+        run: |
+          echo "Contents of $PUBLISH_DIR:"
+          ls -al "$PUBLISH_DIR"
+          
+      - name: Install Azure Functions Core Tools v4 (latest)
+        run: |
+          npm install -g azure-functions-core-tools@4 --unsafe-perm true
+          func --version
+
+      - name: Deploy with Core Tools (Zip Deploy)
+        run: |
+          cd ${{ env.PUBLISH_DIR }}
+          func azure functionapp publish ${{ env.FUNCAPP_NAME }} \
+            --no-build \
+            --dotnet-isolated \
+            --publish-local-settings false 
+
+      - name: Post-deploy validation (Optional)
+        run: |
+          az functionapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.FUNCAPP_NAME }} --query "state"
+          echo "Deployed; check Application Insights for cold start/logs."
