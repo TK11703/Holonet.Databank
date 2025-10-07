@@ -67,6 +67,7 @@ jobs:
 
       - name: Deploy with Core Tools (Zip Deploy)
         run: |
+          cd ${{ env.PUBLISH_DIR }}
           func azure functionapp publish ${{ env.FUNCAPP_NAME }} \
             --no-build \
             --dotnet-isolated \
