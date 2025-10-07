@@ -1,4 +1,5 @@
 name: Function App CI/CD
+
 on:
   workflow_dispatch:
   push:
@@ -9,62 +10,78 @@ on:
   pull_request:
     branches:
       - main
+
+permissions:
+  contents: read
+  id-token: write   # if using federated credentials with azure/login
+
 env:
   DOTNET_VERSION: '9.0.x'
-  CONFIGURATION: 'Release'  
+  CONFIGURATION: 'Release'
   FUNCAPP_NAME: 'Holonet-Func-Databank-8108'
   RESOURCE_GROUP: 'Holonet'
-  # Add additional global environment variables here
+  APP_PROJECT: './src/Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj'
+  PUBLISH_DIR: 'publish'
 
 jobs:
-  build-project:
-    name: Build Function Project
+  build-and-deploy:
+    name: Build, Publish, Deploy (.NET 9 Isolated)
     runs-on: ubuntu-latest
-    env:
-      APP_SOLUTION: 'Holonet.Databank.App-deploy.sln'
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup .NET
+      - name: Setup .NET 9 SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+            dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Restore dependencies
-        run: dotnet restore ${{ env.APP_SOLUTION }}
-
-      - name: Build Solution
-        run: dotnet build --configuration ${{ env.CONFIGURATION }} ${{ env.APP_SOLUTION }}
-  
-  publish-appfunctions:
-    name: Publish Function App
-    needs: build-project
-    runs-on: ubuntu-latest
-    env:
-      PUBLISH_DIR: ./publish
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      - name: Cache NuGet
+        uses: actions/cache@v4
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
+      - name: Restore
+        run: dotnet restore ${{ env.APP_PROJECT }}
+
+      - name: Build
+        run: dotnet build ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} --no-restore
 
       - name: Publish
-        run: dotnet publish ./src/Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj --configuration ${{ env.CONFIGURATION }} --output ${{ env.PUBLISH_DIR }}
-        
+        run: dotnet publish ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} -o ${{ env.PUBLISH_DIR }} --no-build
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
+          # If using federated credentials, ensure the Azure AD app is configured;
+          # otherwise remove 'id-token: write' permission above and use a secret-based SP:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy with Azure Functions Core Tools
+      - name: (Idempotent) Set runtime to .NET 9 isolated
+        run: |
+          az functionapp update \
+            -g ${{ env.RESOURCE_GROUP }} \
+            -n ${{ env.FUNCAPP_NAME }} \
+            --set siteConfig.linuxFxVersion="DOTNET-ISOLATED|9.0"
+          echo "Current runtime:"
+          az functionapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.FUNCAPP_NAME }} --query "siteConfig.linuxFxVersion"
+
+      - name: Install Azure Functions Core Tools v4 (latest)
         run: |
           npm install -g azure-functions-core-tools@4 --unsafe-perm true
-          cd publish
+          func --version
+
+      - name: Deploy with Core Tools (Zip Deploy)
+        run: |
           func azure functionapp publish ${{ env.FUNCAPP_NAME }} \
-            --dotnet-isolated \
             --no-build \
-            --no-bundle 
+            --dotnet-isolated \
+            --publish-local-settings false 
+
+      - name: Post-deploy validation (Optional)
+        run: |
+          az functionapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.FUNCAPP_NAME }} --query "state"
+          echo "Deployed; check Application Insights for cold start/logs."
