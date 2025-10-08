@@ -34,7 +34,7 @@ jobs:
       run: |
         az functionapp create \
           --name ${{ env.APP_NAME }} \
-          --resource-group ${{ env.RESOURCE_GROUP }} \          
+          --resource-group ${{ env.RESOURCE_GROUP }} \
           --storage-account ${{ env.STORAGE_NAME }} \
           --flexconsumption-location ${{ env.LOCATION }} \
           --functions-version ${{ env.FUNCTIONS_VERSION }} \
