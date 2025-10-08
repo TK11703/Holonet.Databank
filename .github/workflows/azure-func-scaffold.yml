@@ -1,0 +1,98 @@
+name: Provision Azure Function App (Flex + .NET 9)
+
+on:
+  workflow_dispatch:
+
+env:
+  RESOURCE_GROUP: holonet
+  LOCATION: eastus
+  STORAGE_NAME: holonetstorageflex
+  PLAN_NAME: holonet-databank-flex-plan
+  APP_NAME: Holonet-Func-Databank-8108
+  RUNTIME: dotnet-isolated
+  FUNCTIONS_VERSION: 4
+  DOTNET_VERSION: 9.0
+
+jobs:
+  provision:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Create Storage Account
+      run: |
+        az storage account create \
+          --name ${{ env.STORAGE_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --location ${{ env.LOCATION }} \
+          --sku Standard_LRS
+
+    - name: Create Flex Consumption Plan
+      run: |
+        az functionapp plan create \
+          --name ${{ env.PLAN_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --location ${{ env.LOCATION }} \
+          --sku FC1 \
+          --is-linux
+
+    - name: Create Function App (.NET 9 Isolated)
+      run: |
+        az functionapp create \
+          --name ${{ env.APP_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --plan ${{ env.PLAN_NAME }} \
+          --storage-account ${{ env.STORAGE_NAME }} \
+          --functions-version ${{ env.FUNCTIONS_VERSION }} \
+          --runtime ${{ env.RUNTIME }} \
+          --os-type Linux
+    
+    - name: Assign System Managed Identity
+      run: |
+        az functionapp identity assign \
+          --name ${{ env.APP_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }}
+
+    - name: Get Principal ID
+      id: identity
+      run: |
+        PRINCIPAL_ID=$(az functionapp show \
+          --name ${{ env.APP_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --query identity.principalId \
+          --output tsv)
+        echo "principal_id=$PRINCIPAL_ID" >> $GITHUB_OUTPUT
+
+    - name: Assign Blob Contributor Role
+      run: |
+        STORAGE_ID=$(az storage account show \
+          --name ${{ env.STORAGE_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --query id \
+          --output tsv)
+
+        az role assignment create \
+          --assignee ${{ steps.identity.outputs.principal_id }} \
+          --role "Storage Blob Data Contributor" \
+          --scope $STORAGE_ID
+
+    - name: Enable Always On
+      run: |
+        az functionapp config set \
+          --name ${{ env.APP_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --always-on true
+
+    - name: Set App Settings
+      run: |
+        az functionapp config appsettings set \
+          --name ${{ env.APP_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --settings \
+            FUNCTIONS_WORKER_RUNTIME=${{ env.RUNTIME }} \
+            FUNCTIONS_EXTENSION_VERSION=~4 \
+            DOTNET_VERSION=${{ env.DOTNET_VERSION }}
