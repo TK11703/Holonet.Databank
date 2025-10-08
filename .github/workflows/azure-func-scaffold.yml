@@ -34,8 +34,8 @@ jobs:
       id: checkapp
       run: |
         EXISTS=$(az functionapp show \
-          --name holonet-funcapp \
-          --resource-group holonet \
+          --name ${{ env.APP_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
           --query name \
           --output tsv || echo "")
         echo "exists=$EXISTS" >> $GITHUB_OUTPUT
