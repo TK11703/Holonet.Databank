@@ -81,13 +81,4 @@ jobs:
           --assignee-principal-type ServicePrincipal \
           --role "Storage Blob Data Contributor" \
           --scope $STORAGE_ID
-
-    - name: Set App Settings
-      run: |
-        az functionapp config appsettings set \
-          --name ${{ env.APP_NAME }} \
-          --resource-group ${{ env.RESOURCE_GROUP }} \
-          --settings \
-            FUNCTIONS_WORKER_RUNTIME=${{ env.RUNTIME }} \
-            FUNCTIONS_EXTENSION_VERSION=~4 \
-            DOTNET_VERSION=${{ env.DOTNET_VERSION }}
+          
