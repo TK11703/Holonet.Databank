@@ -30,7 +30,18 @@ jobs:
           --location ${{ env.LOCATION }} \
           --sku Standard_LRS
 
+    - name: Check if Function App exists
+      id: checkapp
+      run: |
+        EXISTS=$(az functionapp show \
+          --name holonet-funcapp \
+          --resource-group holonet \
+          --query name \
+          --output tsv || echo "")
+        echo "exists=$EXISTS" >> $GITHUB_OUTPUT
+
     - name: Create Function App (.NET 9 Isolated)
+      if: steps.checkapp.outputs.exists == ''
       run: |
         az functionapp create \
           --name ${{ env.APP_NAME }} \
