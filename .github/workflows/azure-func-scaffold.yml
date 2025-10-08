@@ -78,6 +78,7 @@ jobs:
 
         az role assignment create \
           --assignee-object-id ${{ steps.identity.outputs.principal_id }} \
+          --assignee-principal-type ServicePrincipal \
           --role "Storage Blob Data Contributor" \
           --scope $STORAGE_ID
 
