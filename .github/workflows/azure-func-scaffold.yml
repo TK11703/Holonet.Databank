@@ -37,7 +37,7 @@ jobs:
           --name ${{ env.PLAN_NAME }} \
           --resource-group ${{ env.RESOURCE_GROUP }} \
           --location ${{ env.LOCATION }} \
-          --sku FC1 \
+          --sku FlexConsumption \
           --is-linux
 
     - name: Create Function App (.NET 9 Isolated)
