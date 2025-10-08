@@ -7,7 +7,6 @@ env:
   RESOURCE_GROUP: holonet
   LOCATION: eastus
   STORAGE_NAME: holonetstorageflex
-  PLAN_NAME: holonet-databank-flex-plan
   APP_NAME: Holonet-Func-Databank-8108
   RUNTIME: dotnet-isolated
   FUNCTIONS_VERSION: 4
@@ -23,9 +22,6 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Verify Azure CLI version
-      run: az version
-
     - name: Create Storage Account
       run: |
         az storage account create \
@@ -34,25 +30,16 @@ jobs:
           --location ${{ env.LOCATION }} \
           --sku Standard_LRS
 
-    - name: Create Flex Consumption Plan
-      run: |
-        az functionapp plan create \
-          --name ${{ env.PLAN_NAME }} \
-          --resource-group ${{ env.RESOURCE_GROUP }} \
-          --location ${{ env.LOCATION }} \
-          --sku FlexConsumption \
-          --is-linux
-
     - name: Create Function App (.NET 9 Isolated)
       run: |
         az functionapp create \
           --name ${{ env.APP_NAME }} \
-          --resource-group ${{ env.RESOURCE_GROUP }} \
-          --plan ${{ env.PLAN_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \          
           --storage-account ${{ env.STORAGE_NAME }} \
+          --flexconsumption-location ${{ env.LOCATION }} \
           --functions-version ${{ env.FUNCTIONS_VERSION }} \
           --runtime ${{ env.RUNTIME }} \
-          --os-type Linux
+          --runtime-version ${{ env.DOTNET_VERSION }}
     
     - name: Assign System Managed Identity
       run: |
