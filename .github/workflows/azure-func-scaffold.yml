@@ -1,0 +1,88 @@
+name: Provision Azure Function App (Flex + .NET 9)
+
+on:
+  workflow_dispatch:
+
+env:
+  RESOURCE_GROUP: holonet
+  LOCATION: eastus
+  STORAGE_NAME: holonetstorageflex
+  STORAGE_CONTAINER_NAME: app-package-holonetfuncdatabank8108
+  APP_NAME: Holonet-Func-Databank-8108
+  RUNTIME: dotnet-isolated
+  FUNCTIONS_VERSION: 4
+  DOTNET_VERSION: 9.0
+
+jobs:
+  provision:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Create Storage Account
+      run: |
+        az storage account create \
+          --name ${{ env.STORAGE_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --location ${{ env.LOCATION }} \
+          --sku Standard_LRS
+
+    - name: Check if Function App exists
+      id: checkapp
+      run: |
+        EXISTS=$(az functionapp show \
+          --name ${{ env.APP_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --query name \
+          --output tsv || echo "")
+        echo "exists=$EXISTS" >> $GITHUB_OUTPUT
+
+    - name: Create Function App (.NET 9 Isolated)
+      if: steps.checkapp.outputs.exists == ''
+      run: |
+        az functionapp create \
+          --name ${{ env.APP_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --storage-account ${{ env.STORAGE_NAME }} \
+          --deployment-storage-name ${{ env.STORAGE_NAME }} \
+          --deployment-storage-container-name ${{ env.STORAGE_CONTAINER_NAME }}
+          --flexconsumption-location ${{ env.LOCATION }} \
+          --functions-version ${{ env.FUNCTIONS_VERSION }} \
+          --runtime ${{ env.RUNTIME }} \
+          --runtime-version ${{ env.DOTNET_VERSION }} \
+          --deployment-storage-auth-type SystemAssignedIdentity
+    
+    - name: Assign System Managed Identity
+      run: |
+        az functionapp identity assign \
+          --name ${{ env.APP_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }}
+
+    - name: Get Principal ID
+      id: identity
+      run: |
+        PRINCIPAL_ID=$(az functionapp show \
+          --name ${{ env.APP_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --query identity.principalId \
+          --output tsv)
+        echo "principal_id=$PRINCIPAL_ID" >> $GITHUB_OUTPUT
+
+    - name: Assign Blob Contributor Role
+      run: |
+        STORAGE_ID=$(az storage account show \
+          --name ${{ env.STORAGE_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --query id \
+          --output tsv)
+
+        az role assignment create \
+          --assignee-object-id ${{ steps.identity.outputs.principal_id }} \
+          --assignee-principal-type ServicePrincipal \
+          --role "Storage Blob Data Contributor" \
+          --scope $STORAGE_ID
+          

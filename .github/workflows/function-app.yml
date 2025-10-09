@@ -11,10 +11,6 @@ on:
     branches:
       - main
 
-permissions:
-  contents: read
-  id-token: write   # if using federated credentials with azure/login
-
 env:
   DOTNET_VERSION: '9.0.x'
   CONFIGURATION: 'Release'
@@ -53,6 +49,9 @@ jobs:
       - name: Publish
         run: dotnet publish ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} -o ${{ env.PUBLISH_DIR }} --no-build
 
+      - name: Zip published output
+        run: zip -r ${{ env.PUBLISH_DIR }}/app.zip ${{ env.PUBLISH_DIR }}/*
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -60,23 +59,12 @@ jobs:
           # otherwise remove 'id-token: write' permission above and use a secret-based SP:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: List contents of the publish directory
+      - name: Deploy via OneDeploy (zip)
         run: |
-          echo "Contents of $PUBLISH_DIR:"
-          ls -al "$PUBLISH_DIR"
-          
-      - name: Install Azure Functions Core Tools v4 (latest)
-        run: |
-          npm install -g azure-functions-core-tools@4 --unsafe-perm true
-          func --version
-
-      - name: Deploy with Core Tools (Zip Deploy)
-        run: |
-          cd ${{ env.PUBLISH_DIR }}
-          func azure functionapp publish ${{ env.FUNCAPP_NAME }} \
-            --no-build \
-            --dotnet-isolated \
-            --publish-local-settings false 
+          az functionapp deployment source config-zip \
+            --name ${{ env.FUNCAPP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --src ${{ env.PUBLISH_DIR }}/app.zip
 
       - name: Post-deploy validation (Optional)
         run: |
