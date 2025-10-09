@@ -60,23 +60,12 @@ jobs:
           # otherwise remove 'id-token: write' permission above and use a secret-based SP:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: List contents of the publish directory
+      - name: Deploy via OneDeploy (zip)
         run: |
-          echo "Contents of $PUBLISH_DIR:"
-          ls -al "$PUBLISH_DIR"
-          
-      - name: Install Azure Functions Core Tools v4 (latest)
-        run: |
-          npm install -g azure-functions-core-tools@4 --unsafe-perm true
-          func --version
-
-      - name: Deploy with Core Tools (Zip Deploy)
-        run: |
-          cd ${{ env.PUBLISH_DIR }}
-          func azure functionapp publish ${{ env.FUNCAPP_NAME }} \
-            --no-build \
-            --dotnet-isolated \
-            --publish-local-settings true 
+          az functionapp deployment source config-zip \
+            --name ${{ env.FUNCAPP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --src ${{ env.PUBLISH_DIR }}
 
       - name: Post-deploy validation (Optional)
         run: |
