@@ -9,6 +9,7 @@
 		<Nullable>enable</Nullable>
 		<UserSecretsId>ffc6598d-d89e-4d89-8c04-8c8b3fc982a0</UserSecretsId>
 		<GenerateFunctionsMetadata>true</GenerateFunctionsMetadata>
+		<UseMicrosoftAzureFunctionsBuild>true</UseMicrosoftAzureFunctionsBuild>
 	</PropertyGroup>	
 	<ItemGroup>
 		<None Update="host.json">
