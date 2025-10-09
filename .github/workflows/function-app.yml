@@ -49,6 +49,9 @@ jobs:
       - name: Publish
         run: dotnet publish ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} -o ${{ env.PUBLISH_DIR }} --no-build
 
+      - name: Zip published output
+        run: zip -r ${{ env.PUBLISH_DIR }}/app.zip ${{ env.PUBLISH_DIR }}/*
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -61,7 +64,7 @@ jobs:
           az functionapp deployment source config-zip \
             --name ${{ env.FUNCAPP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
-            --src ${{ env.PUBLISH_DIR }}
+            --src ${{ env.PUBLISH_DIR }}/app.zip
 
       - name: Post-deploy validation (Optional)
         run: |
