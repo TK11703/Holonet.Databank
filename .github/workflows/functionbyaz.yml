@@ -57,7 +57,7 @@ jobs:
       #   run: dotnet test ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} --no-build --verbosity normal
 
       - name: Publish
-        run: dotnet publish ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} -o ${{ env.PUBLISH_DIR }} --no-build --self-contained false
+        run: dotnet publish ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} -o ${{ env.PUBLISH_DIR }} --no-build --no-restore -v:detailed
 
       - name: Create deployment package
         run: |
