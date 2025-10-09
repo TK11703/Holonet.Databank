@@ -8,11 +8,8 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<UserSecretsId>ffc6598d-d89e-4d89-8c04-8c8b3fc982a0</UserSecretsId>
-	</PropertyGroup>
-	<PropertyGroup>
-		<GenerateFunctionMetadata>true</GenerateFunctionMetadata>
-		<UseMicrosoftAzureFunctionsBuild>true</UseMicrosoftAzureFunctionsBuild>
-	</PropertyGroup>
+		<GenerateFunctionsMetadata>true</GenerateFunctionsMetadata>
+	</PropertyGroup>	
 	<ItemGroup>
 		<None Update="host.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
