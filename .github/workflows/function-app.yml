@@ -75,6 +75,7 @@ jobs:
           cd ${{ env.PUBLISH_DIR }}
           func azure functionapp publish ${{ env.FUNCAPP_NAME }} \
             --no-build \
+            --dotnet-isolated \
             --publish-local-settings true 
 
       - name: Post-deploy validation (Optional)
