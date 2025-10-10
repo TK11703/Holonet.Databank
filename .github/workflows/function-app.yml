@@ -134,10 +134,15 @@ jobs:
             --name ${{ env.FUNCAPP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} || echo "No functions found or error listing functions"
 
-      - name: Check deployment logs
+      - name: Check deployment status
         run: |
-          echo "=== Recent deployment logs ==="
-          az functionapp deployment list \
+          echo "=== Function App deployment status ==="
+          az functionapp deployment source show \
+            --name ${{ env.FUNCAPP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} || echo "No deployment source information available"
+          echo ""
+          echo "=== Function App site information ==="
+          az functionapp show \
             --name ${{ env.FUNCAPP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
-            --query "[0].{id:id, status:status, message:message, startTime:startTime, endTime:endTime}"
+            --query "{name:name, state:state, kind:kind, repositorySiteName:repositorySiteName, lastModifiedTimeUtc:lastModifiedTimeUtc}"
