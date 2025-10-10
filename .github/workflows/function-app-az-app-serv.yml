@@ -7,6 +7,7 @@ on:
       - main
     paths-ignore:
       - '.github/workflows/**'
+      - '**.md'
   pull_request:
     branches:
       - main
@@ -14,9 +15,9 @@ on:
 env:
   DOTNET_VERSION: '9.0.x'
   CONFIGURATION: 'Release'
-  FUNCAPP_NAME: 'Holonet-Func-Databank-8108'
   RESOURCE_GROUP: 'Holonet'
-  APP_PROJECT: './src/Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj'
+  APP_NAME: 'Holonet-Func-Databank-8108'
+  PROJECT_DIR: './src/Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj'
   PUBLISH_DIR: 'publish'
 
 jobs:
@@ -41,14 +42,14 @@ jobs:
             nuget-${{ runner.os }}-
 
       - name: Restore
-        run: dotnet restore ${{ env.APP_PROJECT }}
+        run: dotnet restore ${{ env.PROJECT_DIR }}
 
       - name: Build
-        run: dotnet build ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} --no-restore
+        run: dotnet build ${{ env.PROJECT_DIR }} -c ${{ env.CONFIGURATION }} --no-restore
 
       - name: Publish with detailed output
         run: |          
-          dotnet publish ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} -o ${{ env.PUBLISH_DIR }} --no-build
+          dotnet publish ${{ env.PROJECT_DIR }} -c ${{ env.CONFIGURATION }} -o ${{ env.PUBLISH_DIR }} --no-build
           echo ""
           echo "=== Checking publish directory contents ==="
           ls -la ${{ env.PUBLISH_DIR }}/
@@ -98,7 +99,7 @@ jobs:
         run: |
           echo "=== Deploying to Azure Function App ==="
           az functionapp deployment source config-zip \
-            --name ${{ env.FUNCAPP_NAME }} \
+            --name ${{ env.APP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --src app.zip \
             --timeout 600
@@ -107,7 +108,7 @@ jobs:
         run: |
           echo "=== Restarting Function App ==="
           az functionapp restart \
-            --name ${{ env.FUNCAPP_NAME }} \
+            --name ${{ env.APP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }}
           echo "Waiting 30 seconds for restart to complete..."
           sleep 30
@@ -116,7 +117,7 @@ jobs:
         run: |
           echo "=== Function App Status ==="
           az functionapp show \
-            --name ${{ env.FUNCAPP_NAME }} \
+            --name ${{ env.APP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --query "{name:name, state:state, hostNames:defaultHostName, linuxFxVersion:siteConfig.linuxFxVersion}"
           echo ""
@@ -125,5 +126,5 @@ jobs:
         run: |
           echo "=== Attempting to list functions ==="
           az functionapp function list \
-            --name ${{ env.FUNCAPP_NAME }} \
+            --name ${{ env.APP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} || echo "No functions found or error listing functions"
