@@ -2,15 +2,15 @@ name: Function App CI/CD (Flex Consumption)
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - '.github/workflows/**'
-      - '**.md'
-  pull_request:
-    branches:
-      - main
+  #push:
+  #  branches:
+  #    - main
+  #  paths-ignore:
+  #    - '.github/workflows/**'
+  #    - '**.md'
+  #pull_request:
+  #  branches:
+  #    - main
 
 env:
   DOTNET_VERSION: '9.0.x'
