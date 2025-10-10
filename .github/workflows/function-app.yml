@@ -46,53 +46,98 @@ jobs:
       - name: Build
         run: dotnet build ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} --no-restore
 
-      - name: Publish
-        run: dotnet publish ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} -o ${{ env.PUBLISH_DIR }} --no-build --verbosity normal
+      - name: Publish with detailed output
+        run: |
+          echo "=== Publishing with verbose output ==="
+          dotnet publish ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} -o ${{ env.PUBLISH_DIR }} --no-build --verbosity detailed
+          echo ""
+          echo "=== Checking publish directory contents ==="
+          ls -la ${{ env.PUBLISH_DIR }}/
+          echo ""
+          echo "=== Checking for critical files ==="
+          if [ -f "${{ env.PUBLISH_DIR }}/host.json" ]; then
+            echo "✓ host.json found"
+            cat ${{ env.PUBLISH_DIR }}/host.json
+          else
+            echo "✗ host.json NOT found"
+          fi
+          echo ""
+          if [ -f "${{ env.PUBLISH_DIR }}/Holonet.Databank.AppFunctions.dll" ]; then
+            echo "✓ Main assembly found"
+          else
+            echo "✗ Main assembly NOT found"
+          fi
+          echo ""
+          echo "=== Checking for function metadata ==="
+          find ${{ env.PUBLISH_DIR }} -name "*.json" -o -name "functions.metadata" 2>/dev/null || echo "No metadata files found"
 
-      - name: Zip published output
+      - name: Create deployment package
         run: |
           cd ${{ env.PUBLISH_DIR }}
-          zip -r ../app.zip *
-      
-      - name: Verify zip contents and structure
+          zip -r ../app.zip . -x "*.pdb"
+          cd ..
+          echo "=== Zip file created ==="
+          ls -la app.zip
+
+      - name: Verify deployment package contents
         run: |
           echo "=== Verifying zip file contents ==="
           unzip -l app.zip | head -30
           echo ""
-          echo "=== Checking for critical files ==="
-          unzip -l app.zip | grep -E "(host\.json|\.dll|\.deps\.json)" || echo "WARNING: Some critical files may be missing"
+          echo "=== Critical files check ==="
+          unzip -l app.zip | grep -E "(host\.json|Holonet\.Databank\.AppFunctions\.dll|\.deps\.json)" || echo "WARNING: Some critical files may be missing"
           echo ""
-          echo "=== Checking for function metadata ==="
-          unzip -l app.zip | grep -E "(functions\.metadata|\.azurefunctions)" || echo "INFO: Function metadata files not found in zip listing"
+          echo "=== Function metadata check ==="
+          unzip -l app.zip | grep -E "(functions\.metadata|\.azurefunctions)" || echo "INFO: Function metadata files not found"
 
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          # If using federated credentials, ensure the Azure AD app is configured;
-          # otherwise remove 'id-token: write' permission above and use a secret-based SP:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy via OneDeploy (zip)
         run: |
+          echo "=== Deploying to Azure Function App ==="
           az functionapp deployment source config-zip \
             --name ${{ env.FUNCAPP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
-            --src app.zip
-            
-      - name: Configure Function App Runtime
-        run: |
-          az functionapp config appsettings set \
-            --name ${{ env.FUNCAPP_NAME }} \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --settings FUNCTIONS_WORKER_RUNTIME=dotnet-isolated FUNCTIONS_EXTENSION_VERSION=~4 DOTNET_ISOLATED_VERSION=9.0
+            --src app.zip \
+            --timeout 600
 
-      - name: Post-deploy validation (Optional)
+      - name: Restart and wait for Function App
         run: |
-          az functionapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.FUNCAPP_NAME }} --query "state"
-          echo "Deployed; check Application Insights for cold start/logs."
-
-      - name: Restart Function App
-        run: |
+          echo "=== Restarting Function App ==="
           az functionapp restart \
             --name ${{ env.FUNCAPP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }}
+          echo "Waiting 30 seconds for restart to complete..."
+          sleep 30
+
+      - name: Check Function App status and logs
+        run: |
+          echo "=== Function App Status ==="
+          az functionapp show \
+            --name ${{ env.FUNCAPP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --query "{name:name, state:state, hostNames:defaultHostName, linuxFxVersion:siteConfig.linuxFxVersion}"
+          echo ""
+          echo "=== Function App Settings ==="
+          az functionapp config appsettings list \
+            --name ${{ env.FUNCAPP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --query "[?name=='FUNCTIONS_WORKER_RUNTIME' || name=='FUNCTIONS_EXTENSION_VERSION' || name=='DOTNET_ISOLATED_VERSION']"
+
+      - name: List functions (if any are discovered)
+        run: |
+          echo "=== Attempting to list functions ==="
+          az functionapp function list \
+            --name ${{ env.FUNCAPP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} || echo "No functions found or error listing functions"
+
+      - name: Check deployment logs
+        run: |
+          echo "=== Recent deployment logs ==="
+          az functionapp deployment list \
+            --name ${{ env.FUNCAPP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --query "[0].{id:id, status:status, message:message, startTime:startTime, endTime:endTime}"
