@@ -53,13 +53,17 @@ jobs:
         run: |
           cd ${{ env.PUBLISH_DIR }}
           zip -r ../app.zip *
-
-      - name: Verify zip contents
+      
+      - name: Verify zip contents and structure
         run: |
-          cd ${{ env.PUBLISH_DIR }}
-          zip -r ../app.zip *
-          cd ..
-          unzip -l app.zip | head -20
+          echo "=== Verifying zip file contents ==="
+          unzip -l app.zip | head -30
+          echo ""
+          echo "=== Checking for critical files ==="
+          unzip -l app.zip | grep -E "(host\.json|\.dll|\.deps\.json)" || echo "WARNING: Some critical files may be missing"
+          echo ""
+          echo "=== Checking for function metadata ==="
+          unzip -l app.zip | grep -E "(functions\.metadata|\.azurefunctions)" || echo "INFO: Function metadata files not found in zip listing"
 
       - name: Login to Azure
         uses: azure/login@v2
