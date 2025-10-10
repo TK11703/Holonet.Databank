@@ -1,0 +1,114 @@
+name: Web API CI/CD
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/workflows/**'
+      - '**.md'
+  pull_request:
+    branches:
+      - main
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  CONFIGURATION: 'Release'
+  RESOURCE_GROUP: 'Holonet'
+  APP_NAME: 'Holonet-Api-Databank-8108'
+  PROJECT_DIR: './src/Holonet.Databank.API/Holonet.Databank.API.csproj'
+  PUBLISH_DIR: 'publish'
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/packages.lock.json') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.PROJECT_DIR }}
+
+      - name: Build
+        run: dotnet build ${{ env.PROJECT_DIR }} -c ${{ env.CONFIGURATION }} --no-restore
+
+      # Optional: Run tests if you have them
+      # - name: Run tests
+      #   run: dotnet test ${{ env.PROJECT_DIR }} -c ${{ env.CONFIGURATION }} --no-build --verbosity normal
+
+      - name: Publish
+        run: dotnet publish ${{ env.PROJECT_DIR }} -c ${{ env.CONFIGURATION }} -o ${{ env.PUBLISH_DIR }} --no-build --no-restore
+
+      - name: Create deployment package
+        run: |
+          cd ${{ env.PUBLISH_DIR }}
+          zip -r ../web-api.zip . -x "*.pdb"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-api-package
+          path: web-api.zip
+          retention-days: 7
+
+  deploy:
+    name: Publish Api
+    needs: build-and-test
+    runs-on: ubuntu-latest    
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: web-api-package
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-app
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.APP_NAME }}
+          slot-name: 'Production'
+
+      - name: Restart App Service (Ensure clean deployment)
+        run: |
+          az webapp  restart \
+            --name ${{ env.APP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }}
+
+      - name: Verify deployment health
+        run: |
+          # Wait a moment for the app to start
+          sleep 30
+          
+          # Check app state
+          APP_STATE=$(az webapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.APP_NAME }} --query "state" -o tsv)
+          echo "Web Api state: $APP_STATE"
+          
+          # Get the app URL
+          HOSTNAME=$(az webapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.APP_NAME }} --query "defaultHostName" -o tsv)
+          echo "Web Api URL: https://$HOSTNAME"
+          
+          # Optional: Test a health endpoint if you have one
+          # curl -f "https://$HOSTNAME/api/health" || echo "Health check failed or endpoint not available"
+          
+          echo "✅ Deployment completed successfully!"
+          echo "Check Application Insights for detailed logs and metrics."

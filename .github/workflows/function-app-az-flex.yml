@@ -1,4 +1,4 @@
-name: Azure Function App CI/CD (Flex Consumption)
+name: Function App CI/CD (Flex Consumption)
 
 on:
   workflow_dispatch:
@@ -15,9 +15,9 @@ on:
 env:
   DOTNET_VERSION: '9.0.x'
   CONFIGURATION: 'Release'
-  FUNCAPP_NAME: 'Holonet-Func-Databank-8108'
   RESOURCE_GROUP: 'Holonet'
-  APP_PROJECT: './src/Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj'
+  APP_NAME: 'Holonet-Func-Databank-8108'
+  PROJECT_DIR: './src/Holonet.Databank.AppFunctions/Holonet.Databank.AppFunctions.csproj'
   PUBLISH_DIR: 'publish'
 
 # Required for OIDC authentication (recommended for Flex Consumption)
@@ -47,17 +47,17 @@ jobs:
             nuget-${{ runner.os }}-
 
       - name: Restore dependencies
-        run: dotnet restore ${{ env.APP_PROJECT }}
+        run: dotnet restore ${{ env.PROJECT_DIR }}
 
       - name: Build
-        run: dotnet build ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} --no-restore
+        run: dotnet build ${{ env.PROJECT_DIR }} -c ${{ env.CONFIGURATION }} --no-restore
 
       # Optional: Run tests if you have them
       # - name: Run tests
-      #   run: dotnet test ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} --no-build --verbosity normal
+      #   run: dotnet test ${{ env.PROJECT_DIR }} -c ${{ env.CONFIGURATION }} --no-build --verbosity normal
 
       - name: Publish
-        run: dotnet publish ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} -o ${{ env.PUBLISH_DIR }} --no-build --no-restore -v:detailed
+        run: dotnet publish ${{ env.PROJECT_DIR }} -c ${{ env.CONFIGURATION }} -o ${{ env.PUBLISH_DIR }} --no-build --no-restore -v:detailed
 
       - name: Create deployment package
         run: |
@@ -100,7 +100,7 @@ jobs:
 
       - name: Verify Function App is on Flex Consumption plan
         run: |
-          COMPUTE_MODE=$(az functionapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.FUNCAPP_NAME }} --query "computeMode" -o tsv)
+          COMPUTE_MODE=$(az functionapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.APP_NAME }} --query "computeMode" -o tsv)
           echo "Current compute mode: $COMPUTE_MODE"
           if [ "$COMPUTE_MODE" != "FlexConsumption" ]; then
             echo "⚠️  Warning: Function App is not on Flex Consumption plan (current: $COMPUTE_MODE)"
@@ -110,9 +110,9 @@ jobs:
 
       - name: Deploy to Azure Function App
         run: |
-          echo "Deploying to Function App: ${{ env.FUNCAPP_NAME }}"
+          echo "Deploying to Function App: ${{ env.APP_NAME }}"
           az functionapp deployment source config-zip \
-            --name ${{ env.FUNCAPP_NAME }} \
+            --name ${{ env.APP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --src function-app.zip \
             --timeout 300
@@ -120,7 +120,7 @@ jobs:
       - name: Restart Function App (Ensure clean deployment)
         run: |
           az functionapp restart \
-            --name ${{ env.FUNCAPP_NAME }} \
+            --name ${{ env.APP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }}
 
       - name: Verify deployment health
@@ -129,11 +129,11 @@ jobs:
           sleep 30
           
           # Check app state
-          APP_STATE=$(az functionapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.FUNCAPP_NAME }} --query "state" -o tsv)
+          APP_STATE=$(az functionapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.APP_NAME }} --query "state" -o tsv)
           echo "Function App state: $APP_STATE"
           
           # Get the function app URL
-          HOSTNAME=$(az functionapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.FUNCAPP_NAME }} --query "defaultHostName" -o tsv)
+          HOSTNAME=$(az functionapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.APP_NAME }} --query "defaultHostName" -o tsv)
           echo "Function App URL: https://$HOSTNAME"
           
           # Optional: Test a health endpoint if you have one
