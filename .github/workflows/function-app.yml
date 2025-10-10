@@ -47,12 +47,19 @@ jobs:
         run: dotnet build ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} --no-restore
 
       - name: Publish
-        run: dotnet publish ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} -o ${{ env.PUBLISH_DIR }} --no-build
+        run: dotnet publish ${{ env.APP_PROJECT }} -c ${{ env.CONFIGURATION }} -o ${{ env.PUBLISH_DIR }} --no-build --verbosity normal
 
       - name: Zip published output
         run: |
           cd ${{ env.PUBLISH_DIR }}
           zip -r ../app.zip *
+
+      - name: Verify zip contents
+        run: |
+          cd ${{ env.PUBLISH_DIR }}
+          zip -r ../app.zip *
+          cd ..
+          unzip -l app.zip | head -20
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -79,3 +86,9 @@ jobs:
         run: |
           az functionapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.FUNCAPP_NAME }} --query "state"
           echo "Deployed; check Application Insights for cold start/logs."
+
+      - name: Restart Function App
+        run: |
+          az functionapp restart \
+            --name ${{ env.FUNCAPP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }}
