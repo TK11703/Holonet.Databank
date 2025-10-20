@@ -31,6 +31,12 @@ jobs:
           --location ${{ env.LOCATION }} \
           --sku Standard_LRS
 
+    - name: Create Blob Container
+      run: |
+        az storage container create \
+          --account-name ${{ env.STORAGE_NAME }} \
+          --name ${{ env.STORAGE_CONTAINER_NAME }}
+
     - name: Check if Function App exists
       id: checkapp
       run: |
