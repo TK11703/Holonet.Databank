@@ -49,7 +49,7 @@ jobs:
           --resource-group ${{ env.RESOURCE_GROUP }} \
           --storage-account ${{ env.STORAGE_NAME }} \
           --deployment-storage-name ${{ env.STORAGE_NAME }} \
-          --deployment-storage-container-name ${{ env.STORAGE_CONTAINER_NAME }}
+          --deployment-storage-container-name ${{ env.STORAGE_CONTAINER_NAME }} \
           --flexconsumption-location ${{ env.LOCATION }} \
           --functions-version ${{ env.FUNCTIONS_VERSION }} \
           --runtime ${{ env.RUNTIME }} \
