@@ -22,7 +22,7 @@ public class DataRecordTrigger(ILoggerFactory loggerFactory, IOptions<AppSetting
     private readonly HistoricalEventClient _historicalEventClient = historicalEventClient;
 
     // Visit https://aka.ms/sqltrigger to learn how to use this trigger binding
-    [Function("DataRecordTrigger")]
+    [Function("datarecordtrigger")]
     public async Task Run([SqlTrigger("[dbo].[DataRecords]", "ConnectionStrings:DefaultConnection")] IReadOnlyList<SqlChange<DataRecordDto>> changes, FunctionContext context)
     {
         DateTime executedOn = DateTime.UtcNow;
