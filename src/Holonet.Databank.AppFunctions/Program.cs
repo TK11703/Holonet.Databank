@@ -6,7 +6,6 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Diagnostics;
 
 try
 {
@@ -24,25 +23,7 @@ try
     })
     .ConfigureServices((context, services) =>
     {
-        services.Configure<AppSettings>(context.Configuration.GetSection("AppSettings"));        
-        if (context.HostingEnvironment.IsDevelopment())
-        {
-            try
-            {
-                var azuritePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),"npm","azurite.cmd");
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = azuritePath,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                });
-                Console.WriteLine("Azurite started.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to start Azurite: {ex.Message}");
-            }
-        }
+        services.Configure<AppSettings>(context.Configuration.GetSection("AppSettings"));
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();
         services.AddLogging();

@@ -43,7 +43,22 @@ public static class EntityExtensions
 		);
 	}
 
-	public static AuthorDto ToDto(this Author author)
+    public static DataRecordFunctionDto ToFunctionDto(this DataRecord record)
+    {
+        return new DataRecordFunctionDto
+        (
+            record.Id,
+            record.Shard ?? string.Empty,
+            record.Data,            
+            record.CharacterId,
+            record.PlanetId,
+            record.SpeciesId,
+            record.HistoricalEventId,            
+            record.UpdatedOn
+        );
+    }
+
+    public static AuthorDto ToDto(this Author author)
 	{
 		return new AuthorDto
 		(

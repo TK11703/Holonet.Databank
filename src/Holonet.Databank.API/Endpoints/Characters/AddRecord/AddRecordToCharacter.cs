@@ -1,4 +1,5 @@
 ﻿using Holonet.Databank.API.Filters;
+using Holonet.Databank.API.Middleware;
 using Holonet.Databank.Application.Services;
 using Holonet.Databank.Core.Dtos;
 using Holonet.Databank.Core.Entities;
@@ -13,7 +14,7 @@ public class AddRecordToCharacter : IEndpoint
             .AddEndpointFilter<ValidatorFilter<CreateRecordDto>>()
             .WithTags(Tags.Characters);
     }
-    protected virtual async Task<Results<Ok<int>, ProblemHttpResult>> Handle(int id, CreateRecordDto itemModel, IDataRecordService dataRecordService, IAuthorService authorService)
+    protected virtual async Task<Results<Ok<int>, ProblemHttpResult>> Handle(int id, CreateRecordDto itemModel, IDataRecordService dataRecordService, IAuthorService authorService, IQueueShardService queueShardService)
     {
         try
         {
@@ -44,6 +45,11 @@ public class AddRecordToCharacter : IEndpoint
             int? newItemId = await dataRecordService.CreateDataRecord(record);
             if (newItemId.HasValue)
             {
+                if (string.IsNullOrEmpty(record.Data) && !string.IsNullOrEmpty(record.Shard)) //only want to request data if no data is present but a shard is specified
+                {
+                    record.Id = newItemId.Value;
+                    await queueShardService.QueueShardItem(record.ToFunctionDto());
+                }
                 return TypedResults.Ok(newItemId.Value);
             }
             else

@@ -8,6 +8,15 @@
                 "excludedTypes": "Request"
             },
             "enableLiveMetricsFilters": true
+        },
+        "logLevel": {
+            "Function": "Information",
+            "Default": "Warning"
+        }
+    },
+    "extensions": {
+        "queues": {
+            "messageEncoding": "None"
         }
     },
     "extensionBundle": {

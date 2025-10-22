@@ -1,6 +1,7 @@
 ﻿using Azure;
 using Azure.Search.Documents.Indexes;
 using Holonet.Databank.API.Configuration;
+using Holonet.Databank.API.Middleware;
 using Holonet.Databank.Application.AICapabilities;
 using Holonet.Databank.Application.AICapabilities.Plugins;
 using Holonet.Databank.Application.Services;
@@ -48,6 +49,9 @@ public static class ScopedServicesExtension
 
         services.AddScoped<IGenericDBService, GenericDBService>();
         services.AddScoped<IGenericDBRepository, GenericDBRepository>();
+        
+        services.AddScoped<IQueueShardService, QueueShardService>();
+
 
         services.AddHealthChecks();
         //.AddCheck<DatabaseHealthCheck>("database", HealthStatus.Unhealthy);

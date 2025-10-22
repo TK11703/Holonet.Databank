@@ -12,15 +12,25 @@ public class AppSettings
 
     [Required]
     public CustomHttpHeaders HarvestingHttpReqHeaders { get; set; }
+    
+    [Required]
+    public StorageQueueSettings StorageQueue { get; set; }
 
     [Required]
     public string FunctionIdentityGuid { get; set; } = string.Empty;
+
+    [Required]
+    public bool UseSqlTrigger { get; set; } = false;
+
+    [Required]
+    public bool UseQueueTrigger { get; set; } = false;
 
     public AppSettings()
     {
         ApiGateway = new ApiGatewaySettings();
         DataStorage = new DataStorageSettings();
         HarvestingHttpReqHeaders = new CustomHttpHeaders();
+        StorageQueue = new StorageQueueSettings();
     }
 }
 
@@ -93,4 +103,15 @@ public class ApiGatewaySettings
     public string Scopes { get; set; } = string.Empty;
 
     public bool RequiresBearerToken { get; set; } = false;
+}
+
+public class StorageQueueSettings
+{
+    public bool UseDevStorage { get; set; } = false;
+    public bool UseSAS { get; set; } = false;
+    public bool UseConnectionString { get; set; } = false;
+    public string BaseUrl { get; set; } = string.Empty;
+    public string QueueName { get; set; } = string.Empty;
+    public string SASUrl { get; set; } = string.Empty;
+    public string DefaultConnection { get; set; } = string.Empty;
 }

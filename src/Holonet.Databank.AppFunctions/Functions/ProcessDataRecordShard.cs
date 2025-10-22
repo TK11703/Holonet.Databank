@@ -1,7 +1,6 @@
 using Holonet.Databank.AppFunctions.Clients;
 using Holonet.Databank.AppFunctions.Configuration;
 using Holonet.Databank.AppFunctions.HtmlHarvesting;
-using Holonet.Databank.AppFunctions.Services;
 using Holonet.Databank.Core.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,15 +12,13 @@ using System.Text.Json;
 namespace Holonet.Databank.AppFunctions.Functions
 {
     public class ProcessDataRecordShard(ILoggerFactory loggerFactory, IOptions<AppSettings> appSettings, AIServiceClient serviceClient, CharacterClient characterClient, PlanetClient planetClient, SpeciesClient speciesClient, HistoricalEventClient historicalEventClient)
+        : DataRecordDtoProcessor(loggerFactory, appSettings, serviceClient, characterClient, planetClient, speciesClient, historicalEventClient)
     {
         private readonly ILogger _logger = loggerFactory.CreateLogger<ProcessDataRecordShard>();
         private readonly ILoggerFactory _loggerFactory = loggerFactory;
         private readonly AppSettings _settings = appSettings.Value;
         private readonly AIServiceClient _serviceClient = serviceClient;
-        private readonly CharacterClient _characterClient = characterClient;
-        private readonly PlanetClient _planetClient = planetClient;
-        private readonly SpeciesClient _speciesClient = speciesClient;
-        private readonly HistoricalEventClient _historicalEventClient = historicalEventClient;
+        
 
         [Function("ProcessDataRecordShard")]
         public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req)
@@ -113,128 +110,6 @@ namespace Holonet.Databank.AppFunctions.Functions
                     StatusCode = StatusCodes.Status400BadRequest
                 };
             }
-        }
-
-        private async Task<bool> UpdateDataRecordForProcessing(DataRecordFunctionDto externalData, string? errorMessage = null)
-        {
-            if (externalData.CharacterId.HasValue)
-            {
-                ILogger<CharacterService> serviceLogger = _loggerFactory.CreateLogger<CharacterService>();
-                CharacterService characterService = new CharacterService(serviceLogger, _characterClient);
-                if (await characterService.UpdateDataRecordForProcessing(externalData.Id, externalData.CharacterId, externalData.Shard, errorMessage))
-                {
-                    _logger.LogInformation("Holonet.Databank.Functions ProcessDataRecordShard CharacterId: {CharacterId} updated successfully.", externalData.CharacterId);
-                    return true;
-                }
-                else
-                {
-                    _logger.LogError("Holonet.Databank.Functions ProcessDataRecordShard CharacterId: {CharacterId} update failed.", externalData.CharacterId);
-                }
-            }
-            if (externalData.PlanetId.HasValue)
-            {
-                ILogger<PlanetService> serviceLogger = _loggerFactory.CreateLogger<PlanetService>();
-                PlanetService planetService = new PlanetService(serviceLogger, _planetClient);
-                if (await planetService.UpdateDataRecordForProcessing(externalData.Id, externalData.PlanetId, externalData.Shard, errorMessage))
-                {
-                    _logger.LogInformation("Holonet.Databank.Functions ProcessDataRecordShard PlanetId: {PlanetId} updated successfully.", externalData.PlanetId);
-                    return true;
-                }
-                else
-                {
-                    _logger.LogError("Holonet.Databank.Functions ProcessDataRecordShard PlanetId: {PlanetId} update failed.", externalData.PlanetId);
-                }
-            }
-            if (externalData.SpeciesId.HasValue)
-            {
-                ILogger<SpeciesService> serviceLogger = _loggerFactory.CreateLogger<SpeciesService>();
-                SpeciesService speciesService = new SpeciesService(serviceLogger, _speciesClient);
-                if (await speciesService.UpdateDataRecordForProcessing(externalData.Id, externalData.SpeciesId, externalData.Shard, errorMessage))
-                {
-                    _logger.LogInformation("Holonet.Databank.Functions ProcessDataRecordShard SpeciesId: {SpeciesId} updated successfully.", externalData.SpeciesId);
-                    return true;
-                }
-                else
-                {
-                    _logger.LogError("Holonet.Databank.Functions ProcessDataRecordShard SpeciesId: {SpeciesId} update failed.", externalData.SpeciesId);
-                }
-            }
-            if (externalData.HistoricalEventId.HasValue)
-            {
-                ILogger<HistoricalEventService> serviceLogger = _loggerFactory.CreateLogger<HistoricalEventService>();
-                HistoricalEventService historicalEventService = new HistoricalEventService(serviceLogger, _historicalEventClient);
-                if (await historicalEventService.UpdateDataRecordForProcessing(externalData.Id, externalData.HistoricalEventId, externalData.Shard, errorMessage))
-                {
-                    _logger.LogInformation("Holonet.Databank.Functions ProcessDataRecordShard HistoricalEventId: {HistoricalEventId} updated successfully.", externalData.HistoricalEventId);
-                    return true;
-                }
-                else
-                {
-                    _logger.LogError("Holonet.Databank.Functions ProcessDataRecordShard HistoricalEventId: {HistoricalEventId} update failed.", externalData.HistoricalEventId);
-                }
-            }
-            return false;
-        }
-
-        private async Task<bool> ProcessNewDataRecord(DataRecordFunctionDto externalData, string summary)
-        {
-            if (externalData.CharacterId.HasValue)
-            {
-                ILogger<CharacterService> serviceLogger = _loggerFactory.CreateLogger<CharacterService>();
-                CharacterService characterService = new CharacterService(serviceLogger, _characterClient);
-                if (await characterService.ProcessNewDataRecord(externalData.Id, externalData.CharacterId, externalData.Shard, summary))
-                {
-                    _logger.LogInformation("Holonet.Databank.Functions ProcessDataRecordShard CharacterId: {CharacterId} updated successfully.", externalData.CharacterId);
-                    return true;
-                }
-                else
-                {
-                    _logger.LogError("Holonet.Databank.Functions ProcessDataRecordShard CharacterId: {CharacterId} update failed.", externalData.CharacterId);                  
-                }
-            }
-            if (externalData.PlanetId.HasValue)
-            {
-                ILogger<PlanetService> serviceLogger = _loggerFactory.CreateLogger<PlanetService>();
-                PlanetService planetService = new PlanetService(serviceLogger, _planetClient);
-                if (await planetService.ProcessNewDataRecord(externalData.Id, externalData.PlanetId, externalData.Shard, summary))
-                {
-                    _logger.LogInformation("Holonet.Databank.Functions ProcessDataRecordShard PlanetId: {PlanetId} updated successfully.", externalData.PlanetId);
-                    return true;
-                }
-                else
-                {
-                    _logger.LogError("Holonet.Databank.Functions ProcessDataRecordShard PlanetId: {PlanetId} update failed.", externalData.PlanetId);
-                }
-            }
-            if (externalData.SpeciesId.HasValue)
-            {
-                ILogger<SpeciesService> serviceLogger = _loggerFactory.CreateLogger<SpeciesService>();
-                SpeciesService speciesService = new SpeciesService(serviceLogger, _speciesClient);
-                if (await speciesService.ProcessNewDataRecord(externalData.Id, externalData.SpeciesId, externalData.Shard, summary))
-                {
-                    _logger.LogInformation("Holonet.Databank.Functions ProcessDataRecordShard SpeciesId: {SpeciesId} updated successfully.", externalData.SpeciesId);
-                    return true;
-                }
-                else
-                {
-                    _logger.LogError("Holonet.Databank.Functions ProcessDataRecordShard SpeciesId: {SpeciesId} update failed.", externalData.SpeciesId);
-                }
-            }
-            if (externalData.HistoricalEventId.HasValue)
-            {
-                ILogger<HistoricalEventService> serviceLogger = _loggerFactory.CreateLogger<HistoricalEventService>();
-                HistoricalEventService historicalEventService = new HistoricalEventService(serviceLogger, _historicalEventClient);
-                if (await historicalEventService.ProcessNewDataRecord(externalData.Id, externalData.HistoricalEventId, externalData.Shard, summary))
-                {
-                    _logger.LogInformation("Holonet.Databank.Functions ProcessDataRecordShard HistoricalEventId: {HistoricalEventId} updated successfully.", externalData.HistoricalEventId);
-                    return true;
-                }
-                else
-                {
-                    _logger.LogError("Holonet.Databank.Functions ProcessDataRecordShard HistoricalEventId: {HistoricalEventId} update failed.", externalData.HistoricalEventId);
-                }
-            }
-            return false;
         }
     }
 }

@@ -70,6 +70,7 @@ public static class ModelExtensions
         (
             record.Id,
             record.Shard ?? string.Empty,
+            record.Data ?? string.Empty,
             record.CharacterId,
             record.PlanetId,
             record.SpeciesId,

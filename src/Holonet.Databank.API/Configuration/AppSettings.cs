@@ -5,17 +5,17 @@ public class AppSettings
     public AiServiceSettings AzureOpenAi { get; set; }
     public AiServiceSettings AzureAiSearch { get; set; }
     public AiServiceSettings AzureAiLanguage { get; set; }
+    public StorageQueueSettings StorageQueue { get; set; }
 
     public string GeoCodingApiKey { get; set; } = string.Empty;
 
-    public bool ShowSwagger { get; set; } = true;
-
-
+    public bool ShowSwagger { get; set; } = true;    
     public AppSettings()
     {
         AzureOpenAi = new AiServiceSettings();
         AzureAiSearch = new AiServiceSettings();
         AzureAiLanguage = new AiServiceSettings();
+        StorageQueue = new StorageQueueSettings();
     }
 }
 
@@ -26,4 +26,15 @@ public class AiServiceSettings
     public string Model { get; set; } = string.Empty;
     public string Index { get; set; } = string.Empty;
     public string EmbeddingModel { get; set; } = string.Empty;
+}
+
+public class StorageQueueSettings
+{
+    public bool UseDevStorage { get; set; } = false;
+    public bool UseSAS { get; set; } = false;
+    public bool UseConnectionString { get; set; } = false;
+    public string BaseUrl { get; set; } = string.Empty;
+    public string QueueName { get; set; } = string.Empty;
+    public string SASUrl { get; set; } = string.Empty;
+    public string DefaultConnection { get; set; } = string.Empty;
 }
