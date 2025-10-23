@@ -25,23 +25,25 @@ try
     {
         services.Configure<AppSettings>(context.Configuration.GetSection("AppSettings"));
 
-        //if (context.HostingEnvironment.IsDevelopment())
-        //{
-        //    services.AddApplicationInsightsTelemetryWorkerService();
-        //}
-        //else
-        //{
-        //    services.AddApplicationInsightsTelemetry(options =>
-        //    {
-        //        options.ConnectionString = context.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
-        //    });
-        //}
-        services.AddApplicationInsightsTelemetry(options =>
+        if (context.HostingEnvironment.IsDevelopment())
         {
-            options.ConnectionString = context.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
-        });
+            services.AddApplicationInsightsTelemetryWorkerService();
+        }
+        else
+        {
+            services.AddApplicationInsightsTelemetry(options =>
+            {
+                options.ConnectionString = context.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+            });
+        }
         services.ConfigureFunctionsApplicationInsights();
         services.AddLogging();
+        services.AddSingleton<TelemetryClient>(provider =>
+        {
+            var config = TelemetryConfiguration.CreateDefault();
+            config.ConnectionString = context.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+            return new TelemetryClient(config);
+        });
         services.ConfigureClients(context.Configuration);
     })
     .Build();
