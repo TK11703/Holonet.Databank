@@ -21,11 +21,15 @@ try
         config.AddEnvironmentVariables();
         config.AddCommandLine(args);
     })
+    .ConfigureFunctionsWorkerDefaults()
     .ConfigureServices((context, services) =>
     {
         services.Configure<AppSettings>(context.Configuration.GetSection("AppSettings"));
 
-        services.AddApplicationInsightsTelemetryWorkerService();
+        services.AddApplicationInsightsTelemetryWorkerService(configure => 
+        {
+            configure.ConnectionString = context.Configuration.GetValue<string>("APPLICATIONINSIGHTS_CONNECTION_STRING");
+        });
         services.ConfigureFunctionsApplicationInsights();
         services.AddLogging();
         services.ConfigureClients(context.Configuration);
