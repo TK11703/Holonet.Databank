@@ -22,6 +22,9 @@ env:
 
 jobs:
   build-and-deploy:
+    if: contains(github.event.head_commit.message, '#function') || 
+        contains(github.event.head_commit.message, '#func') || 
+        contains(github.event.head_commit.message, '#functionapp')
     name: Build, Publish, Deploy (.NET 9 Isolated)
     runs-on: ubuntu-latest
     steps:
