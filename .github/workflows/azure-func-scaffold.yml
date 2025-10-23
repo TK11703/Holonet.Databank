@@ -15,6 +15,7 @@ env:
 
 jobs:
   provision:
+    name: Scaffold & Provision Function App Resources
     runs-on: ubuntu-latest
 
     steps:
