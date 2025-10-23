@@ -22,6 +22,9 @@ env:
 
 jobs:
   build-and-test:
+    if: contains(github.event.head_commit.message, '#webapi') || 
+        contains(github.event.head_commit.message, '#api') || 
+        contains(github.event.head_commit.message, '#apiapp')
     name: Build and Test
     runs-on: ubuntu-latest
     steps:
@@ -67,6 +70,9 @@ jobs:
           retention-days: 7
 
   deploy:
+    if: contains(github.event.head_commit.message, '#webapi') || 
+        contains(github.event.head_commit.message, '#api') || 
+        contains(github.event.head_commit.message, '#apiapp')
     name: Publish Api
     needs: build-and-test
     runs-on: ubuntu-latest    
