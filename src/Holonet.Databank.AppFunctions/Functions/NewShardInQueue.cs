@@ -6,6 +6,7 @@ using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Diagnostics;
 using System.Text.Json;
 
 namespace Holonet.Databank.AppFunctions.Functions;
@@ -20,16 +21,8 @@ public class NewShardInQueue(ILogger<NewShardInQueue> logger, TelemetryClient te
     [Function("NewShardInQueue")]
     public async Task Run([QueueTrigger("shardprocessqueue", Connection = "StorageQueueConnection")] string message)
     {
-        var requestTelemetry = new RequestTelemetry
-        {
-            Name = "NewShardInQueue",
-            Timestamp = DateTimeOffset.UtcNow,
-            Duration = TimeSpan.FromSeconds(1), // Adjust as needed
-            Success = true
-        };
-
-        _telemetryClient.TrackRequest(requestTelemetry);
-
+        var stopwatch = Stopwatch.StartNew();
+        
         DateTime executedOn = DateTime.UtcNow;
         _logger.LogInformation("Holonet.Databank.Functions NewShardInQueue was triggered at: {ExecutionTime}.", executedOn);
 
@@ -71,5 +64,20 @@ public class NewShardInQueue(ILogger<NewShardInQueue> logger, TelemetryClient te
         {
             _logger.LogInformation("Holonet.Databank.Functions NewShardInQueue was cancelled due to UseQueueTrigger configuration setting.");
         }
+        stopwatch.Stop();
+        var duration = stopwatch.Elapsed;
+
+        var requestTelemetry = new RequestTelemetry
+        {
+            Name = "NewShardInQueue",
+            Timestamp = DateTimeOffset.UtcNow - duration,
+            Duration = duration,
+            Success = true,
+            ResponseCode = "200"
+        };
+
+        telemetryClient.TrackRequest(requestTelemetry);
+        telemetryClient.Flush();
+
     }
 }
