@@ -12,6 +12,9 @@ on:
       - main
 jobs:
   Build:
+    if: contains(github.event.head_commit.message, '#db') || 
+        contains(github.event.head_commit.message, '#dbproj') || 
+        contains(github.event.head_commit.message, '#dbapp')
     runs-on: windows-latest
     
     steps:
@@ -31,6 +34,9 @@ jobs:
           path: ${{ github.workspace }}\src\Holonet.Databank.DB\bin\release\
 
   DeploySQLDB:
+    if: contains(github.event.head_commit.message, '#db') || 
+        contains(github.event.head_commit.message, '#dbproj') || 
+        contains(github.event.head_commit.message, '#dbapp')
     needs: Build
     runs-on: ubuntu-22.04
     permissions:
