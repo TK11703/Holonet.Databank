@@ -1,11 +1,13 @@
 using Holonet.Databank.AppFunctions.Configuration;
 using Holonet.Databank.AppFunctions.Extensions;
+using Holonet.Databank.AppFunctions.Middleware;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Drawing;
 
 try
 {
@@ -21,7 +23,11 @@ try
         config.AddEnvironmentVariables();
         config.AddCommandLine(args);
     })
-    .ConfigureFunctionsWorkerDefaults()
+    .ConfigureFunctionsWorkerDefaults(worker =>
+    {
+        // register middleware in the worker pipeline
+        worker.UseMiddleware<AiInvocationMiddleware>();
+    })
     .ConfigureServices((context, services) =>
     {
         services.Configure<AppSettings>(context.Configuration.GetSection("AppSettings"));
@@ -32,6 +38,18 @@ try
         });
         services.ConfigureFunctionsApplicationInsights();
         services.AddLogging();
+
+        // register TelemetryClient
+        services.AddSingleton(_ =>
+        {
+            var config = TelemetryConfiguration.CreateDefault();
+            config.ConnectionString = context.Configuration.GetValue<string>("APPLICATIONINSIGHTS_CONNECTION_STRING");
+            return new TelemetryClient(config);
+        });
+
+        // register your middleware (see next step)
+        services.AddSingleton<AiInvocationMiddleware>();
+
         services.ConfigureClients(context.Configuration);
     })
     .Build();
