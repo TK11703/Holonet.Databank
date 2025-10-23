@@ -24,7 +24,19 @@ try
     .ConfigureServices((context, services) =>
     {
         services.Configure<AppSettings>(context.Configuration.GetSection("AppSettings"));
-        services.AddApplicationInsightsTelemetryWorkerService();
+
+        if (context.HostingEnvironment.IsDevelopment())
+        {
+            services.AddApplicationInsightsTelemetryWorkerService();
+        }
+        else
+        {
+            services.AddApplicationInsightsTelemetry(options =>
+            {
+                options.ConnectionString = context.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+            });
+        }
+        
         services.ConfigureFunctionsApplicationInsights();
         services.AddLogging();
         services.ConfigureClients(context.Configuration);
