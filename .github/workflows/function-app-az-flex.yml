@@ -27,6 +27,9 @@ permissions:
 
 jobs:
   build-and-test:
+    if: contains(github.event.head_commit.message, '#function') || 
+        contains(github.event.head_commit.message, '#func') || 
+        contains(github.event.head_commit.message, '#functionapp')
     name: Build and Test
     runs-on: ubuntu-latest
     steps:
@@ -72,6 +75,9 @@ jobs:
           retention-days: 7
 
   deploy:
+    if: contains(github.event.head_commit.message, '#function') || 
+        contains(github.event.head_commit.message, '#func') || 
+        contains(github.event.head_commit.message, '#functionapp')
     name: Deploy to Azure (Flex Consumption)
     runs-on: ubuntu-latest
     needs: build-and-test
