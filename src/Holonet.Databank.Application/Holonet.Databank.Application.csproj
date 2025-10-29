@@ -1,22 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Azure.AI.OpenAI" Version="2.5.0-beta.1" />
-    <PackageReference Include="Azure.AI.TextAnalytics" Version="5.3.0" />
-    <PackageReference Include="Azure.Search.Documents" Version="11.7.0" />
-    <PackageReference Include="Microsoft.Extensions.AI" Version="9.10.1" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.10" />
-    <PackageReference Include="Microsoft.SemanticKernel" Version="1.66.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Azure.AI.OpenAI" />
+		<PackageReference Include="Azure.AI.TextAnalytics" />
+		<PackageReference Include="Azure.Search.Documents" />
+		<PackageReference Include="Microsoft.Extensions.AI" />
+		<PackageReference Include="Microsoft.Extensions.Http" />
+		<PackageReference Include="Microsoft.SemanticKernel" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Holonet.Databank.Infrastructure\Holonet.Databank.Infrastructure.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Holonet.Databank.Infrastructure\Holonet.Databank.Infrastructure.csproj" />
+	</ItemGroup>
 
 </Project>

@@ -1,42 +1,42 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>68a31335-c80f-4e50-9325-1470774069f6</UserSecretsId>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>68a31335-c80f-4e50-9325-1470774069f6</UserSecretsId>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Azure.AI.OpenAI" Version="2.5.0-beta.1" />
-    <PackageReference Include="Azure.Storage.Queues" Version="12.24.0" />
-    <PackageReference Include="FluentValidation" Version="12.0.0" />
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.10" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.10" />
-    <PackageReference Include="Microsoft.Extensions.AI" Version="9.10.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10" />
-    <PackageReference Include="Microsoft.Extensions.VectorData.Abstractions" Version="9.7.0" />
-    <PackageReference Include="Microsoft.Identity.Web" Version="4.0.1" />
-    <PackageReference Include="Microsoft.Identity.Web.UI" Version="4.0.1" />
-    <PackageReference Include="Microsoft.SemanticKernel" Version="1.66.0" />
-    <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureAISearch" Version="1.66.0-preview" />
-    <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="1.66.0" />
-    <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.66.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
-    <PackageReference Include="System.Text.Json" Version="9.0.10" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Azure.AI.OpenAI" />
+		<PackageReference Include="Azure.Storage.Queues" />
+		<PackageReference Include="FluentValidation" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+		<PackageReference Include="Microsoft.Extensions.AI" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+		<PackageReference Include="Microsoft.Extensions.VectorData.Abstractions" />
+		<PackageReference Include="Microsoft.Identity.Web" />
+		<PackageReference Include="Microsoft.Identity.Web.UI" />
+		<PackageReference Include="Microsoft.SemanticKernel" />
+		<PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureAISearch" />
+		<PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" />
+		<PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" />
+		<PackageReference Include="Swashbuckle.AspNetCore" />
+		<PackageReference Include="System.Text.Json" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Holonet.Databank.Core\Holonet.Databank.Core.csproj" />
-    <ProjectReference Include="..\Holonet.Databank.Infrastructure\Holonet.Databank.Infrastructure.csproj" />
-    <ProjectReference Include="..\Holonet.Databank.Application\Holonet.Databank.Application.csproj" />
-    <ProjectReference Include="..\Holonet.Databank.ServiceDefaults\Holonet.Databank.ServiceDefaults.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Holonet.Databank.Core\Holonet.Databank.Core.csproj" />
+		<ProjectReference Include="..\Holonet.Databank.Infrastructure\Holonet.Databank.Infrastructure.csproj" />
+		<ProjectReference Include="..\Holonet.Databank.Application\Holonet.Databank.Application.csproj" />
+		<ProjectReference Include="..\Holonet.Databank.ServiceDefaults\Holonet.Databank.ServiceDefaults.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\PublishProfiles\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Properties\PublishProfiles\" />
+	</ItemGroup>
 
 </Project>

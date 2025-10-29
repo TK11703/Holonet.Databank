@@ -1,51 +1,51 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>9d76f8dc-e5b9-4f45-8f3d-1d5a24a78c4c</UserSecretsId>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>9d76f8dc-e5b9-4f45-8f3d-1d5a24a78c4c</UserSecretsId>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Clients\ConfidentialClientTokenProvider.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Clients\ConfidentialClientTokenProvider.cs" />
+	</ItemGroup>
 
-  <ItemGroup>    
-    <PackageReference Include="Blazored.Toast" Version="4.2.1" />
-    <PackageReference Include="Markdig" Version="0.43.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.10" />
-    <PackageReference Include="Microsoft.Graph" Version="5.95.0" />
-    <PackageReference Include="Microsoft.Identity.Web" Version="4.0.1" />
-    <PackageReference Include="Microsoft.Identity.Web.DownstreamApi" Version="4.0.1" />
-    <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="4.0.1" />
-    <PackageReference Include="Microsoft.Identity.Web.UI" Version="4.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="System.Text.Json" Version="9.0.10" />    
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Blazored.Toast" />
+		<PackageReference Include="Markdig" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" />
+		<PackageReference Include="Microsoft.Graph" />
+		<PackageReference Include="Microsoft.Identity.Web" />
+		<PackageReference Include="Microsoft.Identity.Web.DownstreamApi" />
+		<PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" />
+		<PackageReference Include="Microsoft.Identity.Web.UI" />
+		<PackageReference Include="Newtonsoft.Json" />
+		<PackageReference Include="System.Text.Json" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Holonet.Databank.Core\Holonet.Databank.Core.csproj" />
-    <ProjectReference Include="..\Holonet.Databank.ServiceDefaults\Holonet.Databank.ServiceDefaults.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Holonet.Databank.Core\Holonet.Databank.Core.csproj" />
+		<ProjectReference Include="..\Holonet.Databank.ServiceDefaults\Holonet.Databank.ServiceDefaults.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\PublishProfiles\" />
-    <Folder Include="Properties\ServiceDependencies\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Properties\PublishProfiles\" />
+		<Folder Include="Properties\ServiceDependencies\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Update="wwwroot\bootstrap\bootstrap.min.css">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="wwwroot\bootstrap\bootstrap.min.css.map">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
+	<ItemGroup>
+		<Content Update="wwwroot\bootstrap\bootstrap.min.css">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="wwwroot\bootstrap\bootstrap.min.css.map">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
 
 </Project>
