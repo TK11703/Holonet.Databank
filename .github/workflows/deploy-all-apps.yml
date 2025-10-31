@@ -16,6 +16,11 @@ on:
         required: true
         type: boolean
 
+# Required for OIDC authentication (recommended for Flex Consumption)
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   execute-flex-function-workflow:
     uses: ./.github/workflows/function-app-az-flex.yml
