@@ -2,6 +2,16 @@ name: Web API CI/CD
 
 on:
   workflow_dispatch:
+    inputs:
+      shouldRun:
+        description: 'True to override all checks and run the workflow, False otherwise'
+        required: true
+        type: boolean
+  workflow_call:
+    inputs:
+      shouldRun:
+        required: true
+        type: boolean
   push:
     branches:
       - main
@@ -21,10 +31,31 @@ env:
   PUBLISH_DIR: 'publish'
 
 jobs:
+  determine-execution-condition:
+    runs-on: ubuntu-latest
+    outputs:
+      shouldRun: ${{ steps.setFlag.outputs.shouldRun }}
+    steps:
+      - id: setFlag
+        run: |
+          if [[ "${{ github.event_name }}" == "push" && \
+                ("${{ github.event.head_commit.message }}" == *"#webapi"* || \
+                 "${{ github.event.head_commit.message }}" == *"#api"* || \
+                 "${{ github.event.head_commit.message }}" == *"#apiapp"*) ]]; then
+            echo "shouldRun=true" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "pull_request" && \
+                ("${{ github.event.head_commit.message }}" == *"#webapi"* || \
+                    "${{ github.event.head_commit.message }}" == *"#api"* || \
+                    "${{ github.event.head_commit.message }}" == *"#apiapp"*) ]]; then
+            echo "shouldRun=true" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.shouldRun }}" == "true" ]]; then
+            echo "shouldRun=true" >> $GITHUB_OUTPUT
+          else
+            echo "shouldRun=false" >> $GITHUB_OUTPUT
+          fi
   build-and-test:
-    if: contains(github.event.head_commit.message, '#webapi') || 
-        contains(github.event.head_commit.message, '#api') || 
-        contains(github.event.head_commit.message, '#apiapp')
+    needs: determine-execution-condition
+    if: ${{ needs.determine-execution-condition.outputs.shouldRun == 'true' }}
     name: Build and Test
     runs-on: ubuntu-latest
     steps:
@@ -70,9 +101,7 @@ jobs:
           retention-days: 7
 
   deploy:
-    if: contains(github.event.head_commit.message, '#webapi') || 
-        contains(github.event.head_commit.message, '#api') || 
-        contains(github.event.head_commit.message, '#apiapp')
+    if: ${{ needs.determine-execution-condition.outputs.shouldRun == 'true' }}
     name: Publish Api
     needs: build-and-test
     runs-on: ubuntu-latest    

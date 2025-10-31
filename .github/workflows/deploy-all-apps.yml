@@ -1,0 +1,33 @@
+name: Deploy All Apps (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      runWebBuild:
+        description: 'Build/Deploy Web Application?'
+        required: true
+        type: boolean
+      runApiBuild:
+        description: 'Build/Deploy Web Api?'
+        required: true
+        type: boolean
+      runFunctionBuild:
+        description: 'Build/Deploy Azure Function?'
+        required: true
+        type: boolean
+
+jobs:
+  execute-flex-function-workflow:
+    uses: ./.github/workflows/function-app-az-flex.yml
+    with:
+      shouldRun: ${{ inputs.runFunctionBuild }}
+  
+  execute-web-workflow:
+    uses: ./.github/workflows/web-app-az-app-serv.yml
+    with:
+      shouldRun: ${{ inputs.runWebBuild }}
+
+  execute-api-workflow:
+    uses: ./.github/workflows/web-api-az-app-serv.yml
+    with:
+      shouldRun: ${{ inputs.runApiBuild }}

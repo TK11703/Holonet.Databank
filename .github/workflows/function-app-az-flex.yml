@@ -2,6 +2,16 @@ name: Function App CI/CD (Flex Consumption)
 
 on:
   workflow_dispatch:
+    inputs:
+      shouldRun:
+        description: 'True to override all checks and run the workflow, False otherwise'
+        required: true
+        type: boolean
+  workflow_call:
+    inputs:
+      shouldRun:
+        required: true
+        type: boolean
   push:
     branches:
       - main
@@ -26,10 +36,31 @@ permissions:
   contents: read
 
 jobs:
+  determine-execution-condition:
+    runs-on: ubuntu-latest
+    outputs:
+      shouldRun: ${{ steps.setFlag.outputs.shouldRun }}
+    steps:
+      - id: setFlag
+        run: |
+          if [[ "${{ github.event_name }}" == "push" && \
+                ("${{ github.event.head_commit.message }}" == *"#function"* || \
+                 "${{ github.event.head_commit.message }}" == *"#func"* || \
+                 "${{ github.event.head_commit.message }}" == *"#functionapp"*) ]]; then
+            echo "shouldRun=true" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "pull_request" && \
+                ("${{ github.event.head_commit.message }}" == *"#function"* || \
+                    "${{ github.event.head_commit.message }}" == *"#func"* || \
+                    "${{ github.event.head_commit.message }}" == *"#functionapp"*) ]]; then
+            echo "shouldRun=true" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.shouldRun }}" == "true" ]]; then
+            echo "shouldRun=true" >> $GITHUB_OUTPUT
+          else
+            echo "shouldRun=false" >> $GITHUB_OUTPUT
+          fi
   build-and-test:
-    if: contains(github.event.head_commit.message, '#function') || 
-        contains(github.event.head_commit.message, '#func') || 
-        contains(github.event.head_commit.message, '#functionapp')
+    needs: determine-execution-condition
+    if: ${{ needs.determine-execution-condition.outputs.shouldRun == 'true' }}
     name: Build and Test
     runs-on: ubuntu-latest
     steps:
@@ -74,14 +105,11 @@ jobs:
           path: function-app.zip
           retention-days: 7
 
-  deploy:
-    if: contains(github.event.head_commit.message, '#function') || 
-        contains(github.event.head_commit.message, '#func') || 
-        contains(github.event.head_commit.message, '#functionapp')
+  deploy:    
     name: Deploy to Azure (Flex Consumption)
     runs-on: ubuntu-latest
     needs: build-and-test
-    # if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    if: ${{ needs.determine-execution-condition.outputs.shouldRun == 'true' }}
     environment: production # Optional: Use GitHub environments for additional protection
     steps:
       - name: Download build artifacts
@@ -147,20 +175,3 @@ jobs:
           
           echo "✅ Deployment completed successfully!"
           echo "Check Application Insights for detailed logs and metrics."
-
-  # Optional: Cleanup job for PR deployments or staging slots
-  cleanup:
-    name: Cleanup
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    steps:
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      # Add any cleanup logic here if needed
-      - name: Cleanup resources
-        run: echo "Add cleanup logic if needed for PR environments"
