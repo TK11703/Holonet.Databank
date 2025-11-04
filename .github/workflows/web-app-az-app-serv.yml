@@ -36,6 +36,11 @@ env:
   APP_NAME: 'Holonet-App-Databank-8108'
   PROJECT_DIR: './src/Holonet.Databank.Web/Holonet.Databank.Web.csproj'
   PUBLISH_DIR: 'publish'
+
+# Required for OIDC authentication (recommended for Flex Consumption)
+permissions:
+  id-token: write
+  contents: read
   
 jobs:
   determine-execution-condition:

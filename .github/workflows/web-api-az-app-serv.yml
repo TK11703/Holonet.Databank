@@ -37,6 +37,11 @@ env:
   PROJECT_DIR: './src/Holonet.Databank.API/Holonet.Databank.API.csproj'
   PUBLISH_DIR: 'publish'
 
+# Required for OIDC authentication (recommended for Flex Consumption)
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   determine-execution-condition:
     runs-on: ubuntu-latest
