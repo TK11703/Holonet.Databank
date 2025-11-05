@@ -6,6 +6,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 try
 {
@@ -17,9 +18,11 @@ try
         {
             config.AddJsonFile(Path.Combine(context.HostingEnvironment.ContentRootPath, $"local.settings.json"), optional: true, reloadOnChange: false);
             config.AddUserSecrets<Program>();
+            Console.WriteLine("Development environment detected. Loaded local.settings.json and user secrets.");
         }
         config.AddEnvironmentVariables();
         config.AddCommandLine(args);
+        Console.WriteLine("Configuration sources have been set up.");
     })
     .ConfigureFunctionsWorkerDefaults()
     .ConfigureServices((context, services) =>
@@ -31,8 +34,12 @@ try
             configure.ConnectionString = context.Configuration.GetValue<string>("APPLICATIONINSIGHTS_CONNECTION_STRING");
         });
         services.ConfigureFunctionsApplicationInsights();
-        services.AddLogging();
+        services.AddLogging(logging =>
+        {
+            logging.AddConsole(); // Optional: add other providers like Application Insights
+        });
         services.ConfigureClients(context.Configuration);
+        Console.WriteLine("Services have been configured.");
     })
     .Build();
     
@@ -40,8 +47,12 @@ try
 }
 catch (Exception ex)
 {
+    Console.WriteLine($"? Application startup failed: {ex.Message}");
+    Console.WriteLine($"Stack trace: {ex.StackTrace}");
+
     var telemetryConfiguration = TelemetryConfiguration.CreateDefault();
     var telemetryClient = new TelemetryClient(telemetryConfiguration);
+    telemetryClient.Context.Cloud.RoleName = "Holonet-Func-Databank-8108";
     telemetryClient.TrackException(ex);
     telemetryClient.Flush();
     throw;
