@@ -92,11 +92,7 @@ jobs:
 
       - name: Build
         run: dotnet build ${{ env.PROJECT_DIR }} -c ${{ env.CONFIGURATION }} --no-restore
-
-      # Optional: Run tests if you have them
-      # - name: Run tests
-      #   run: dotnet test ${{ env.PROJECT_DIR }} -c ${{ env.CONFIGURATION }} --no-build --verbosity normal
-
+      
       - name: Publish
         run: dotnet publish ${{ env.PROJECT_DIR }} -c ${{ env.CONFIGURATION }} -o ${{ env.PUBLISH_DIR }} --no-build --no-restore -v:detailed
 
@@ -132,7 +128,7 @@ jobs:
 
       - name: Verify Function App is on Flex Consumption plan
         run: |
-          COMPUTE_MODE=$(az functionapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.APP_NAME }} --query "computeMode" -o tsv)
+          COMPUTE_MODE=$(az functionapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.APP_NAME }} --query "properties.sku" -o tsv)
           echo "Current compute mode: $COMPUTE_MODE"
           if [ "$COMPUTE_MODE" != "FlexConsumption" ]; then
             echo "⚠️  Warning: Function App is not on Flex Consumption plan (current: $COMPUTE_MODE)"
@@ -161,11 +157,11 @@ jobs:
           sleep 30
           
           # Check app state
-          APP_STATE=$(az functionapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.APP_NAME }} --query "state" -o tsv)
+          APP_STATE=$(az functionapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.APP_NAME }} --query "properties.state" -o tsv)
           echo "Function App state: $APP_STATE"
           
           # Get the function app URL
-          HOSTNAME=$(az functionapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.APP_NAME }} --query "defaultHostName" -o tsv)
+          HOSTNAME=$(az functionapp show -g ${{ env.RESOURCE_GROUP }} -n ${{ env.APP_NAME }} --query "properties.defaultHostName" -o tsv)
           echo "Function App URL: https://$HOSTNAME"
           
           # Optional: Test a health endpoint if you have one
