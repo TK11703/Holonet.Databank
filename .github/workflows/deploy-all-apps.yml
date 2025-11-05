@@ -23,6 +23,7 @@ permissions:
 
 jobs:
   execute-flex-function-workflow:
+    name: Run Function Workflow
     uses: ./.github/workflows/function-app-az-flex.yml
     with:
       shouldRun: ${{ inputs.runFunctionBuild }}
@@ -32,6 +33,7 @@ jobs:
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   
   execute-web-workflow:
+    name: Run Web Workflow
     uses: ./.github/workflows/web-app-az-app-serv.yml
     with:
       shouldRun: ${{ inputs.runWebBuild }}
@@ -41,6 +43,7 @@ jobs:
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
   execute-api-workflow:
+    name: Run API Workflow
     uses: ./.github/workflows/web-api-az-app-serv.yml
     with:
       shouldRun: ${{ inputs.runApiBuild }}
