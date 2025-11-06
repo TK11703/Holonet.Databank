@@ -8,8 +8,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+var logger = loggerFactory.CreateLogger<Program>();
+
 try
-{
+{    
+    logger.LogInformation("Starting Holonet.Databank.AppFunctions...");
     var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
     .ConfigureAppConfiguration((context, config) =>
@@ -18,11 +22,11 @@ try
         {
             config.AddJsonFile(Path.Combine(context.HostingEnvironment.ContentRootPath, $"local.settings.json"), optional: true, reloadOnChange: false);
             config.AddUserSecrets<Program>();
-            Console.WriteLine("Development environment detected. Loaded local.settings.json and user secrets.");
+            logger.LogInformation("Development environment detected. Loaded local.settings.json and user secrets.");
         }
         config.AddEnvironmentVariables();
         config.AddCommandLine(args);
-        Console.WriteLine("Configuration sources have been set up.");
+        logger.LogInformation("Configuration sources have been set up.");
     })
     .ConfigureFunctionsWorkerDefaults()
     .ConfigureServices((context, services) =>
@@ -39,7 +43,7 @@ try
             logging.AddConsole(); // Optional: add other providers like Application Insights
         });
         services.ConfigureClients(context.Configuration);
-        Console.WriteLine("Services have been configured.");
+        logger.LogInformation("Services have been configured.");
     })
     .Build();
     
@@ -47,13 +51,16 @@ try
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"? Application startup failed: {ex.Message}");
-    Console.WriteLine($"Stack trace: {ex.StackTrace}");
-
+    logger.LogError(ex, "Application startup failed: {Message}", ex.Message);
+    logger.LogError(ex, "Stack trace: {StackTrace}", ex.StackTrace);
+    var connectionString = Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING");
     var telemetryConfiguration = TelemetryConfiguration.CreateDefault();
+    telemetryConfiguration.ConnectionString = connectionString;
     var telemetryClient = new TelemetryClient(telemetryConfiguration);
     telemetryClient.Context.Cloud.RoleName = "Holonet-Func-Databank-8108";
     telemetryClient.TrackException(ex);
     telemetryClient.Flush();
-    throw;
+
+    // Rethrow with contextual information to address S2139 and S112
+    throw new InvalidOperationException("Holonet.Databank.AppFunctions failed to start. See inner exception for details.", ex);
 }

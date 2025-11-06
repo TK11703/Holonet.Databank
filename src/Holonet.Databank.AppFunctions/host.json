@@ -4,13 +4,17 @@
     "logging": {
         "applicationInsights": {
             "samplingSettings": {
-                "isEnabled": false
+                "isEnabled": true,
+                "excludedTypes": "Request" // Exclude Request telemetry from sampling
             },
             "enableLiveMetricsFilters": true
         },
         "logLevel": {
-            "Function": "Information",
-            "Default": "Warning"
+            "Function": "Information", // Your function logs
+            "Host": "Warning", // Runtime internals
+            "Microsoft": "Warning", // SDKs and bindings
+            "Worker": "Warning", // Isolated worker internals
+            "Default": "Warning" // Catch-all fallback           
         }
     },
     "extensions": {
