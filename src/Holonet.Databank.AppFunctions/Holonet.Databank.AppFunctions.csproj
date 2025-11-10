@@ -12,6 +12,9 @@
 		<UseMicrosoftAzureFunctionsBuild>true</UseMicrosoftAzureFunctionsBuild>
 	</PropertyGroup>
 	<ItemGroup>
+	  <Compile Remove="Functions\DataRecordTrigger.cs" />
+	</ItemGroup>
+	<ItemGroup>
 		<None Update="host.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
